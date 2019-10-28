@@ -8,6 +8,8 @@ services:
       - '80:5000'
     links:
       - mongo
+    environment:
+      - STRETCH_CONNECTION_STRING=mongodb://stretch-db:27017/
   mongo:
     container_name: stretch-db
     image: mongo
