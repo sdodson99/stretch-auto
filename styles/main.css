@@ -1,0 +1,145 @@
+#site-header {
+  color: white;
+  background: #66ccff;
+  border-bottom: 1px solid #004466;
+}
+#site-header #header-logo {
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 3rem;
+}
+#site-header #header-nav {
+  background: #0088cc;
+}
+#site-header #header-nav ul {
+  list-style-type: none;
+}
+#site-header #header-nav li a {
+  padding: 0.5rem 3rem;
+  display: inline-block;
+}
+#site-header #header-nav .selected {
+  background: #004466;
+}
+#site-header #header-nav #center-nav {
+  font-size: 2rem;
+  text-align: center;
+}
+
+footer {
+  color: white;
+  background: #0088cc;
+  padding: 0.5rem;
+  text-align: center;
+  border-top: 1px solid #004466;
+}
+
+button {
+  font-size: 1.5rem;
+  text-decoration: none;
+  padding: 0.5rem;
+  border: 1px solid #004466;
+  color: white;
+  background: #0088cc;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background: #004466;
+}
+
+input[type=text] {
+  padding: 0.5rem;
+  border: 1px solid #004466;
+  border-radius: 5px;
+}
+
+#stretch-setup .prompt {
+  font-size: 2rem;
+}
+#stretch-setup input[type=text] {
+  margin-left: 1.5rem;
+  font-size: 1.5rem;
+}
+#stretch-setup .stretch-fieldset {
+  padding: 1.5rem;
+}
+#stretch-setup .stretch-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+#stretch-setup #stretch-legend {
+  margin: 3rem 0;
+  font-size: 1rem;
+}
+
+#stretch #stretch-volume {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+#stretch #stretch-timer, #stretch #stretch-set {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+#stretch #stretch-information {
+  padding-bottom: 3rem;
+  text-align: center;
+}
+#stretch #stretch-name {
+  font-size: 2.5rem;
+  text-align: center;
+}
+#stretch #stretch-instructions {
+  display: inline-block;
+  text-align: left;
+}
+#stretch #stretch-instructions li {
+  font-size: 2rem;
+  padding: 0.5rem 0;
+}
+#stretch #stretch-cancel {
+  background: red;
+}
+#stretch #stretch-cancel:hover {
+  background: darkred;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+#page {
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#main {
+  display: flex;
+  flex-grow: 1;
+}
+
+.stretch-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
+  margin: 1.5rem auto;
+  max-width: 75%;
+}
+
+/*# sourceMappingURL=main.css.map */

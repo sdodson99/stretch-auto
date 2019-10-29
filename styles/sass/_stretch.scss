@@ -1,0 +1,43 @@
+@import 'common-variables';
+
+#stretch{
+
+    #stretch-volume{
+        margin-bottom: $spacing-large;
+        text-align: center;
+    }
+
+    #stretch-timer, #stretch-set{
+        font-size: $font-large;
+        margin-bottom: $spacing-medium;
+    }
+
+    #stretch-information{
+        padding-bottom: $spacing-large;
+        text-align: center;
+    }
+
+    #stretch-name{
+        font-size: $font-large;
+        text-align: center;
+    }
+
+    #stretch-instructions{
+        display: inline-block;
+        text-align: left;
+    }
+
+    #stretch-instructions li{
+        font-size: $font-medium;
+        padding: $spacing-small 0;
+    }
+
+    #stretch-cancel{
+        background: red;
+    }
+
+    #stretch-cancel:hover{
+        background: darkred;
+    }
+}
+

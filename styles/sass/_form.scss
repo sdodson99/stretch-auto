@@ -1,0 +1,25 @@
+@import 'common-variables';
+
+$form-border-radius: 5px;
+$form-border: 1px solid $color-primary-3;
+
+button{
+    font-size: $font-small;
+    text-decoration: none;
+    padding: $spacing-small;
+    border: $form-border;
+    color: white;
+    background: $color-primary-2;
+    cursor: pointer;
+    border-radius: $form-border-radius;
+}
+
+button:hover{
+    background: $color-primary-3;
+}
+
+input[type=text]{
+    padding: $spacing-small;
+    border: $form-border;
+    border-radius: $form-border-radius;
+}

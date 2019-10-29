@@ -1,0 +1,41 @@
+@import 'header';
+@import 'footer';
+@import 'common-variables';
+@import 'form';
+@import 'stretch-setup';
+@import 'stretch';
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    font-family: $font-stack;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+#page{
+    min-height: 100vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#main{
+    display: flex;
+    flex-grow: 1;
+}
+
+.stretch-content{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    margin: $spacing-medium auto;
+    max-width: 75%;
+}

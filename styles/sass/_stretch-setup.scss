@@ -1,0 +1,29 @@
+@import 'common-variables';
+
+#stretch-setup{
+
+    .prompt{
+        font-size: $font-medium;
+    }
+
+    input[type=text]{
+        margin-left: $spacing-medium;
+        font-size: $font-small;
+    }
+
+    .stretch-fieldset{
+        padding: $spacing-medium;
+    }
+
+    .stretch-field{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-small;
+    }
+
+    #stretch-legend{
+        margin: $spacing-large 0;
+        font-size: $font-tiny;
+    }
+}
