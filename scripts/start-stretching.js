@@ -14,53 +14,44 @@ const displayStretchSetup = document.querySelector("#stretch-setup")
 const displayStretch = document.querySelector("#stretch")
 const displays = document.querySelectorAll(".stretch-content")
 
-const stretchApiUrl = "http://localhost/stretch"
+const stretchApiUrl = "http://52.170.19.168/stretch"
 
-const StretchRoutine = function(stretches, sets, duration){
+function StretchRoutine(stretches, sets, duration){
     this.stretches = stretches
     this.sets = sets
     this.duration = duration
 }
 
-const StretchController = function(stretchService, navigator){
+function PlayableStretchRoutine(routine, onTimeChange, onFinish){
+    this.stretches = routine.stretches
+    this.sets = routine.sets
+    this.duration = routine.duration
 
-    this.stretchService = stretchService
-    this.navigator = navigator
+    this.onTimeChange = onTimeChange
+    this.onFinish = onFinish
+
     this.isCancelled = false
     this.isPaused = false
     this.isFinished = false
 
-    this.startRoutine = async function(){
-        this.unPauseRoutine()
-
-        //Get inputs from user
-        let stretchAmount = inputStretchAmount.value ? inputStretchAmount.value : 1
-        let stretchSets = inputStretchSets.value ? inputStretchSets.value : 1
-        let stretchDuration = inputStretchDuration.value ? inputStretchDuration.value : 5
-
-        //Create routine from API stretches
-        this.routine = new StretchRoutine(await stretchService.getStretches(stretchAmount), stretchSets, stretchDuration)
-
-        labelStretchSetMax.textContent = this.routine.sets
+    this.start = async function(){
 
         //Display each stretch
-        for (let i = 0; i < this.routine.stretches.length; i++) {
+        for (let i = 0; i < this.stretches.length; i++) {
             if(this.isCancelled) break
 
-            const stretch = this.routine.stretches[i]
-
             //Display each set
-            for (let set = 1; set <= this.routine.sets; set++) {
+            for (this.currentSet = 1; this.currentSet <= this.sets; this.currentSet++) {
                 if(this.isCancelled) break
 
-                labelStretchSetCurrent.textContent = set
-                await this.startStretch(stretch, stretchDuration)
+                await this.startStretch(this.stretches[i], this.duration)
             }
         }
 
-        this.finishRoutine()
+        this.onFinish(this)
     }
 
+    //Start a stretch
     this.startStretch = async function(stretch, duration){
         stretch.isUnilateral ? 
             await this.startUnilateralStretch(stretch, duration) : 
@@ -71,13 +62,13 @@ const StretchController = function(stretchService, navigator){
     this.startUnilateralStretch = async function(stretch, duration){
         let originalStretchName = stretch.name
 
-        //Show stretch for left side
+        //Play stretch for left side
         stretch.name = "Left " + originalStretchName
-        await this.showStretchForDuration(stretch, duration)
+        await this.playStretchForDuration(stretch, duration)
 
-        //Show stretch for right side
+        //Play stretch for right side
         stretch.name = "Right " + originalStretchName
-        await this.showStretchForDuration(stretch, duration)
+        await this.playStretchForDuration(stretch, duration)
 
         //Revert to old name
         stretch.name = originalStretchName
@@ -85,59 +76,36 @@ const StretchController = function(stretchService, navigator){
 
     //Start a bilateral stretch
     this.startBilateralStretch = async function(stretch, duration){
-        await this.showStretchForDuration(stretch, duration)
+        await this.playForDuration(stretch, duration)
     }
 
-    //Start a stretch for a specified duration
-    this.showStretchForDuration = async function(stretch, duration){
-        this.navigator.showStretch(stretch)
+    //Play stretch for a specified duration
+    this.playStretchForDuration = async function(stretch, duration){
+        this.currentStretch = stretch
 
-        for (let index = duration; index >= 1; index--) {
+        for (this.currentTime = duration; this.currentTime >= 1; this.currentTime--) {
             if(this.isCancelled) break
 
-            labelStretchTimer.textContent = index
-            await wait(1)
+            this.onTimeChange(this)
+            await this.wait(1)
 
             while(this.isPaused){
-                await wait(1)
+                await this.wait(1)
             }
         }
     }
 
-    this.pauseRoutine = function(){
-        this.togglePauseRoutine(true)
-    }
-
-    this.unPauseRoutine = function(){
-        this.togglePauseRoutine(false)
-    }
-
-    this.togglePauseRoutine = function(isPaused){
-        this.isPaused = isPaused
-        this.isPaused ? btnPause.textContent = "Unpause Routine" : btnPause.textContent = "Pause Routine"
-    }
-
-    this.cancelRoutine = function(){
-        this.isCancelled = true
-        this.navigator.show(DisplayType.SETUP)
-    }
-
-    this.finishRoutine = function(){
-        this.isFinished = true
-        this.navigator.show(DisplayType.DONE)
+    //Wait for amount of time
+    this.wait = function(timeInSeconds){
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve()
+            }, timeInSeconds * 1000)
+        })
     }
 }
 
-//Wait for amount of time
-function wait(timeInSeconds){
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve()
-        }, timeInSeconds * 1000)
-    })
-}
-
-const StretchApiService = function(url){
+function StretchApiService(url){
     this.url = url
 
     this.getStretches = async function(amount){
@@ -153,7 +121,7 @@ const DisplayType = {
     DONE: "Done"
 }
 
-const Navigator = function(){
+function Navigator(){
 
     //Hide all displays except for specified display
     this.show = function(displayType){
@@ -195,19 +163,40 @@ const Navigator = function(){
 
 const navigator = new Navigator()
 const stretchService = new StretchApiService(stretchApiUrl)
-let currentController;
+let currentRoutine;
 
-async function startStretching(e){
-    currentController = new StretchController(stretchService, navigator)
-    await currentController.startRoutine()
+async function startStretching(){
+
+    btnPause.textContent = "Pause Routine"
+
+    //Get inputs from user
+    let stretchAmount = inputStretchAmount.value ? inputStretchAmount.value : 1
+    let stretchSets = inputStretchSets.value ? inputStretchSets.value : 1
+    let stretchDuration = inputStretchDuration.value ? inputStretchDuration.value : 5
+
+    //Create routine from API stretches
+    let routine = new StretchRoutine(await stretchService.getStretches(stretchAmount), stretchSets, stretchDuration)
+    currentRoutine = new PlayableStretchRoutine(routine, updateUI, () => navigator.show(DisplayType.DONE))
+
+    currentRoutine.start()
 }
 
 function pauseStretching(){
-    currentController.isPaused ? currentController.unPauseRoutine() : currentController.pauseRoutine()
+    currentRoutine.isPaused = !currentRoutine.isPaused
+    btnPause.textContent = currentRoutine.isPaused ? "Unpause Routine" : "Pause Routine"
 }
 
 function stopStretching(){
-    currentController.cancelRoutine()
+    currentRoutine.isCancelled = true
+    navigator.show(DisplayType.SETUP)
+}
+
+function updateUI(routine){
+    labelStretchSetMax.textContent = routine.sets
+    labelStretchSetCurrent.textContent = routine.currentSet
+    labelStretchTimer.textContent = routine.currentTime
+
+    navigator.showStretch(routine.currentStretch)
 }
 
 btnStart.addEventListener("click", startStretching)
