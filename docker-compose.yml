@@ -9,7 +9,7 @@ services:
     links:
       - mongo
     environment:
-      - STRETCH_CONNECTION_STRING=mongodb://stretch-db:27017/
+      - STRETCH_CONNECTION_STRING=mongodb://admin:PASSWORD@stretch-db:27017/
   mongo:
     container_name: stretch-db
     image: mongo
@@ -17,3 +17,4 @@ services:
       - '27017:27017'
     volumes:
       - '/data/db:/data/db'
+      - '/etc:/etc'
