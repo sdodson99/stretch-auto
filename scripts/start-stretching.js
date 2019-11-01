@@ -6,17 +6,14 @@ const inputStretchAmount = document.querySelector("#stretch-amount")
 const inputStretchSets = document.querySelector("#stretch-sets")
 const inputStretchDuration = document.querySelector("#stretch-duration")
 const inputStretchNarrate = document.querySelector("#stretch-narrate")
+const inputNarrationFieldset = document.querySelector("#narration-fieldset")
 
 const labelStretchName = document.querySelector("#stretch-name")
-const labelStretchTimer = document.querySelector("#stretch-timer span")
+const labelStretchTimer = document.querySelector("#stretch-timer-value span")
 const labelStretchSetCurrent = document.querySelector("#stretch-set-current")
 const labelStretchSetMax = document.querySelector("#stretch-set-max")
 
 const listStretchInstructions = document.querySelector("#stretch-instructions")
-
-const displayStretchSetup = document.querySelector("#stretch-setup")
-const displayStretch = document.querySelector("#stretch")
-const displays = document.querySelectorAll(".stretch-content")
 
 const stretchApiUrl = "http://52.170.19.168/stretch"
 
@@ -200,6 +197,8 @@ function SpeakingStretchPlayer(stretch, sets, duration, onChange){
                 await this.speakNextSet()
             }
         }
+
+        await this.speakFinished()
     }
 
     this.playBilateral = async function(){
@@ -269,6 +268,11 @@ function SpeakingStretchPlayer(stretch, sets, duration, onChange){
         await this.speaker.speakAsync("Start next set.")
     }
 
+    this.speakFinished = async function(){
+        if(this.isCancelled()) return
+        await this.speaker.speakAsync("Stretching completed.")
+    }
+
     this.togglePause = function(){
         this.stretchPlayer.togglePause()
         this.speaker.togglePause()
@@ -325,7 +329,7 @@ function StretchApiService(url){
 }
 
 function StretchMockService(){
-    this.getStretches = async function(amount){
+    this.getStretches = function(amount){
         return [
             {
                 name: "Test",
@@ -349,22 +353,26 @@ const DisplayType = {
 
 function Navigator(){
 
+    this.displayStretchSetup = document.querySelector("#stretch-setup")
+    this.displayStretch = document.querySelector("#stretch")
+    this.displays = document.querySelectorAll(".stretch-content")
+
     //Hide all displays except for specified display
     this.show = function(displayType){
 
-        displays.forEach((d) => {
+        this.displays.forEach((d) => {
             d.style.display = "none"
         })
 
         switch (displayType) {
             case DisplayType.SETUP:
-                displayStretchSetup.style.display = ""
+                this.displayStretchSetup.style.display = ""
                 break;
             case DisplayType.STRETCH:
-                displayStretch.style.display = ""
+                this.displayStretch.style.display = ""
                 break;
             case DisplayType.DONE:
-                displayStretchSetup.style.display = ""
+                this.displayStretchSetup.style.display = ""
             default:
                 break;
         }
@@ -447,6 +455,10 @@ function updateUI(routine){
     labelStretchTimer.textContent = routine.getCurrentTime()
 
     navigator.showStretch(routine.getStretch())
+}
+
+if(!Modernizr.speechsynthesis){
+    inputNarrationFieldset.style.display = "none"
 }
 
 btnStart.addEventListener("click", startStretching)

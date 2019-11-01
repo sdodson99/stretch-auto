@@ -59,7 +59,7 @@ input[type=text] {
   font-size: 1.5rem;
   flex-grow: 1;
 }
-#stretch-setup input[type=text] {
+#stretch-setup input {
   margin-left: 1.5rem;
   font-size: 1.5rem;
 }
@@ -76,13 +76,23 @@ input[type=text] {
   font-size: 2rem;
 }
 #stretch-setup #stretch-narrate {
-  margin-left: 1.5rem;
   width: 30px;
   height: 30px;
 }
 #stretch-setup #stretch-legend {
   margin: 3rem 0;
   font-size: 1rem;
+}
+@media screen and (max-width: 600px) {
+  #stretch-setup .stretch-field {
+    flex-direction: column;
+  }
+  #stretch-setup input[type=text] {
+    margin: 1.5rem 0;
+  }
+  #stretch-setup input[type=checkbox] {
+    margin: 0;
+  }
 }
 
 #stretch #stretch-volume {
@@ -109,11 +119,29 @@ input[type=text] {
   font-size: 1.5rem;
   padding: 0.5rem 0;
 }
+#stretch #stretch-buttons {
+  align-self: center;
+}
 #stretch #stretch-cancel {
+  margin-left: 0.5rem;
   background: red;
 }
 #stretch #stretch-cancel:hover {
   background: darkred;
+}
+@media screen and (max-width: 800px) {
+  #stretch #stretch-timer-value {
+    display: block;
+  }
+}
+@media screen and (max-width: 500px) {
+  #stretch #stretch-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  #stretch #stretch-buttons button {
+    margin: 0.5rem 0;
+  }
 }
 
 * {

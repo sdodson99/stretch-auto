@@ -32,12 +32,34 @@
         padding: $spacing-small 0;
     }
 
+    #stretch-buttons{
+        align-self: center;
+    }
+
     #stretch-cancel{
+        margin-left: $spacing-small;
         background: red;
     }
 
     #stretch-cancel:hover{
         background: darkred;
+    }
+
+    @media screen and (max-width: 800px){
+        #stretch-timer-value{
+            display: block;
+        }
+    }
+
+    @media screen and (max-width: 500px){
+        #stretch-buttons{
+            display: flex;
+            flex-direction: column;
+            
+            button{
+                margin: $spacing-small 0;
+            }
+        }
     }
 }
 

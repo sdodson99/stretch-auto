@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="stylesheet" href="styles/main.css"/>
+    <script defer src="scripts/modernizr.js"></script>
     <script defer src="scripts/start-stretching.js"></script>
 
     <title>Stretch Auto</title>
@@ -33,14 +34,14 @@
                     <div class="stretch-field">
                         <p class="prompt">How many sets would you like to perform for each stretch?</p>
                         <input id="stretch-sets" type="text" maxlength="5" size="5"/>
-                    </div>                 
+                    </div>
                      <div class="stretch-field">
                         <p class="prompt">How many seconds would you like to perform each stretch?</p>
                         <input id="stretch-duration" type="text" maxlength="5" size="5"/>
                     </div>
                 </div>
-                <div class="stretch-fieldset">
-                    <p class="stretch-fieldset-header">Advanced</p>
+                <div id="narration-fieldset" class="stretch-fieldset">
+                    <p class="stretch-fieldset-header">Narration</p>
                     <div class="stretch-field">
                         <p class="prompt">Narrate stretches?</p>
                         <input id="stretch-narrate" type="checkbox"/>
@@ -59,7 +60,9 @@
                     <div id="stretch-set">
                         Set: <span id="stretch-set-current">0</span>/<span id="stretch-set-max">0</span>
                     </div>
-                    <div id="stretch-timer">Time Remaining: <span>0</span> second(s)</div>
+                    <div id="stretch-timer">
+                        Time Remaining: <span id="stretch-timer-value"><span>0</span> second(s)</span> 
+                    </div>
                 </div>
                 <div id="stretch-information">
                     <div id="stretch-name">Stretch</div>
@@ -67,7 +70,7 @@
 
                     </ol>
                 </div>
-                <div>
+                <div id="stretch-buttons">
                     <button id="stretch-pause">Pause Routine</button>
                     <button id="stretch-cancel">Cancel Routine</button>
                 </div>

@@ -7,7 +7,7 @@
         flex-grow: 1;
     }
 
-    input[type=text]{
+    input{
         margin-left: $spacing-medium;
         font-size: $font-small;
     }
@@ -28,7 +28,6 @@
     }
 
     #stretch-narrate{
-        margin-left: $spacing-medium;
         width: 30px;
         height: 30px;
     }
@@ -36,5 +35,19 @@
     #stretch-legend{
         margin: $spacing-large 0;
         font-size: $font-tiny;
+    }
+
+    @media screen and (max-width: 600px){
+        .stretch-field{
+            flex-direction: column;
+        }
+
+        input[type=text]{
+            margin: $spacing-medium 0;
+        }
+
+        input[type=checkbox]{
+            margin: 0;
+        }
     }
 }
