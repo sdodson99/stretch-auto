@@ -246,8 +246,10 @@ function SpeakingStretchPlayer(stretch, sets, duration, onChange){
     }
 
     this.speakInstructions = async function(stretch){
-        for (let i = 0; i < stretch.instructions.length; i++) {
-            const instruction = stretch.instructions[i]
+        let instructions = stretch.instructions
+
+        for (let i = 0; i < instructions.length; i++) {
+            const instruction = instructions[i]
 
             if(this.isCancelled()) return
             await this.speaker.speakAsync(instruction.order + ".")
@@ -315,6 +317,7 @@ function StretchApiService(url){
 
         stretches.forEach((stretch) => {
             stretch.name = stretch.name + " Stretch"
+            stretch.instructions.sort((a, b) => a.order > b.order)
         })
 
         return stretches
@@ -372,7 +375,7 @@ function Navigator(){
         labelStretchName.textContent = stretch.name
         listStretchInstructions.innerHTML = ""
 
-        stretch.instructions.sort((a, b) => a.order < b.order).forEach(instruction => {
+        stretch.instructions.forEach(instruction => {
 
             let newListItem = document.createElement("li")
             newListItem.innerText = instruction.content
