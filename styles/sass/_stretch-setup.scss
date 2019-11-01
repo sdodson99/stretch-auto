@@ -3,7 +3,8 @@
 #stretch-setup{
 
     .prompt{
-        font-size: $font-medium;
+        font-size: $font-small;
+        flex-grow: 1;
     }
 
     input[type=text]{
@@ -18,8 +19,18 @@
     .stretch-field{
         display: flex;
         align-items: center;
-        justify-content: space-between;
         padding: $spacing-small;
+    }
+
+    .stretch-fieldset-header{
+        text-align: center;
+        font-size: $font-medium;
+    }
+
+    #stretch-narrate{
+        margin-left: $spacing-medium;
+        width: 30px;
+        height: 30px;
     }
 
     #stretch-legend{

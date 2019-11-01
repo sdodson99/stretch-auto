@@ -1,13 +1,17 @@
 const btnStart = document.querySelector("#stretch-start")
 const btnPause = document.querySelector("#stretch-pause")
 const btnCancel = document.querySelector("#stretch-cancel")
+
 const inputStretchAmount = document.querySelector("#stretch-amount")
 const inputStretchSets = document.querySelector("#stretch-sets")
 const inputStretchDuration = document.querySelector("#stretch-duration")
+const inputStretchNarrate = document.querySelector("#stretch-narrate")
+
 const labelStretchName = document.querySelector("#stretch-name")
 const labelStretchTimer = document.querySelector("#stretch-timer span")
 const labelStretchSetCurrent = document.querySelector("#stretch-set-current")
 const labelStretchSetMax = document.querySelector("#stretch-set-max")
+
 const listStretchInstructions = document.querySelector("#stretch-instructions")
 
 const displayStretchSetup = document.querySelector("#stretch-setup")
@@ -22,80 +26,150 @@ function StretchRoutine(stretches, sets, duration){
     this.duration = duration
 }
 
-function PlayableStretchRoutine(routine, onTimeChange, onFinish){
+function PlayableStretchRoutine(routine, onChange, onFinish, options){
     this.stretches = routine.stretches
     this.sets = routine.sets
     this.duration = routine.duration
 
-    this.onTimeChange = onTimeChange
+    this.onChange = onChange
     this.onFinish = onFinish
+    this.options = options
 
     this.isCancelled = false
     this.isPaused = false
     this.isFinished = false
 
     this.start = async function(){
-
+        
         //Display each stretch
         for (let i = 0; i < this.stretches.length; i++) {
             if(this.isCancelled) break
 
-            //Display each set
-            for (this.currentSet = 1; this.currentSet <= this.sets; this.currentSet++) {
-                if(this.isCancelled) break
-
-                await this.startStretch(this.stretches[i], this.duration)
-            }
+            this.currentPlayer = this.createStretchPlayer(this.stretches[i], this.sets, this.duration, this.options, this.onChange)
+            await this.currentPlayer.play()
         }
 
         this.onFinish(this)
     }
 
-    //Start a stretch
-    this.startStretch = async function(stretch, duration){
-        stretch.isUnilateral ? 
-            await this.startUnilateralStretch(stretch, duration) : 
-            await this.startBilateralStretch(stretch, duration)
+    this.togglePause = function(){
+        this.isPaused = !this.isPaused
+        this.currentPlayer.togglePause()
     }
 
-    //Start a stretch on the left and right side
-    this.startUnilateralStretch = async function(stretch, duration){
-        let originalStretchName = stretch.name
-
-        //Play stretch for left side
-        stretch.name = "Left " + originalStretchName
-        await this.playStretchForDuration(stretch, duration)
-
-        //Play stretch for right side
-        stretch.name = "Right " + originalStretchName
-        await this.playStretchForDuration(stretch, duration)
-
-        //Revert to old name
-        stretch.name = originalStretchName
+    this.cancel = function(){
+        this.isCancelled = true
+        this.currentPlayer.cancel()
     }
 
-    //Start a bilateral stretch
-    this.startBilateralStretch = async function(stretch, duration){
-        await this.playForDuration(stretch, duration)
+    this.createStretchPlayer = function(stretch, sets, duration, options, onChange){
+        if(options && options.narrate){
+            return new SpeakingStretchPlayer(stretch, sets, duration, onChange)
+        } else {
+            return new StretchPlayer(stretch, sets, duration, onChange)
+        }
+    }
+}
+
+function StretchPlayer(stretch, sets, duration, onChange){
+    this.stretch = stretch
+    this.duration = duration
+    this.sets = sets
+
+    this.currentSet = 1
+    this.currentTime = duration
+    this.onChange = onChange
+
+    this.cancelled = false
+    this.isPaused = false
+
+    this.play = async function(){
+        for (this.currentSet = 1; this.currentSet <= this.getSets(); this.currentSet++) {
+            if(this.isCancelled()) break
+
+            this.stretch.isUnilateral ? 
+                await this.playUnilateral() :
+                await this.playBilateral()
+
+            if(this.getCurrentSet() != this.getSets())
+            {
+                await this.wait(5)
+            }
+        }
     }
 
-    //Play stretch for a specified duration
-    this.playStretchForDuration = async function(stretch, duration){
-        this.currentStretch = stretch
+    this.playBilateral = async function(){
+        await this.waitForDuration()
+    }
 
-        for (this.currentTime = duration; this.currentTime >= 1; this.currentTime--) {
-            if(this.isCancelled) break
+    this.playUnilateral = async function(){
+        await this.playOneSide(true)
+        await this.playOneSide(false)
+    }
 
-            this.onTimeChange(this)
+    this.playOneSide = async function(isLeft){
+        this.setNameOneSide(isLeft)
+        await this.waitForDuration()
+        this.resetOriginalName()
+    }
+
+    this.setNameOneSide = function(isLeft){
+        this.originalStretchName = this.stretch.name
+        let prefix = isLeft ? "Left " : "Right "
+        this.stretch.name = prefix + this.originalStretchName
+    }
+
+    this.resetOriginalName = function(){
+        this.stretch.name = this.originalStretchName || this.stretch.name
+    }
+
+    this.waitForDuration = async function(){
+        for (this.currentTime = this.duration; this.currentTime >= 1; this.currentTime--) {
+            if(this.isCancelled()) break
+
+            this.onChange(this)
             await this.wait(1)
 
             while(this.isPaused){
                 await this.wait(1)
             }
         }
+
+        this.currentTime = this.duration
     }
 
-    //Wait for amount of time
+    this.togglePause = function(){
+        this.isPaused = !this.isPaused
+    }
+
+    this.cancel = function(){
+        this.cancelled = true
+    }
+
+    this.isCancelled = function(){
+        return this.cancelled
+    }
+
+    this.getCurrentSet = function(){
+        return this.currentSet
+    }
+
+    this.setCurrentSet = function (set){
+        this.currentSet = set
+    }
+
+    this.getStretch = function(){
+        return this.stretch
+    }
+
+    this.getSets = function(){
+        return this.sets
+    }
+
+    this.getCurrentTime = function(){
+        return this.currentTime
+    }
+
     this.wait = function(timeInSeconds){
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -105,13 +179,162 @@ function PlayableStretchRoutine(routine, onTimeChange, onFinish){
     }
 }
 
+function SpeakingStretchPlayer(stretch, sets, duration, onChange){
+    this.stretchPlayer = new StretchPlayer(stretch, sets, duration, onChange)
+    this.speaker = new Speaker()
+
+    this.play = async function(){
+
+        for (let currentSet = 1; currentSet <= this.getSets(); currentSet++) {
+            if(this.isCancelled()) break            
+
+            this.setCurrentSet(currentSet)
+
+            this.getStretch().isUnilateral ? 
+                await this.playUnilateral() :
+                await this.playBilateral()
+            
+            if(!this.isCancelled() && this.getCurrentSet() != this.getSets()){
+                this.speaker.speakAsync("Relax.")
+                await this.stretchPlayer.wait(5)
+                await this.speakNextSet()
+            }
+        }
+    }
+
+    this.playBilateral = async function(){
+        this.onChange(this)
+
+        if(this.getCurrentSet() == 1){
+            await this.speakName(this.getStretch())
+            await this.speakInstructions(this.getStretch())
+        }
+
+        await this.stretchPlayer.waitForDuration()
+    }
+
+    this.playUnilateral = async function(){
+        await this.playLeftSide()
+        if(this.isCancelled()) return
+        await this.playRightSide()
+    }
+
+    this.playLeftSide = async function(){
+        this.stretchPlayer.setNameOneSide(true)
+        this.onChange(this)
+
+        if(this.getCurrentSet() == 1){
+            await this.speakName(this.getStretch())
+            await this.speakInstructions(this.getStretch())
+        }
+
+        await this.stretchPlayer.waitForDuration()
+        this.stretchPlayer.resetOriginalName()
+    }
+
+    this.playRightSide = async function(){
+        this.stretchPlayer.setNameOneSide(false)
+        this.onChange(this)
+        await this.speakSwitch()
+        await this.stretchPlayer.waitForDuration()
+        this.stretchPlayer.resetOriginalName()
+    }
+
+    this.speakName = async function(stretch){
+        if(this.isCancelled()) return
+        await this.speaker.speakAsync(stretch.name)
+    }
+
+    this.speakInstructions = async function(stretch){
+        for (let i = 0; i < stretch.instructions.length; i++) {
+            const instruction = stretch.instructions[i]
+
+            if(this.isCancelled()) return
+            await this.speaker.speakAsync(instruction.order + ".")
+
+            if(this.isCancelled()) return
+            await this.speaker.speakAsync(instruction.content)
+        }
+    }
+
+    this.speakSwitch = async function(){
+        if(this.isCancelled()) return
+        await this.speaker.speakAsync("Switch sides.")
+    }
+
+    this.speakNextSet = async function(){
+        if(this.isCancelled()) return
+        await this.speaker.speakAsync("Start next set.")
+    }
+
+    this.togglePause = function(){
+        this.stretchPlayer.togglePause()
+        this.speaker.togglePause()
+    }
+
+    this.cancel = function(){
+        this.stretchPlayer.cancel()
+        this.speaker.cancel()
+    }
+
+    this.isCancelled = function(){
+        return this.stretchPlayer.isCancelled()
+    }
+
+    this.getCurrentSet = function(){
+        return this.stretchPlayer.currentSet
+    }
+
+    this.setCurrentSet = function (set){
+        this.stretchPlayer.currentSet = set
+    }
+
+    this.getStretch = function(){
+        return this.stretchPlayer.stretch
+    }
+
+    this.getSets = function(){
+        return this.stretchPlayer.sets
+    }
+
+    this.getCurrentTime = function(){
+        return this.stretchPlayer.currentTime
+    }
+
+    this.onChange = function(sender){
+        this.stretchPlayer.onChange(sender)
+    }
+}
+
 function StretchApiService(url){
     this.url = url
 
     this.getStretches = async function(amount){
         let fetchResult = await fetch(stretchApiUrl + `/?maxAmount=${amount}`)
-    
-        return await fetchResult.json()
+        let stretches = await fetchResult.json()
+
+        stretches.forEach((stretch) => {
+            stretch.name = stretch.name + " Stretch"
+        })
+
+        return stretches
+    }
+}
+
+function StretchMockService(){
+    this.getStretches = async function(amount){
+        return [
+            {
+                name: "Test",
+                isUnilateral: true,
+                instructions : [
+                {
+                    order: 1,
+                    content: "Try as hard as possible."
+                }
+                ]
+            }
+        ]
     }
 }
 
@@ -146,7 +369,7 @@ function Navigator(){
 
     //Display a stretch
     this.showStretch = function(stretch){
-        labelStretchName.textContent = stretch.name + " Stretch"
+        labelStretchName.textContent = stretch.name
         listStretchInstructions.innerHTML = ""
 
         stretch.instructions.sort((a, b) => a.order < b.order).forEach(instruction => {
@@ -158,6 +381,26 @@ function Navigator(){
         })
 
         this.show(DisplayType.STRETCH)
+    }
+}
+
+function Speaker(){
+    this.synth = window.speechSynthesis
+
+    this.speakAsync = async function(content){
+        return new Promise((resolve) => {
+            let utterance = new SpeechSynthesisUtterance(content)
+            utterance.onend = resolve
+            this.synth.speak(utterance)
+        })
+    }
+
+    this.togglePause = function(){
+        this.synth.paused ? this.synth.resume() : this.synth.pause()
+    }
+
+    this.cancel = function(){
+        this.synth.cancel()
     }
 }
 
@@ -173,54 +416,37 @@ async function startStretching(){
     let stretchAmount = inputStretchAmount.value ? inputStretchAmount.value : 1
     let stretchSets = inputStretchSets.value ? inputStretchSets.value : 1
     let stretchDuration = inputStretchDuration.value ? inputStretchDuration.value : 5
+    let options = {
+        narrate: inputStretchNarrate.checked
+    }
 
     //Create routine from API stretches
     let routine = new StretchRoutine(await stretchService.getStretches(stretchAmount), stretchSets, stretchDuration)
-    currentRoutine = new PlayableStretchRoutine(routine, updateUI, () => navigator.show(DisplayType.DONE))
+    currentRoutine = new PlayableStretchRoutine(routine, updateUI, () => navigator.show(DisplayType.DONE), options)
 
     currentRoutine.start()
 }
 
 function pauseStretching(){
-    currentRoutine.isPaused = !currentRoutine.isPaused
+    currentRoutine.togglePause()
     btnPause.textContent = currentRoutine.isPaused ? "Unpause Routine" : "Pause Routine"
 }
 
 function stopStretching(){
-    currentRoutine.isCancelled = true
+    currentRoutine.cancel()
     navigator.show(DisplayType.SETUP)
 }
 
 function updateUI(routine){
-    labelStretchSetMax.textContent = routine.sets
-    labelStretchSetCurrent.textContent = routine.currentSet
-    labelStretchTimer.textContent = routine.currentTime
 
-    navigator.showStretch(routine.currentStretch)
+    labelStretchSetMax.textContent = routine.getSets()
+    labelStretchSetCurrent.textContent = routine.getCurrentSet()
+    labelStretchTimer.textContent = routine.getCurrentTime()
+
+    navigator.showStretch(routine.getStretch())
 }
 
 btnStart.addEventListener("click", startStretching)
 btnPause.addEventListener("click", pauseStretching)
 btnCancel.addEventListener("click", stopStretching)
 navigator.show(DisplayType.SETUP)
-
-// const testStretch = {
-//     name: "Test",
-//     isUnilateral: false,
-//     instructions : [
-//         {
-//             order: 1,
-//             content: "Try as hard as possible."
-//         },
-//         {
-//             order: 2,
-//             content: "Hold."
-//         },
-//         {
-//             order: 3,
-//             content: "Slowly release."
-//         }
-//     ]
-// }
-
-// navigator.showStretch(testStretch)

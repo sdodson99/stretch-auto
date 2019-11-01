@@ -56,7 +56,8 @@ input[type=text] {
 }
 
 #stretch-setup .prompt {
-  font-size: 2rem;
+  font-size: 1.5rem;
+  flex-grow: 1;
 }
 #stretch-setup input[type=text] {
   margin-left: 1.5rem;
@@ -68,8 +69,16 @@ input[type=text] {
 #stretch-setup .stretch-field {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0.5rem;
+}
+#stretch-setup .stretch-fieldset-header {
+  text-align: center;
+  font-size: 2rem;
+}
+#stretch-setup #stretch-narrate {
+  margin-left: 1.5rem;
+  width: 30px;
+  height: 30px;
 }
 #stretch-setup #stretch-legend {
   margin: 3rem 0;

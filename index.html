@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="styles/main.css"/>
     <script defer src="scripts/start-stretching.js"></script>
 
-    <title>Auto Stretch</title>
+    <title>Stretch Auto</title>
 </head>
 <body>
     <div id="page">
         <header id="site-header">
             <div id="header-logo">
-                <h1>AUTO STRETCH</h1>
+                <h1>STRETCH AUTO</h1>
             </div>
             <div id="header-nav">
                 <ul id="center-nav">
@@ -25,6 +25,7 @@
         <div id="main">
             <section id="stretch-setup" class="stretch-content">
                 <div class="stretch-fieldset">
+                    <p class="stretch-fieldset-header">Capacity</p>
                     <div class="stretch-field">
                         <p class="prompt">How many stretches would you like to perform?*</p>
                         <input id="stretch-amount" type="text" maxlength="5" size="5"/>
@@ -36,6 +37,13 @@
                      <div class="stretch-field">
                         <p class="prompt">How many seconds would you like to perform each stretch?</p>
                         <input id="stretch-duration" type="text" maxlength="5" size="5"/>
+                    </div>
+                </div>
+                <div class="stretch-fieldset">
+                    <p class="stretch-fieldset-header">Advanced</p>
+                    <div class="stretch-field">
+                        <p class="prompt">Narrate stretches?</p>
+                        <input id="stretch-narrate" type="checkbox"/>
                     </div>
                 </div>
                 <div class="stretch-fieldset">
@@ -67,7 +75,7 @@
         </div>
     </div>
     <footer>
-        <p>&copy; 2019 Auto Stretch</p>
+        <p>&copy; 2019 Stretch Auto</p>
     </footer>
 </body>
 </html>
