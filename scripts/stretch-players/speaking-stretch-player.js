@@ -1,5 +1,5 @@
-function SpeakingStretchPlayer(stretch, sets, duration, onChange){
-    this.stretchPlayer = new StretchPlayer(stretch, sets, duration, onChange)
+function SpeakingStretchPlayer(stretchPlayer){
+    this.stretchPlayer = stretchPlayer
     this.speaker = new Speaker()
 
     this.play = async function(){

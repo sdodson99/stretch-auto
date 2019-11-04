@@ -33,10 +33,12 @@ function PlayableStretchRoutine(routine, onChange, onFinish, options){
     }
 
     this.createStretchPlayer = function(stretch, sets, duration, options, onChange){
+        let player = new StretchPlayer(stretch, sets, duration, onChange)
+
         if(options && options.narrate){
-            return new SpeakingStretchPlayer(stretch, sets, duration, onChange)
-        } else {
-            return new StretchPlayer(stretch, sets, duration, onChange)
+            player = new SpeakingStretchPlayer(player)
         }
+
+        return player
     }
 }
