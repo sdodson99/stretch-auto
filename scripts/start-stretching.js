@@ -35,9 +35,9 @@ async function startStretching(){
 
     //Create routine from API stretches
     let routine = new StretchRoutine(await stretchService.getStretches(stretchAmount), stretchSets, stretchDuration)
-    currentRoutine = new PlayableStretchRoutine(routine, updateUI, () => navigator.show(DisplayType.DONE), options)
-
-    currentRoutine.start()
+    let p = (s) => console.log(s)
+    currentRoutine = new PlayableStretchRoutine(routine, p, p, p, p);
+    await currentRoutine.start()
 }
 
 function pauseStretching(){
@@ -67,3 +67,4 @@ btnStart.addEventListener("click", startStretching)
 btnPause.addEventListener("click", pauseStretching)
 btnCancel.addEventListener("click", stopStretching)
 navigator.show(DisplayType.SETUP)
+

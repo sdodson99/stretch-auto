@@ -1,44 +1,30 @@
-function PlayableStretchRoutine(routine, onChange, onFinish, options){
+function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeChange, onFinish){
     this.stretches = routine.stretches
     this.sets = routine.sets
     this.duration = routine.duration
 
-    this.onChange = onChange
+    this.onTimeChange = onTimeChange
+    this.onStretchChange = onStretchChange
+    this.onSetChange = onSetChange
     this.onFinish = onFinish
-    this.options = options
-
-    this.isCancelled = false
-    this.isPaused = false
-    this.isFinished = false
 
     this.start = async function(){
         for (let i = 0; i < this.stretches.length; i++) {
-            if(this.isCancelled) break
+            const currentStretch = this.stretches[i]
 
-            this.currentPlayer = this.createStretchPlayer(this.stretches[i], this.sets, this.duration, this.options, this.onChange)
-            await this.currentPlayer.play()
+            this.onStretchChange(currentStretch)
+            this.currentPlayer = this.createStretchPlayer(currentStretch)
+
+            await this.currentPlayer.start()
         }
 
-        this.onFinish(this)
+        this.onFinish()
     }
 
-    this.togglePause = function(){
-        this.isPaused = !this.isPaused
-        this.currentPlayer.togglePause()
-    }
+    this.createStretchPlayer = function(stretch){
+        let baseStretchPlayer = new StretchPlayer(this.duration, this.onTimeChange)
+        let unilateralStretchPlayer = new UnilateralStretchPlayer(baseStretchPlayer, stretch, this.onStretchChange)
 
-    this.cancel = function(){
-        this.isCancelled = true
-        this.currentPlayer.cancel()
-    }
-
-    this.createStretchPlayer = function(stretch, sets, duration, options, onChange){
-        let player = new StretchPlayer(stretch, sets, duration, onChange)
-
-        if(options && options.narrate){
-            player = new SpeakingStretchPlayer(player)
-        }
-
-        return player
+        return new StretchSetPlayer(unilateralStretchPlayer, 2, this.onSetChange)
     }
 }
