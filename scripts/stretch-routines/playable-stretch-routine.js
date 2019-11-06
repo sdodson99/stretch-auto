@@ -10,6 +10,8 @@ function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeCha
 
     this.start = async function(){
         for (let i = 0; i < this.stretches.length; i++) {
+            if(this.isCancelled()) return
+
             const currentStretch = this.stretches[i]
 
             this.onStretchChange(currentStretch)
@@ -21,10 +23,26 @@ function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeCha
         this.onFinish()
     }
 
+    this.setPaused = function(paused){
+        this.currentPlayer.setPaused(paused)
+    }
+
+    this.isPaused = function(){
+        return this.currentPlayer.isPaused()
+    }
+
+    this.cancel = function(){
+        this.currentPlayer.cancel()
+    }
+
+    this.isCancelled = function(){
+        return this.currentPlayer && this.currentPlayer.isCancelled()
+    }
+
     this.createStretchPlayer = function(stretch){
         let baseStretchPlayer = new StretchPlayer(this.duration, this.onTimeChange)
         let unilateralStretchPlayer = new UnilateralStretchPlayer(baseStretchPlayer, stretch, this.onStretchChange)
 
-        return new StretchSetPlayer(unilateralStretchPlayer, 2, this.onSetChange)
+        return new StretchSetPlayer(unilateralStretchPlayer, this.sets, this.onSetChange)
     }
 }

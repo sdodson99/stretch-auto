@@ -21,6 +21,22 @@ const navigator = new Navigator()
 const stretchService = new ApiStretchService(stretchApiUrl)
 let currentRoutine;
 
+async function stretchChange(stretch){
+    navigator.showStretch(stretch)
+}
+
+async function setChange(set){
+    labelStretchSetCurrent.textContent = set
+}
+
+async function timeChange(time){
+    labelStretchTimer.textContent = time
+}
+
+async function finish(){
+    navigator.show(DisplayType.DONE)
+}
+
 async function startStretching(){
 
     btnPause.textContent = "Pause Routine"
@@ -33,30 +49,23 @@ async function startStretching(){
         narrate: inputStretchNarrate.checked
     }
 
+    labelStretchSetMax.textContent = stretchSets
+
     //Create routine from API stretches
     let routine = new StretchRoutine(await stretchService.getStretches(stretchAmount), stretchSets, stretchDuration)
-    let p = (s) => console.log(s)
-    currentRoutine = new PlayableStretchRoutine(routine, p, p, p, p);
+    currentRoutine = new PlayableStretchRoutine(routine, stretchChange, setChange, timeChange, finish);
+
     await currentRoutine.start()
 }
 
 function pauseStretching(){
-    currentRoutine.togglePause()
-    btnPause.textContent = currentRoutine.isPaused ? "Unpause Routine" : "Pause Routine"
+    currentRoutine.setPaused(!currentRoutine.isPaused())
+    btnPause.textContent = currentRoutine.isPaused() ? "Unpause Routine" : "Pause Routine"
 }
 
 function stopStretching(){
     currentRoutine.cancel()
     navigator.show(DisplayType.SETUP)
-}
-
-function updateUI(routine){
-
-    labelStretchSetMax.textContent = routine.getSets()
-    labelStretchSetCurrent.textContent = routine.getCurrentSet()
-    labelStretchTimer.textContent = routine.getCurrentTime()
-
-    navigator.showStretch(routine.getStretch())
 }
 
 if(!Modernizr.speechsynthesis){

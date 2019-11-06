@@ -19,6 +19,6 @@ function StretchPlayer(duration, onTimeChange){
     }
 
     this.isCancelled = function(){
-        return this.timer.isCancelled
+        return this.timer.isCancelled()
     }
 }

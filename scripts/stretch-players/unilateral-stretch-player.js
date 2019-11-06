@@ -9,6 +9,8 @@ function UnilateralStretchPlayer(stretchPlayer, stretch, onStretchChange){
         this.onStretchChange(this.stretch)
         await this.stretchPlayer.start()
 
+        if(this.isCancelled()) return
+
         this.stretch.name = "Right " + this.originalStretchName
         this.onStretchChange(this.stretch)
         await this.stretchPlayer.start()
@@ -29,6 +31,6 @@ function UnilateralStretchPlayer(stretchPlayer, stretch, onStretchChange){
     }
 
     this.isCancelled = function(){
-        return this.stretchPlayer.isCancelled
+        return this.stretchPlayer.isCancelled()
     }
 }
