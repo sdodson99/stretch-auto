@@ -6,6 +6,10 @@ function StretchPlayer(stretch, sets, duration, onChange){
     this.currentSet = 1
     this.currentTime = duration
     this.onChange = onChange
+    this.timer = new Timer((t) => {
+        this.currentTime = t
+        this.onChange(this)
+    })
 
     this.cancelled = false
     this.isPaused = false
@@ -26,17 +30,18 @@ function StretchPlayer(stretch, sets, duration, onChange){
     }
 
     this.playBilateral = async function(){
-        await this.waitForDuration()
+        await this.timer.waitForDuration(this.duration)
     }
 
     this.playUnilateral = async function(){
         await this.playOneSide(true)
+        if(this.isCancelled) return
         await this.playOneSide(false)
     }
 
     this.playOneSide = async function(isLeft){
         this.setNameOneSide(isLeft)
-        await this.waitForDuration()
+        await this.timer.waitForDuration(this.duration)
         this.resetOriginalName()
     }
 
@@ -50,27 +55,14 @@ function StretchPlayer(stretch, sets, duration, onChange){
         this.stretch.name = this.originalStretchName || this.stretch.name
     }
 
-    this.waitForDuration = async function(){
-        for (this.currentTime = this.duration; this.currentTime >= 1; this.currentTime--) {
-            if(this.isCancelled()) break
-
-            this.onChange(this)
-            await this.wait(1)
-
-            while(this.isPaused){
-                await this.wait(1)
-            }
-        }
-
-        this.currentTime = this.duration
-    }
-
     this.togglePause = function(){
         this.isPaused = !this.isPaused
+        this.timer.setPaused(this.isPaused)
     }
 
     this.cancel = function(){
         this.cancelled = true
+        this.timer.cancel()
     }
 
     this.isCancelled = function(){
@@ -95,13 +87,5 @@ function StretchPlayer(stretch, sets, duration, onChange){
 
     this.getCurrentTime = function(){
         return this.currentTime
-    }
-
-    this.wait = function(timeInSeconds){
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve()
-            }, timeInSeconds * 1000)
-        })
     }
 }
