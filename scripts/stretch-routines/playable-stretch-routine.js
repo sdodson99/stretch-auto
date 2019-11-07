@@ -1,12 +1,14 @@
-function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeChange, onFinish){
+function PlayableStretchRoutine(routine, handler){
     this.stretches = routine.stretches
     this.sets = routine.sets
     this.duration = routine.duration
 
-    this.onTimeChange = onTimeChange
-    this.onStretchChange = onStretchChange
-    this.onSetChange = onSetChange
-    this.onFinish = onFinish
+    this.onTimeChange = (time) => handler.onTimeChange(time)
+    this.onStretchChange = (stretch) => handler.onStretchChange(stretch)
+    this.onSetChange = (set) => handler.onSetChange(set)
+    this.onFinish = () => handler.onFinish()
+    this.onCancel = () => handler.onCancel()
+    this.onSetPaused = (paused) => handler.onSetPaused(paused)
 
     this.start = async function(){
         for (let i = 0; i < this.stretches.length; i++) {
@@ -14,8 +16,8 @@ function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeCha
 
             const currentStretch = this.stretches[i]
 
-            this.onStretchChange(currentStretch)
             this.currentPlayer = this.createStretchPlayer(currentStretch)
+            await this.onStretchChange(currentStretch)
 
             await this.currentPlayer.start()
         }
@@ -25,6 +27,7 @@ function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeCha
 
     this.setPaused = function(paused){
         this.currentPlayer.setPaused(paused)
+        this.onSetPaused(paused)
     }
 
     this.isPaused = function(){
@@ -33,6 +36,7 @@ function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeCha
 
     this.cancel = function(){
         this.currentPlayer.cancel()
+        this.onCancel()
     }
 
     this.isCancelled = function(){
@@ -40,9 +44,12 @@ function PlayableStretchRoutine(routine, onStretchChange, onSetChange, onTimeCha
     }
 
     this.createStretchPlayer = function(stretch){
-        let baseStretchPlayer = new StretchPlayer(this.duration, this.onTimeChange)
-        let unilateralStretchPlayer = new UnilateralStretchPlayer(baseStretchPlayer, stretch, this.onStretchChange)
+        let stretchPlayer = new StretchPlayer(this.duration, this.onTimeChange)
+        
+        if(stretch.isUnilateral){
+            stretchPlayer = new UnilateralStretchPlayer(stretchPlayer, stretch, this.onStretchChange)
+        }
 
-        return new StretchSetPlayer(unilateralStretchPlayer, this.sets, this.onSetChange)
+        return new StretchSetPlayer(stretchPlayer, this.sets, this.onSetChange)
     }
 }

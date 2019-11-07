@@ -9,8 +9,8 @@ function Speaker(){
         })
     }
 
-    this.togglePause = function(){
-        this.synth.paused ? this.synth.resume() : this.synth.pause()
+    this.setPaused = function(paused){
+        paused ? this.synth.pause() : this.synth.resume()
     }
 
     this.cancel = function(){

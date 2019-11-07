@@ -18,24 +18,9 @@ const listStretchInstructions = document.querySelector("#stretch-instructions")
 const stretchApiUrl = "http://52.170.19.168/stretch"
 
 const navigator = new Navigator()
+const speaker = new Speaker()
 const stretchService = new ApiStretchService(stretchApiUrl)
 let currentRoutine;
-
-async function stretchChange(stretch){
-    navigator.showStretch(stretch)
-}
-
-async function setChange(set){
-    labelStretchSetCurrent.textContent = set
-}
-
-async function timeChange(time){
-    labelStretchTimer.textContent = time
-}
-
-async function finish(){
-    navigator.show(DisplayType.DONE)
-}
 
 async function startStretching(){
 
@@ -46,16 +31,31 @@ async function startStretching(){
     let stretchSets = inputStretchSets.value ? inputStretchSets.value : 1
     let stretchDuration = inputStretchDuration.value ? inputStretchDuration.value : 5
     let options = {
-        narrate: inputStretchNarrate.checked
+        narrate: inputStretchNarrate.checked,
+        unilateralMode: true
     }
 
     labelStretchSetMax.textContent = stretchSets
 
     //Create routine from API stretches
+    let handler = createStretchHandler(options, stretchDuration)
+    
     let routine = new StretchRoutine(await stretchService.getStretches(stretchAmount), stretchSets, stretchDuration)
-    currentRoutine = new PlayableStretchRoutine(routine, stretchChange, setChange, timeChange, finish);
+    currentRoutine = new PlayableStretchRoutine(routine, handler);
 
     await currentRoutine.start()
+}
+
+function createStretchHandler(options, duration){
+    let compositeHandler = new CompositeStretchHandler()
+
+    compositeHandler.addHandler(new UIStretchHandler(navigator, labelStretchSetCurrent, labelStretchTimer, duration))
+
+    if(options.narrate){
+        compositeHandler.addHandler(new SpeechStretchHandler(false))
+    }
+
+    return new OptionsStretchHandler(compositeHandler, options)
 }
 
 function pauseStretching(){

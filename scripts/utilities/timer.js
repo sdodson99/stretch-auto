@@ -12,7 +12,7 @@ function Timer(onTimeChange){
         for (let time = duration; time >= 1; time--) {
             if(this.isCancelled()) return
 
-            this.onTimeChange(time)
+            await this.onTimeChange(time)
 
             await this.wait(1)
 
