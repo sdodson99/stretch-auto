@@ -1,6 +1,4 @@
 const btnStart = document.querySelector("#stretch-start")
-const btnPause = document.querySelector("#stretch-pause")
-const btnCancel = document.querySelector("#stretch-cancel")
 
 const inputStretchAmount = document.querySelector("#stretch-amount")
 const inputStretchSets = document.querySelector("#stretch-sets")
@@ -17,8 +15,6 @@ let currentRoutine;
 
 async function startStretching(){
 
-    btnPause.textContent = "Pause Routine"
-
     //Get inputs from user
     let stretchAmount = inputStretchAmount.value ? inputStretchAmount.value : 1
     let stretchSets = inputStretchSets.value ? inputStretchSets.value : 1
@@ -27,18 +23,13 @@ async function startStretching(){
         narrate: inputStretchNarrate.checked,
         unilateralMode: true
     }
-
-    stretchRoutineView.setMaxSet(stretchSets)
-    stretchRoutineView.setTime(stretchDuration)
-
-    //Create routine from API stretches
-    let handler = createStretchHandler(options, stretchDuration)
     
     let routine = new StretchRoutine(await stretchService.getStretches(stretchAmount), stretchSets, stretchDuration)
-    currentRoutine = new PlayableStretchRoutine(routine, handler);
+    currentRoutine = new PlayableStretchRoutine(routine);
 
     navigator.show(DisplayType.STRETCH)
-    await currentRoutine.start()
+    let stretchRoutineController = new PlayableStretchRoutineController(currentRoutine, stretchRoutineView, navigator)
+    await stretchRoutineController.startRoutine()
 }
 
 function createStretchHandler(options){
@@ -53,22 +44,10 @@ function createStretchHandler(options){
     return new OptionsStretchHandler(compositeHandler, options)
 }
 
-function pauseStretching(){
-    currentRoutine.setPaused(!currentRoutine.isPaused())
-    btnPause.textContent = currentRoutine.isPaused() ? "Unpause Routine" : "Pause Routine"
-}
-
-function stopStretching(){
-    currentRoutine.cancel()
-    navigator.show(DisplayType.SETUP)
-}
-
 if(!Modernizr.speechsynthesis){
     inputNarrationFieldset.style.display = "none"
 }
 
 btnStart.addEventListener("click", startStretching)
-btnPause.addEventListener("click", pauseStretching)
-btnCancel.addEventListener("click", stopStretching)
 navigator.show(DisplayType.SETUP)
 

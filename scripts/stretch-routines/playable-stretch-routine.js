@@ -1,14 +1,14 @@
-function PlayableStretchRoutine(routine, handler){
+function PlayableStretchRoutine(routine){
     this.stretches = routine.stretches
     this.sets = routine.sets
     this.duration = routine.duration
 
-    this.onTimeChange = (time) => handler.onTimeChange(time)
-    this.onStretchChange = (stretch) => handler.onStretchChange(stretch)
-    this.onSetChange = (set) => handler.onSetChange(set)
-    this.onFinish = () => handler.onFinish()
-    this.onCancel = () => handler.onCancel()
-    this.onSetPaused = (paused) => handler.onSetPaused(paused)
+    this.onTimeChange = function(){}
+    this.onStretchChange = function(){}
+    this.onSetChange = function(){}
+    this.onFinish = function(){}
+    this.onCancel = function(){}
+    this.onSetPaused = function(){}
 
     this.start = async function(){
         for (let i = 0; i < this.stretches.length; i++) {
