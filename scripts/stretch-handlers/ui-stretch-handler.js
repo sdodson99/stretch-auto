@@ -1,20 +1,22 @@
-function UIStretchHandler(navigator, setLabel, timeLabel, duration){
+function UIStretchHandler(navigator, stretchRoutineView){
     this.navigator = navigator
-    this.setLabel = setLabel
-    this.timeLabel = timeLabel
-    this.duration = duration
+    this.stretchRoutineView = stretchRoutineView
 
     this.onStretchChange = async function(stretch){
-        this.onTimeChange(this.duration)
-        this.navigator.showStretch(stretch)
+        this.stretchRoutineView.setName(stretch.name)
+        this.stretchRoutineView.resetInstructions()
+        
+        stretch.instructions.forEach(i => {
+            this.stretchRoutineView.addInstruction(i)
+        })
     }
 
     this.onSetChange = async function(set){
-        this.setLabel.textContent = set
+        this.stretchRoutineView.setCurrentSet(set)
     }
 
     this.onTimeChange = async function(time){
-        this.timeLabel.textContent = time
+        this.stretchRoutineView.setTime(time)
     }
 
     this.onFinish = async function(){

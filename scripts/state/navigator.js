@@ -1,4 +1,3 @@
-
 const DisplayType = {
     SETUP: "Setup",
     STRETCH: "Stretch",
@@ -30,21 +29,5 @@ function Navigator(){
             default:
                 break;
         }
-    }
-
-    //Display a stretch
-    this.showStretch = function(stretch){
-        labelStretchName.textContent = stretch.name
-        listStretchInstructions.innerHTML = ""
-
-        stretch.instructions.forEach(instruction => {
-
-            let newListItem = document.createElement("li")
-            newListItem.innerText = instruction.content
-
-            listStretchInstructions.appendChild(newListItem)
-        })
-
-        this.show(DisplayType.STRETCH)
     }
 }
