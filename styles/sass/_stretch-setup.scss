@@ -38,6 +38,10 @@
     }
 
     @media screen and (max-width: 600px){
+        .prompt{
+            text-align: center;
+        }
+
         .stretch-field{
             flex-direction: column;
         }

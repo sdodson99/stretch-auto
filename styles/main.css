@@ -84,6 +84,9 @@ input[type=text] {
   font-size: 1rem;
 }
 @media screen and (max-width: 600px) {
+  #stretch-setup .prompt {
+    text-align: center;
+  }
   #stretch-setup .stretch-field {
     flex-direction: column;
   }
