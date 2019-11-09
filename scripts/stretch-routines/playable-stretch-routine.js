@@ -22,7 +22,7 @@ function PlayableStretchRoutine(routine){
             await this.currentPlayer.start()
         }
 
-        this.onFinish()
+        await this.onFinish()
     }
 
     this.setPaused = function(paused){

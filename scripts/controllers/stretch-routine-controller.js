@@ -2,6 +2,7 @@ function StretchRoutineController(routine, view, navigator, handlerFactory, opti
     this.routine = routine
     this.view = view
     this.navigator = navigator
+    this.options = options
     this.stretchHandler = handlerFactory.createStretchHandler(options)
     
     this.startRoutine = async function(){
@@ -19,6 +20,7 @@ function StretchRoutineController(routine, view, navigator, handlerFactory, opti
     }
 
     this.onStretchChange = async function(stretch){   
+        
         this.view.setTime(this.routine.duration)
         this.view.setName(stretch.name)
         this.view.resetInstructions()
@@ -27,33 +29,34 @@ function StretchRoutineController(routine, view, navigator, handlerFactory, opti
             this.view.addInstruction(i)
         })
 
-        await this.stretchHandler.onStretchChange(stretch)
+        await this.stretchHandler.onStretchChange(this, stretch)
     }
 
     this.onSetChange = async function(set){
         this.view.setCurrentSet(set)
-        await this.stretchHandler.onSetChange(set)
+        this.currentSet = set
+        await this.stretchHandler.onSetChange(this, set)
     }
 
     this.onTimeChange = async function(time){
         this.view.setTime(time)
-        await this.stretchHandler.onTimeChange(time)
+        await this.stretchHandler.onTimeChange(this, time)
     }
 
     this.onFinish = async function(){
         this.navigator.show(DisplayType.DONE)
-        this.stretchHandler.onFinish()
+        this.stretchHandler.onFinish(this)
     }
     
     this.onPause = function(){
         this.routine.setPaused(!this.routine.isPaused())
         this.view.setPaused(this.routine.isPaused())
-        this.stretchHandler.onPause()
+        this.stretchHandler.onSetPaused(this, this.routine.isPaused())
     }
 
     this.onCancel = function(){
         this.routine.cancel()
         this.navigator.show(DisplayType.SETUP)
-        this.stretchHandler.onCancel()
+        this.stretchHandler.onCancel(this)
     }
 }

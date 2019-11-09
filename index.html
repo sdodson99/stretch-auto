@@ -10,21 +10,23 @@
     <script defer src="scripts/utilities/modernizr.js"></script>
     <script defer src="scripts/utilities/speaker.js"></script>
     <script defer src="scripts/utilities/timer.js"></script>
-    <script defer src="scripts/views/stretch-routine-view.js"></script>
-    <script defer src="scripts/views/navigator.js"></script>
-    <script defer src="scripts/stretch-handlers/stretch-handler-factory.js"></script>
-    <script defer src="scripts/controllers/stretch-routine-controller.js"></script>
     <script defer src="scripts/stretch-services/mock-stretch-service.js"></script>
     <script defer src="scripts/stretch-services/api-stretch-service.js"></script>
-    <script defer src="scripts/start-stretching.js"></script>
     <script defer src="scripts/stretch-players/stretch-player.js"></script>
     <script defer src="scripts/stretch-players/unilateral-stretch-player.js"></script>
     <script defer src="scripts/stretch-players/stretch-set-player.js"></script>
     <script defer src="scripts/stretch-routines/stretch-routine.js"></script>
     <script defer src="scripts/stretch-routines/playable-stretch-routine.js"></script>
+    <script defer src="scripts/views/stretch-routine-view.js"></script>
+    <script defer src="scripts/views/stretch-setup-view.js"></script>
+    <script defer src="scripts/controllers/stretch-routine-controller.js"></script>
+    <script defer src="scripts/controllers/stretch-setup-controller.js"></script>
     <script defer src="scripts/stretch-handlers/speech-stretch-handler.js"></script>
     <script defer src="scripts/stretch-handlers/composite-stretch-handler.js"></script>
     <script defer src="scripts/stretch-handlers/options-stretch-handler.js"></script>
+    <script defer src="scripts/stretch-handlers/stretch-handler-factory.js"></script>
+    <script defer src="scripts/navigator.js"></script>
+    <script defer src="scripts/main.js"></script>
 
     <title>Stretch Auto</title>
 </head>
@@ -60,8 +62,12 @@
                 <div id="narration-fieldset" class="stretch-fieldset">
                     <p class="stretch-fieldset-header">Narration</p>
                     <div class="stretch-field">
-                        <p class="prompt">Narrate stretches?</p>
+                        <p class="prompt">Narrate routine?</p>
                         <input id="stretch-narrate" type="checkbox"/>
+                    </div>
+                    <div id="narrate-instructions" class="stretch-field">
+                        <p class="prompt">Narrate instructions?</p>
+                        <input id="stretch-narrate-instructions" type="checkbox"/>
                     </div>
                 </div>
                 <div class="stretch-fieldset">
@@ -75,7 +81,7 @@
             <section id="stretch" class="stretch-content">
                 <div id="stretch-volume">
                     <div id="stretch-set">
-                        Set: <span id="stretch-set-current">0</span>/<span id="stretch-set-max">0</span>
+                        Set: <span id="stretch-set-current">1</span>/<span id="stretch-set-max">0</span>
                     </div>
                     <div id="stretch-timer">
                         Time Remaining: <span id="stretch-timer-value"><span>0</span> second(s)</span> 

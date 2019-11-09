@@ -75,7 +75,7 @@ input[type=text] {
   text-align: center;
   font-size: 2rem;
 }
-#stretch-setup #stretch-narrate {
+#stretch-setup input[type=checkbox] {
   width: 30px;
   height: 30px;
 }

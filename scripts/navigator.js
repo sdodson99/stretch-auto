@@ -10,6 +10,11 @@ function Navigator(){
     this.displayStretch = document.querySelector("#stretch")
     this.displays = document.querySelectorAll(".stretch-content")
 
+    this.handlerFactory = new StretchHandlerFactory()
+    this.routineView = new StretchRoutineView()
+    this.setupView = new StretchSetupView()
+    this.stretchService = new ApiStretchService(stretchApiUrl)
+
     //Hide all displays except for specified display
     this.show = function(displayType){
 
@@ -30,4 +35,15 @@ function Navigator(){
                 break;
         }
     }
+
+    this.showSetup = function(){
+        this.show(DisplayType.SETUP)
+        this.currentController = new StretchSetupController(this.setupView, this, this.stretchService)
+    }
+
+    this.showRoutine = async function(routine, options){
+        this.show(DisplayType.STRETCH)
+        this.currentController = new StretchRoutineController(routine, this.routineView, this, this.handlerFactory, options)
+        await this.currentController.startRoutine()
+    }   
 }

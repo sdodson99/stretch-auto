@@ -3,6 +3,7 @@ function StretchPlayer(duration, onTimeChange){
     this.timer = new Timer(onTimeChange)
 
     this.start = async function(){
+        if(this.isCancelled()) return
         await this.timer.waitForDuration(this.duration)
     }
 

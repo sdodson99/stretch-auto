@@ -1,12 +1,16 @@
 function StretchHandlerFactory(){
 
     this.createStretchHandler = function(options){
-        let compositeHandler = new CompositeStretchHandler()
+        let handler = new CompositeStretchHandler()
 
         if(options.narrate){
-            compositeHandler.addHandler(new SpeechStretchHandler(false))
+            handler.addHandler(new SpeechStretchHandler(false, options.narrateInstructions))
+        }
+
+        if(options.unilateralMode){
+            handler = new OptionsStretchHandler(handler, options)
         }
     
-        return new OptionsStretchHandler(compositeHandler, options)
+        return handler
     }
 }

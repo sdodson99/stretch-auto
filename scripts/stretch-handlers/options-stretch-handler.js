@@ -2,30 +2,30 @@ function OptionsStretchHandler(stretchHandler, options){
     this.stretchHandler = stretchHandler
     this.options = options
 
-    this.onStretchChange = async function(stretch){
+    this.onStretchChange = async function(sender, stretch){
         if(this.options.unilateralMode && stretch.isUnilateral && !(stretch.name.startsWith("Left") || stretch.name.startsWith("Right")))
             return
         
-        await stretchHandler.onStretchChange(stretch)
+        await stretchHandler.onStretchChange(sender, stretch)
     }
 
-    this.onSetChange = async function(set){   
-        await stretchHandler.onSetChange(set)
+    this.onSetChange = async function(sender, set){   
+        await stretchHandler.onSetChange(sender, set)
     }
 
-    this.onTimeChange = async function(time){
-        await stretchHandler.onTimeChange(time)
+    this.onTimeChange = async function(sender, time){
+        await stretchHandler.onTimeChange(sender, time)
     }
 
-    this.onFinish = async function(){
-        await stretchHandler.onFinish()
+    this.onFinish = async function(sender){
+        await stretchHandler.onFinish(sender)
     }
 
-    this.onCancel = async function(){
-        await stretchHandler.onCancel()
+    this.onCancel = async function(sender){
+        await stretchHandler.onCancel(sender)
     }
 
-    this.onSetPaused = async function(paused){
-        await stretchHandler.onSetPaused(paused)
+    this.onSetPaused = async function(sender, paused){
+        await stretchHandler.onSetPaused(sender, paused)
     }
 }

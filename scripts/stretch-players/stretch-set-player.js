@@ -6,8 +6,9 @@ function StretchSetPlayer(stretchPlayer, sets, onSetChange){
     this.start = async function(){
         for (let currentSet = 1; currentSet <= sets; currentSet++) {
             if(this.isCancelled()) return
-
             await this.onSetChange(currentSet)
+
+            if(this.isCancelled()) return
             await this.stretchPlayer.start()
         }
     }
