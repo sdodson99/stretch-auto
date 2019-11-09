@@ -1,7 +1,8 @@
-function PlayableStretchRoutine(routine){
+function PlayableStretchRoutine(routine, playerFactory){
     this.stretches = routine.stretches
     this.sets = routine.sets
     this.duration = routine.duration
+    this.playerFactory = playerFactory
 
     this.onTimeChange = function(){}
     this.onStretchChange = function(){}
@@ -44,12 +45,6 @@ function PlayableStretchRoutine(routine){
     }
 
     this.createStretchPlayer = function(stretch){
-        let stretchPlayer = new StretchPlayer(this.duration, this.onTimeChange)
-        
-        if(stretch.isUnilateral){
-            stretchPlayer = new UnilateralStretchPlayer(stretchPlayer, stretch, this.onStretchChange)
-        }
-
-        return new StretchSetPlayer(stretchPlayer, this.sets, this.onSetChange)
+        return this.playerFactory.createStretchPlayer(stretch, this.sets, this.duration, this.onStretchChange, this.onSetChange, this.onTimeChange)
     }
 }

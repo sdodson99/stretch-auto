@@ -29,6 +29,7 @@ function StretchRoutineController(routine, view, navigator, handlerFactory, opti
             this.view.addInstruction(i)
         })
 
+        this.currentStretch = stretch
         await this.stretchHandler.onStretchChange(this, stretch)
     }
 

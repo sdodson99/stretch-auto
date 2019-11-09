@@ -41,9 +41,10 @@ function Navigator(){
         this.currentController = new StretchSetupController(this.setupView, this, this.stretchService)
     }
 
-    this.showRoutine = async function(routine, options){
+    this.playRoutine = async function(routine, options){
         this.show(DisplayType.STRETCH)
-        this.currentController = new StretchRoutineController(routine, this.routineView, this, this.handlerFactory, options)
+        playableRoutine = new PlayableStretchRoutine(routine, new StretchPlayerFactory(options.unilateralMode))
+        this.currentController = new StretchRoutineController(playableRoutine, this.routineView, this, this.handlerFactory, options)
         await this.currentController.startRoutine()
     }   
 }

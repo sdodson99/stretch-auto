@@ -1,9 +1,8 @@
-function OptionsStretchHandler(stretchHandler, options){
+function UnilateralStretchHandler(stretchHandler){
     this.stretchHandler = stretchHandler
-    this.options = options
 
     this.onStretchChange = async function(sender, stretch){
-        if(this.options.unilateralMode && stretch.isUnilateral && !(stretch.name.startsWith("Left") || stretch.name.startsWith("Right")))
+        if(stretch.isUnilateral && !(stretch.name.startsWith("Left") || stretch.name.startsWith("Right")))
             return
         
         await stretchHandler.onStretchChange(sender, stretch)

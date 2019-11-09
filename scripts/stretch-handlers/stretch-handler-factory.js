@@ -8,7 +8,7 @@ function StretchHandlerFactory(){
         }
 
         if(options.unilateralMode){
-            handler = new OptionsStretchHandler(handler, options)
+            handler = new UnilateralStretchHandler(handler)
         }
     
         return handler

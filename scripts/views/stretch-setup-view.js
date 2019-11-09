@@ -20,7 +20,7 @@ function StretchSetupView(){
     }
 
     this.getMaxSets = function(){
-        return this.stretchMaxSetsInput.value || 1
+        return this.stretchMaxSetsInput.value || 2
     }
 
     this.getDuration = function(){
