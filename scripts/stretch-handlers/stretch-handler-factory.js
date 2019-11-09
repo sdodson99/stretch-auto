@@ -4,7 +4,7 @@ function StretchHandlerFactory(){
         let handler = new CompositeStretchHandler()
 
         if(options.narrate){
-            handler.addHandler(new SpeechStretchHandler(false, options.narrateInstructions))
+            handler.addHandler(new SpeechStretchHandler(false, options.narrateInstructions, options.unilateralMode))
         }
 
         if(options.unilateralMode){

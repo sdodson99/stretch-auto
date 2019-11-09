@@ -1,23 +1,19 @@
-function SpeechStretchHandler(speakTime, speakInstructions){
+function SpeechStretchHandler(speakTime, speakInstructions, unilateralMode){
     this.speaker = new Speaker()
     this.speakTime = speakTime
     this.speakInstructions = speakInstructions
+    this.unilateralMode = unilateralMode
 
     this.onStretchChange = async function(sender, stretch){
-        if(stretch.isUnilateral){
-            await this.speakStretch(stretch, sender.currentSet)
-        }
+        await this.speakStretch(stretch, sender.currentSet)
     }
 
     this.onSetChange = async function(sender, set){
-        if(!sender.currentStretch.isUnilateral){
-            await this.speakStretch(sender.currentStretch, set)
-        }
     }
 
     this.speakStretch = async function(stretch, set){
         if(set > 1 || stretch.name.startsWith("Right")){
-            stretch.isUnilateral ? await this.speaker.speakAsync("switch sides") : await this.speaker.speakAsync("repeat")
+            stretch.isUnilateral && this.unilateralMode ? await this.speaker.speakAsync("switch sides") : await this.speaker.speakAsync("repeat")
         } else {
             await this.speaker.speakAsync(stretch.name)     
             
@@ -25,8 +21,8 @@ function SpeechStretchHandler(speakTime, speakInstructions){
                 for (let i = 0; i < stretch.instructions.length; i++) {
                     if(this.cancelled) return
                     const instruction = stretch.instructions[i]
-
                     await this.speaker.speakAsync(instruction.order)    
+                    
                     if(this.cancelled) return
                     await this.speaker.speakAsync(instruction.content)        
                 }

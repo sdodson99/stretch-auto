@@ -12,7 +12,7 @@ function StretchSetupController(view, navigator, stretchService){
         let options = {
             narrate: this.view.isNarrate(),
             narrateInstructions: this.view.isNarrateInstructions(),
-            unilateralMode: false
+            unilateralMode: true
         }
         
         let routine = new StretchRoutine(await this.stretchService.getStretches(amount), maxSets, duration)
