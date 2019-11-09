@@ -6,7 +6,6 @@ function StretchSetupView(){
     this.narrateCheckbox = document.querySelector("#stretch-narrate")
     this.instructionsNarrateCheckbox = document.querySelector("#stretch-narrate-instructions")
     this.narrateFieldset = document.querySelector("#narration-fieldset")
-    this.instructionsNarrateFieldset = document.querySelector("#narrate-instructions")
 
     if(!Modernizr.speechsynthesis){
         this.narrateFieldset.style.display = "none"
@@ -35,4 +34,18 @@ function StretchSetupView(){
     this.isNarrateInstructions = function(){
         return this.instructionsNarrateCheckbox.checked
     }
+
+    this.isNarrateChanged = function(){
+        if(this.isNarrate()){
+            this.instructionsNarrateCheckbox.disabled = false
+        } else {
+            this.instructionsNarrateCheckbox.disabled = true
+        }
+    }
+
+    this.narrateCheckbox.addEventListener("click", (event) => {
+        this.isNarrateChanged()
+    })
+
+    this.isNarrateChanged()
 }
