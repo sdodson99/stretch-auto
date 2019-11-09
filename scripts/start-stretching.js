@@ -10,6 +10,7 @@ const stretchApiUrl = "http://52.170.19.168/stretch"
 
 const navigator = new Navigator()
 const stretchRoutineView = new StretchRoutineView()
+const handlerFactory = new StretchHandlerFactory()
 const stretchService = new ApiStretchService(stretchApiUrl)
 let currentRoutine;
 
@@ -28,20 +29,8 @@ async function startStretching(){
     currentRoutine = new PlayableStretchRoutine(routine);
 
     navigator.show(DisplayType.STRETCH)
-    let stretchRoutineController = new PlayableStretchRoutineController(currentRoutine, stretchRoutineView, navigator)
+    let stretchRoutineController = new StretchRoutineController(currentRoutine, stretchRoutineView, navigator, handlerFactory, options)
     await stretchRoutineController.startRoutine()
-}
-
-function createStretchHandler(options){
-    let compositeHandler = new CompositeStretchHandler()
-
-    compositeHandler.addHandler(new UIStretchHandler(navigator, stretchRoutineView))
-
-    if(options.narrate){
-        compositeHandler.addHandler(new SpeechStretchHandler(false))
-    }
-
-    return new OptionsStretchHandler(compositeHandler, options)
 }
 
 if(!Modernizr.speechsynthesis){
