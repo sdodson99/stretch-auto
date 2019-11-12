@@ -13,6 +13,7 @@ services:
   mongo:
     container_name: stretch-db
     image: mongo
+    command: [--auth]
     ports:
       - '27017:27017'
     volumes:
