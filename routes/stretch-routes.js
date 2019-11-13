@@ -1,26 +1,38 @@
 const express = require('express')
-const MongoStretchService = require('../services/mongo-stretch-service')
 
-const router = express.Router()
+function createStretchRouter(stretchService, authenticationMiddleware){
+    const router = express.Router()
 
-const StretchRouter = function(connectionString){
-    this.stretchService = new MongoStretchService(connectionString)
-
-    router.get("/", (req, res) => {
-        if(req.query['maxAmount']){
-            this.stretchService.getRandomAmount(req.query['maxAmount']).then((data) => {
-                res.json(data)
-            })
+    router.get("/", authenticationMiddleware, (req, res) => {
+        if(req.user){
+            if(req.query['maxAmount']){
+                stretchService.getRandomAmount(req.query['maxAmount']).then((data) => {
+                    res.json(data)
+                })
+            } else {
+                stretchService.getAll().then((data) => {
+                    res.json(data)
+                })  
+            }
         } else {
-            this.stretchService.getAll().then((data) => {
-                res.json(data)
-            })        
+            res.sendStatus(403)
         }
     })
 
-    this.getRouter = function(){
-        return router
-    }
+    router.post("/", authenticationMiddleware, (req, res) => {
+        if(req.user && req.user.role == "admin"){
+            const stretch = req.body
+            
+            stretchService.create(stretch).then((newStretchId) => {
+                stretch._id = newStretchId
+                res.json(stretch)
+            })
+        } else {
+            res.sendStatus(403)
+        }
+    })
+
+    return router
 }
 
-module.exports = StretchRouter
+module.exports = createStretchRouter

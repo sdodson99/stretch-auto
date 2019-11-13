@@ -47,11 +47,7 @@ class MongoStretchService{
     async create(stretch){
         let connection = await mongoClient.connect(this.connectionString)
 
-        let newStretchId
-
-        await connection.db("stretch").collection("stretches").insertOne(stretch, (err, res) => {
-            newStretchId = res.insertedId
-        })
+        let newStretchId = (await connection.db("stretch").collection("stretches").insertOne(stretch)).insertedId
 
         connection.close()
 

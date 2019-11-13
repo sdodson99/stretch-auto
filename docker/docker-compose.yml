@@ -10,6 +10,10 @@ services:
       - mongo
     environment:
       - STRETCH_CONNECTION_STRING=mongodb://admin:PASSWORD@stretch-db:27017/
+      - ADMIN_EMAIL=EMAIL
+      - ADMIN_USERNAME=USERNAME
+      - ADMIN_PASSWORD=PASSWORD
+      - SALT_ROUNDS=ROUNDS
   mongo:
     container_name: stretch-db
     image: mongo
