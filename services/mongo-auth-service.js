@@ -9,13 +9,16 @@ class MongoAuthService{
         this.connectionString = connectionString
     }
 
+    //Login a user by checking credentials.
+    //Return the user if valid credentials.
+    //Return undefinited if invalid credentials.
     async login(email, password){
         let connection = await mongoClient.connect(this.connectionString)
         
         //Find the user in the database.
         let user = await connection.db("stretch").collection("users").findOne({email: email})
 
-        //If the hashed passwords do not match, do not return the user.
+        //If the hashed passwords do not match, return undefined.
         if(user && !(await bcrypt.compare(password, user.password))){
             user = undefined
         }
@@ -25,16 +28,16 @@ class MongoAuthService{
         return user
     }
 
+    //Register a user.
+    //Return true/false for success.
     async register(email, username, password){
+        let success = false        
+
         let connection = await mongoClient.connect(this.connectionString)
         let existingUser = await connection.db("stretch").collection("users").findOne({email: email})
 
-        let success
-
-        //If the user already exists, result is unsuccessful.
-        if(existingUser){
-            success = false
-        } else {
+        //If the user does not already exist, register them.
+        if(!existingUser){
 
             //Hash the password.
             let hashedPassword = await bcrypt.hash(password, saltRounds)
@@ -45,9 +48,12 @@ class MongoAuthService{
             }
 
             //Create the new user.
-            await connection.db("stretch").collection("users").insertOne(newUser)
+            let insertResult = await connection.db("stretch").collection("users").insertOne(newUser)
 
-            success = true
+            //Check if the user was created.
+            if(insertResult.insertedCount == 1){
+                success = true
+            }
         }
 
         connection.close()
@@ -55,6 +61,9 @@ class MongoAuthService{
         return success;
     }
 
+    //Get a user from the database.
+    //Returns the user if it exists.
+    //Returns undefinied if it does not exist.
     async getUser(email){
         let connection = await mongoClient.connect(this.connectionString)
         let user = await connection.db("stretch").collection("users").findOne({email: email})

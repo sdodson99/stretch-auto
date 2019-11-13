@@ -4,10 +4,11 @@ const bcrypt = require('bcrypt')
 const mongoClient = mongo.MongoClient
 const saltRounds = process.env.SALT_ROUNDS || 10
 
+//Seeds an admin user in the database if it does not exist.
 async function seedAdminUser(connectionString){
     let connection = await mongoClient.connect(connectionString)
     
-    //Crate admin user from environment variables.
+    //Create admin user from environment variables.
     let adminUser = {
         email: process.env.ADMIN_EMAIL || "admin@stretchauto.com",
         username: process.env.ADMIN_USERNAME || "admin",

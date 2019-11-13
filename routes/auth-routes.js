@@ -4,7 +4,9 @@ const jwt = require('jsonwebtoken')
 function createAuthenticationRouter(authService, authenticationMiddleware, secretKey, secondsUntilExpiration){
     const router = express.Router()
 
-    //Login a user by sending a JWT.
+    //Login a user. 
+    //Send a signed JWT with username, email, and role if login successful.
+    //Send an invalid credentials error if login unsuccessful.
     router.post("/login", async (req, res) => {
 
         let email = req.body.email
@@ -15,7 +17,8 @@ function createAuthenticationRouter(authService, authenticationMiddleware, secre
         if(user){
             const payload = {
                 username: user.username,
-                email: user.email
+                email: user.email,
+                role: user.role
             }
 
             jwt.sign(payload, secretKey, {expiresIn: secondsUntilExpiration}, (err, token) => {
@@ -27,6 +30,8 @@ function createAuthenticationRouter(authService, authenticationMiddleware, secre
     })
 
     //Register a new account.
+    //Send a 200 if successful.
+    //Send a registration failed error if unsuccessful.
     router.post("/register", async (req, res) => {
         
         let email = req.body.email
@@ -43,6 +48,8 @@ function createAuthenticationRouter(authService, authenticationMiddleware, secre
     })
 
     //Get the role of the user from the authentication middleware.
+    //Send the role of the user if authenticated.
+    //Send a 403 if not authenticated.
     router.get("/role", authenticationMiddleware, (req, res) => {
         if(req.user){
             res.json({role: req.user.role})

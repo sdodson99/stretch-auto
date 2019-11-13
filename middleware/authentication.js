@@ -4,25 +4,28 @@ const jwt = require('jsonwebtoken')
 //If authorization fails, do nothing. Individual routes will handle authorization failure results.
 function createAuthenticationMiddleware(secretKey, authService){
 
-    return function(req, res, next){
+    return async function(req, res, next){
         const bearerHeader = req.headers['authorization']
 
         if(bearerHeader){
             const token = bearerHeader.split(" ")[1]
             
             //Decode the JWT.
-            jwt.verify(token, secretKey, (err, decoded) => {
+            jwt.verify(token, secretKey, async (err, decoded) => {
 
-                if(decoded){
-                    //Get the user information from the database based on the JWT email claim.
-                    authService.getUser(decoded.email).then((user) => {
+                try {
+                    if(decoded){
+                        //Add user information to the request based on the JWT email claim.
+                        req.user = await authService.getUser(decoded.email)
 
-                        //Add the user information to the request.
-                        req.user = user
-                    }).finally(() =>{
-                        next()
-                    })
-                } else {
+                        //Add token information to the request.
+                        //In the future, we will use this data once we setup refresh tokens.
+                        req.auth = decoded
+                    } else {
+                        //Set the authentication error name.
+                        req.authError = err.name
+                    }
+                } finally {
                     next()
                 }
             })

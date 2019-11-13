@@ -7,6 +7,8 @@ class MongoStretchService{
         this.connectionString = connectionString
     }
 
+    //Get all stretches in the database.
+    //Returns the list of stretches.
     async getAll(){
         let connection = await mongoClient.connect(this.connectionString)
         
@@ -17,6 +19,8 @@ class MongoStretchService{
         return stretches
     }
 
+    //Gets a random amount of stretches from the database without duplicates.
+    //Returns the list of stretches.
     async getRandomAmount(maxAmount){
         let connection = await mongoClient.connect(this.connectionString)
 
@@ -44,6 +48,8 @@ class MongoStretchService{
         return stretches
     }
 
+    //Inserts a new stretch into the database.
+    //Returns the id of the new stretch.
     async create(stretch){
         let connection = await mongoClient.connect(this.connectionString)
 

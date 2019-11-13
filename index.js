@@ -15,12 +15,14 @@ const jwtExpirationSeconds = 3600
 const adminSeed = require('./seeds/admin-seed')
 adminSeed(connectionString)
 
-//Create services and middleware.
+//Create services.
 const MongoStretchService = require('./services/mongo-stretch-service')
 const MongoAuthService = require('./services/mongo-auth-service')
-const Authentication = require('./middleware/authentication')
 const stretchService = new MongoStretchService(connectionString)
 const authService = new MongoAuthService(connectionString)
+
+//Create middleware.
+const Authentication = require('./middleware/authentication')
 const authenticationMiddleware = Authentication(jwtSecretKey, authService)
 
 //Setup routes.
