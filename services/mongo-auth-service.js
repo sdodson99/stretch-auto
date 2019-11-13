@@ -54,6 +54,15 @@ class MongoAuthService{
 
         return success;
     }
+
+    async getUser(email){
+        let connection = await mongoClient.connect(this.connectionString)
+        let user = await connection.db("stretch").collection("users").findOne({email: email})
+        
+        connection.close()
+
+        return user
+    }
 }
 
 module.exports = MongoAuthService
