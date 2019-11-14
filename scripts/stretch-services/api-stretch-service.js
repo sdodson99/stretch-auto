@@ -7,7 +7,9 @@ function ApiStretchService(url){
 
         stretches.forEach((stretch) => {
             stretch.name = stretch.name + " Stretch"
-            stretch.instructions.sort((a, b) => a.order > b.order)
+            if(stretch.instructions){
+                stretch.instructions.sort((a, b) => a.order > b.order)
+            }
         })
 
         return stretches

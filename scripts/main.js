@@ -1,4 +1,4 @@
-const stretchApiUrl = "http://52.170.19.168/stretch"
+const stretchApiUrl = "http://localhost:5000/stretch"
 const navigator = new Navigator()
 
 navigator.showSetup()
