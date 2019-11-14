@@ -2,7 +2,7 @@ const mongo = require('mongodb')
 const bcrypt = require('bcrypt')
 
 const mongoClient = mongo.MongoClient
-const saltRounds = process.env.SALT_ROUNDS || 10
+const saltRounds = 10
 
 class MongoAuthService{
     constructor(connectionString){

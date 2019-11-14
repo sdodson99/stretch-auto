@@ -2,7 +2,7 @@ const mongo = require('mongodb')
 const bcrypt = require('bcrypt')
 
 const mongoClient = mongo.MongoClient
-const saltRounds = process.env.SALT_ROUNDS || 10
+const saltRounds = 10
 
 //Seeds an admin user in the database if it does not exist.
 async function seedAdminUser(connectionString){
