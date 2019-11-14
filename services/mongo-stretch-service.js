@@ -55,8 +55,13 @@ class MongoStretchService{
     //Returns undefined if stretch not found.
     async getById(id){
         let connection = await mongoClient.connect(this.connectionString)
-
-        let stretch = await connection.db("stretch").collection("stretches").findOne({_id: new mongo.ObjectID(id)})
+        
+        try {
+            let mongoId = new mongo.ObjectID(id)
+            var stretch = await connection.db("stretch").collection("stretches").findOne({_id: mongoId}) 
+        } catch (error) {
+            //Do nothing, return undefined.
+        }
 
         connection.close()
 
