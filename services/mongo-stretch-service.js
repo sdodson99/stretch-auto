@@ -25,12 +25,13 @@ class MongoStretchService{
         let connection = await mongoClient.connect(this.connectionString)
 
         let stretches = []
+        let ids = []
 
         for (let index = 0; index < maxAmount; index++) {
 
             //Get 1 random stretch from the collection not including stretches already found.
             let randomStretch = (await connection.db("stretch").collection("stretches").aggregate([
-                { $match: { _id: {$nin: stretches.map((stretch) => stretch ? new mongo.ObjectId(stretch._id) : 0)}}},
+                { $match: { _id: {$nin: ids}}},
                 { $sample: {size: 1}}
             ]).toArray())[0]
 
@@ -38,6 +39,7 @@ class MongoStretchService{
             //more possible stretches to be found and we can simply break.
             if(randomStretch){
                 stretches.push(randomStretch)
+                ids.push(new mongo.ObjectID(randomStretch._id))
             } else {
                 break
             }
@@ -46,6 +48,19 @@ class MongoStretchService{
         connection.close()
 
         return stretches
+    }
+
+    //Get a stretch by id.
+    //Returns the stretch if it exists.
+    //Returns undefined if stretch not found.
+    async getById(id){
+        let connection = await mongoClient.connect(this.connectionString)
+
+        let stretch = await connection.db("stretch").collection("stretches").findOne({_id: new mongo.ObjectID(id)})
+
+        connection.close()
+
+        return stretch
     }
 
     //Inserts a new stretch into the database.
@@ -58,6 +73,18 @@ class MongoStretchService{
         connection.close()
 
         return newStretchId
+    }
+
+    //Delete a stretch by id.
+    //Returns true/false for success.
+    async delete(id){
+        let connection = await mongoClient.connect(this.connectionString)
+
+        let deletedResult = await connection.db("stretch").collection("stretches").deleteOne({_id: new mongo.ObjectID(id)})
+
+        connection.close()
+
+        return deletedResult.deletedCount > 0
     }
 }
 
