@@ -61,6 +61,40 @@ class MongoAuthService{
         return success;
     }
 
+    //Find a refresh token record from a refresh token.
+    //Returns the record if it exists.
+    //Returns undefined if record does not exist.
+    async getRefreshToken(refreshToken){
+        let connection = await mongoClient.connect(this.connectionString)
+        let storedRefreshToken = await connection.db("stretch").collection("refresh_tokens").findOne({refreshToken: refreshToken})
+        
+        connection.close()
+
+        return storedRefreshToken
+    }
+
+    //Insert a refresh token for a user.
+    //Returns the id of the inserted token.
+    async insertRefreshToken(refreshToken, email){
+        let connection = await mongoClient.connect(this.connectionString)
+        let insertedResult = await connection.db("stretch").collection("refresh_tokens").insertOne({email: email, refreshToken: refreshToken})
+        
+        connection.close()
+
+        return insertedResult.insertedId
+    }
+
+    //Logout a user by deleting all of their refresh tokens.
+    //Returns true/false for at least one refresh token removed.
+    async logout(email){
+        let connection = await mongoClient.connect(this.connectionString)
+        let deletedResult = await connection.db("stretch").collection("refresh_tokens").deleteMany({email: email})
+        
+        connection.close()
+
+        return deletedResult.deletedCount > 0
+    }
+
     //Get a user from the database.
     //Returns the user if it exists.
     //Returns undefinied if it does not exist.

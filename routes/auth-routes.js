@@ -1,7 +1,7 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
 
-function createAuthenticationRouter(authService, authenticationMiddleware, secretKey, secondsUntilExpiration){
+function createAuthenticationRouter(authService, secretKey, secondsUntilExpiration, refreshSecretKey, refreshSecondsUntilExpiration){
     const router = express.Router()
 
     //Login a user. 
@@ -21,9 +21,14 @@ function createAuthenticationRouter(authService, authenticationMiddleware, secre
                 role: user.role
             }
 
-            jwt.sign(payload, secretKey, {expiresIn: secondsUntilExpiration}, (err, token) => {
-                res.json({token: token})
-            })
+            //Sign tokens.
+            const accessToken = jwt.sign(payload, secretKey, {expiresIn: secondsUntilExpiration})
+            const refreshToken = jwt.sign(payload, refreshSecretKey, {expiresIn: refreshSecondsUntilExpiration})
+
+            //Store refresh token.
+            await authService.insertRefreshToken(refreshToken, user.email)
+
+            res.json({accessToken: accessToken, refreshToken: refreshToken})
         } else {
             res.json({error: "Invalid credentials"})
         }
@@ -47,15 +52,46 @@ function createAuthenticationRouter(authService, authenticationMiddleware, secre
         }
     })
 
-    //Get the role of the user from the authentication middleware.
-    //Send the role of the user if authenticated.
-    //Send a 403 if not authenticated.
-    router.get("/role", authenticationMiddleware, (req, res) => {
-        if(req.user){
-            res.json({role: req.user.role})
-        } else {
-            res.sendStatus(403)
-        }
+    //Refresh a token.
+    //Send a 403 if error or refresh token is not stored.
+    //Send a new access token if valid refresh token.
+    router.post("/refresh", async (req, res) => {
+        let refreshToken = req.body.refreshToken
+
+        jwt.verify(refreshToken, refreshSecretKey, async (err, decoded) => {
+            if(err) res.sendStatus(403)
+
+            const user = {
+                username: decoded.username,
+                email: decoded.email,
+                role: decoded.role
+            }
+
+            let storedRefreshToken = await authService.getRefreshToken(refreshToken)
+
+            if(storedRefreshToken){
+                let accessToken = jwt.sign(user, secretKey, {expiresIn: secondsUntilExpiration})
+                res.json({accessToken: accessToken})
+            } else {
+                res.sendStatus(403)
+            }
+        })
+    })
+
+    //Logout and clear tokens.
+    //Send a 403 if token verification fails.
+    //Send a 204 if successful logout.
+    router.delete("/logout", async (req, res) => {
+        let refreshToken = req.body.refreshToken
+
+        jwt.verify(refreshToken, refreshSecretKey, async (err, decoded) => {
+            if(err) res.sendStatus(403)
+
+            let email = decoded.email
+            await authService.logout(email)
+
+            res.sendStatus(204)
+        })
     })
 
     return router

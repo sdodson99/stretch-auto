@@ -14,6 +14,8 @@ services:
       - ADMIN_USERNAME=USERNAME
       - ADMIN_PASSWORD=PASSWORD
       - SALT_ROUNDS=ROUNDS
+      - JWT_SECRET_KEY=SECRET
+      - JWT_REFRESH_SECRET_KEY=SECRET
   mongo:
     container_name: stretch-db
     image: mongo

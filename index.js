@@ -9,7 +9,9 @@ app.use(cors())
 //Setup environment constants.
 const connectionString = process.env.STRETCH_CONNECTION_STRING || "mongodb://localhost:27017/"
 const jwtSecretKey = process.env.JWT_SECRET_KEY || "ilovetostretch"
-const jwtExpirationSeconds = 3600
+const jwtRefreshSecretKey = process.env.JWT_REFRESH_SECRET_KEY || "ilovetorefreshstretch"
+const jwtExpirationSeconds = "15m"
+const jwtRefreshExpirationSeconds = "90d"
 
 //Seed data.
 const adminSeed = require('./seeds/admin-seed')
@@ -23,13 +25,13 @@ const authService = new MongoAuthService(connectionString)
 
 //Create middleware.
 const Authentication = require('./middleware/authentication')
-const authenticationMiddleware = Authentication(jwtSecretKey, authService)
+const authenticationMiddleware = Authentication(jwtSecretKey)
 
 //Setup routes.
 const StretchRouter = require('./routes/stretch-routes')
 const AuthenticationRouter = require('./routes/auth-routes')
 app.use("/stretch", StretchRouter(stretchService, authenticationMiddleware))
-app.use("/auth", AuthenticationRouter(authService, authenticationMiddleware, jwtSecretKey, jwtExpirationSeconds))
+app.use("/auth", AuthenticationRouter(authService, jwtSecretKey, jwtExpirationSeconds, jwtRefreshSecretKey, jwtRefreshExpirationSeconds))
 
 //Start server.
 const PORT = process.env.PORT || 5000
