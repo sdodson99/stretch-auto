@@ -16,6 +16,7 @@ function createAuthenticationRouter(authService, secretKey, secondsUntilExpirati
 
         if(user){
             const payload = {
+                id: user._id,
                 username: user.username,
                 email: user.email,
                 role: user.role
@@ -62,6 +63,7 @@ function createAuthenticationRouter(authService, secretKey, secondsUntilExpirati
             if(err) res.sendStatus(403)
 
             const user = {
+                id: decoded.id,
                 username: decoded.username,
                 email: decoded.email,
                 role: decoded.role

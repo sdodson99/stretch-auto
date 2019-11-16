@@ -1,22 +1,19 @@
 const mongo = require('mongodb')
-
 const mongoClient = mongo.MongoClient
 
-class MongoStretchService{
+const MongoGenericService = require('./mongo-generic-service')
+
+class MongoStretchService {
     constructor(connectionString){
         this.connectionString = connectionString
+        this.collectionName = "stretches"
+        this.genericService = new MongoGenericService(connectionString, this.collectionName)
     }
 
     //Get all stretches in the database.
     //Returns the list of stretches.
     async getAll(){
-        let connection = await mongoClient.connect(this.connectionString)
-        
-        let stretches = await connection.db("stretch").collection("stretches").find({}).toArray()
-
-        connection.close()
-
-        return stretches
+        return await this.genericService.getAll()
     }
 
     //Gets a random amount of stretches from the database without duplicates.
@@ -30,7 +27,7 @@ class MongoStretchService{
         for (let index = 0; index < maxAmount; index++) {
 
             //Get 1 random stretch from the collection not including stretches already found.
-            let randomStretch = (await connection.db("stretch").collection("stretches").aggregate([
+            let randomStretch = (await connection.db("stretch").collection(this.collectionName).aggregate([
                 { $match: { _id: {$nin: ids}}},
                 { $sample: {size: 1}}
             ]).toArray())[0]
@@ -54,42 +51,25 @@ class MongoStretchService{
     //Returns the stretch if it exists.
     //Returns undefined if stretch not found.
     async getById(id){
-        let connection = await mongoClient.connect(this.connectionString)
-        
-        try {
-            let mongoId = new mongo.ObjectID(id)
-            var stretch = await connection.db("stretch").collection("stretches").findOne({_id: mongoId}) 
-        } catch (error) {
-            //Do nothing, return undefined.
-        }
-
-        connection.close()
-
-        return stretch
+        return await this.genericService.getById(id)
     }
 
     //Inserts a new stretch into the database.
     //Returns the id of the new stretch.
     async create(stretch){
-        let connection = await mongoClient.connect(this.connectionString)
+        return await this.genericService.create(stretch)
+    }
 
-        let newStretchId = (await connection.db("stretch").collection("stretches").insertOne(stretch)).insertedId
-
-        connection.close()
-
-        return newStretchId
+    //Update a stretch at the id with a new stretch.
+    //Returns true/false for success.
+    async update(id, stretch){
+        return await this.genericService.update(id, stretch)
     }
 
     //Delete a stretch by id.
     //Returns true/false for success.
     async delete(id){
-        let connection = await mongoClient.connect(this.connectionString)
-
-        let deletedResult = await connection.db("stretch").collection("stretches").deleteOne({_id: new mongo.ObjectID(id)})
-
-        connection.close()
-
-        return deletedResult.deletedCount > 0
+        return await this.genericService.delete(id)
     }
 }
 
