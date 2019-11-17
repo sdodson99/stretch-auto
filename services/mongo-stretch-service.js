@@ -1,5 +1,4 @@
 const mongo = require('mongodb')
-const mongoClient = mongo.MongoClient
 
 const MongoGenericService = require('./mongo-generic-service')
 
@@ -19,7 +18,7 @@ class MongoStretchService {
     //Gets a random amount of stretches from the database without duplicates.
     //Returns the list of stretches.
     async getRandomAmount(maxAmount){
-        let connection = await mongoClient.connect(this.connectionString)
+        let connection = await this.genericService.mongoClient.connect(this.connectionString)
 
         let stretches = []
         let ids = []

@@ -1,8 +1,8 @@
 const mongo = require('mongodb')
-const mongoClient = mongo.MongoClient
 
 class MongoGenericService{
     constructor(connectionString, collectionName){
+        this.mongoClient = mongo.MongoClient
         this.connectionString = connectionString
         this.collectionName = collectionName
     }
@@ -10,7 +10,7 @@ class MongoGenericService{
     //Get all entities in the collection.
     //Returns the list of entities.
     async getAll(){
-        let connection = await mongoClient.connect(this.connectionString)
+        let connection = await this.mongoClient.connect(this.connectionString)
         
         let entities = await connection.db("stretch").collection(this.collectionName).find({}).toArray()
 
@@ -23,7 +23,7 @@ class MongoGenericService{
     //Returns the entity if it exists.
     //Returns undefined if entity not found.
     async getById(id){
-        let connection = await mongoClient.connect(this.connectionString)
+        let connection = await this.mongoClient.connect(this.connectionString)
         
         try {
             let mongoId = new mongo.ObjectID(id)
@@ -40,7 +40,7 @@ class MongoGenericService{
     //Inserts a new entity into the database.
     //Returns the id of the new entity.
     async create(entity){
-        let connection = await mongoClient.connect(this.connectionString)
+        let connection = await this.mongoClient.connect(this.connectionString)
 
         let newEntityId = (await connection.db("stretch").collection(this.collectionName).insertOne(entity)).insertedId
 
@@ -52,7 +52,7 @@ class MongoGenericService{
     //Update an entity at the id with a new entity.
     //Returns true/false for success.
     async update(id, entity){
-        let connection = await mongoClient.connect(this.connectionString)
+        let connection = await this.mongoClient.connect(this.connectionString)
 
         let mongoId = new mongo.ObjectID(id)
         let updateResult = await connection.db("stretch").collection(this.collectionName).replaceOne({_id: mongoId}, entity)
@@ -65,7 +65,7 @@ class MongoGenericService{
     //Delete an entity by id.
     //Returns true/false for success.
     async delete(id){
-        let connection = await mongoClient.connect(this.connectionString)
+        let connection = await this.mongoClient.connect(this.connectionString)
 
         let deletedResult = await connection.db("stretch").collection(this.collectionName).deleteOne({_id: new mongo.ObjectID(id)})
 

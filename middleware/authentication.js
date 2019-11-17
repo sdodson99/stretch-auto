@@ -15,9 +15,6 @@ function createAuthenticationMiddleware(secretKey){
                 if(decoded){
                     //Add token information to the request.
                     req.user = decoded
-                } else {
-                    //Set the authentication error name.
-                    req.authError = err.name
                 }
 
                 next()

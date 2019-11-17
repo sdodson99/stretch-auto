@@ -43,6 +43,8 @@ function createStretchRouter(stretchService, authenticationMiddleware){
             stretchService.create(stretch).then((newStretchId) => {
                 stretch._id = newStretchId
                 res.json(stretch)
+            }).catch(() => {
+                res.sendStatus(400)
             })
         } else {
             res.sendStatus(403)
@@ -54,7 +56,7 @@ function createStretchRouter(stretchService, authenticationMiddleware){
     //Send a 400 if invalid stretch body.
     //Send a 404 if no stretch found with the id.
     //Send a 403 if the user is not admin.
-    router.put("/:stretchId", authenticationMiddleware, async (req, res) => {
+    router.put("/:stretchId", authenticationMiddleware, (req, res) => {
         
         //Only admins can delete stretches.
         if(req.user && req.user.role == "admin"){
@@ -63,12 +65,16 @@ function createStretchRouter(stretchService, authenticationMiddleware){
 
             if(!stretch) res.sendStatus(400)
 
-            if(await stretchService.update(stretchId, stretch)){
-                stretch._id = stretchId
-                res.json(stretch)
-            } else {
-                res.sendStatus(404)
-            }
+            stretchService.update(stretchId, stretch).then((success) => {
+                if(success){
+                    stretch._id = stretchId
+                    res.json(stretch)
+                } else {
+                    res.sendStatus(404)
+                }
+            }).catch(() => {
+                res.sendStatus(400)
+            })                
         } else {
             res.sendStatus(403)
         } 
