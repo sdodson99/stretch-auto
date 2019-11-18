@@ -15,9 +15,19 @@ function createAuthenticationMiddleware(secretKey){
                 if(decoded){
                     //Add token information to the request.
                     req.user = decoded
+                    next()
+                } else {
+                    if(err.name == "TokenExpiredError"){
+                        res.status(403).json({
+                            error: {
+                                code: 1,
+                                message: "Token expired."
+                            }
+                        })
+                    } else {
+                        next()
+                    }
                 }
-
-                next()
             })
         } else {
             //Move to route even if authentication fails.
