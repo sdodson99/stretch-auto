@@ -40,6 +40,10 @@ function createUserRouter(userService){
         if(!user) res.sendStatus(400)
 
         if(req.user && (req.user.id == userId || res.user.role == "admin")){
+
+            //Prevent user from changing role.
+            user.role = req.user.role
+
             if(await userService.update(userId, user)){
                 user._id = userId
                 res.json(user)
