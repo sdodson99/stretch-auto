@@ -28,3 +28,5 @@ function UnilateralStretchHandler(stretchHandler){
         await stretchHandler.onSetPaused(sender, paused)
     }
 }
+
+module.exports = UnilateralStretchHandler

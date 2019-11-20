@@ -41,3 +41,5 @@ function CompositeStretchHandler(...handlers){
         } 
     }
 }
+
+module.exports = CompositeStretchHandler

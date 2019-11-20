@@ -54,3 +54,5 @@ function PlayableStretchRoutine(routine, playerFactory){
         return this.playerFactory.createStretchPlayer(stretch, this.duration, this.onStretchChange, this.onTimeChange)
     }
 }
+
+module.exports = PlayableStretchRoutine

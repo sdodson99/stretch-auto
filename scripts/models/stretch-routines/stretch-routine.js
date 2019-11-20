@@ -3,3 +3,5 @@ function StretchRoutine(stretches, sets, duration){
     this.sets = sets
     this.duration = duration
 }
+
+module.exports = StretchRoutine

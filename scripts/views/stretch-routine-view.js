@@ -46,3 +46,5 @@ function StretchRoutineView(){
         this.cancelButton.addEventListener("click", (e) => handler())
     }
 }
+
+module.exports = StretchRoutineView

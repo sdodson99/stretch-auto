@@ -1,3 +1,8 @@
+const CompositeStretchHandler = require('./composite-stretch-handler')
+const SpeechStretchHandler = require('./speech-stretch-handler')
+const WaitStretchHandler = require('./wait-stretch-handler')
+const UnilateralStretchHandler = require('./unilateral-stretch-handler')
+
 function StretchHandlerFactory(){
 
     this.createStretchHandler = function(options){
@@ -18,3 +23,5 @@ function StretchHandlerFactory(){
         return handler
     }
 }
+
+module.exports = StretchHandlerFactory

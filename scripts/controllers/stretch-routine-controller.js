@@ -1,3 +1,5 @@
+const DisplayType = require('../navigators/stretch-display-type')
+
 function StretchRoutineController(routine, view, navigator, handlerFactory, options){
     this.routine = routine
     this.view = view
@@ -63,3 +65,5 @@ function StretchRoutineController(routine, view, navigator, handlerFactory, opti
         this.stretchHandler.onCancel(this)
     }
 }
+
+module.exports = StretchRoutineController

@@ -38,3 +38,5 @@ function UnilateralStretchPlayer(stretchPlayer, stretch, onStretchChange){
         return this.stretchPlayer.isCancelled()
     }
 }
+
+module.exports = UnilateralStretchPlayer

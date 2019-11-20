@@ -1,4 +1,11 @@
-const authenticationService = new ApiAuthenticationService(authenticationApiUrl)
+require('babel-polyfill')
+const authenticate = require('./authenticate')
+const ApiAuthenticationService = require('./services/api-authentication-service')
+const Constants = require('./utilities/constants')
+
+authenticate()
+
+const authenticationService = new ApiAuthenticationService(Constants.authenticationApiUrl)
 
 authenticationService.logout(localStorage.getItem("refreshToken")).then((success) => {
 

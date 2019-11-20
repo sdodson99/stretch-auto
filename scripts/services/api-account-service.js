@@ -15,3 +15,5 @@ function ApiAccountService(url, client){
         return accountResponse
     }
 }
+
+module.exports = ApiAccountService

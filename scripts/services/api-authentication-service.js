@@ -72,3 +72,5 @@ function ApiAuthenticationService(url){
         return logoutResult.ok
     }
 }
+
+module.exports = ApiAuthenticationService

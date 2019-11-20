@@ -1,3 +1,6 @@
+const StretchPlayer = require('./stretch-player')
+const UnilateralStretchPlayer = require('./unilateral-stretch-player')
+
 function StretchPlayerFactory(unilateralMode){
     this.unilateralMode = unilateralMode
 
@@ -11,3 +14,5 @@ function StretchPlayerFactory(unilateralMode){
         return stretchPlayer
     }
 }
+
+module.exports = StretchPlayerFactory

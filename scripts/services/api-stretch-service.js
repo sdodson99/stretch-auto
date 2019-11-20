@@ -15,3 +15,5 @@ function ApiStretchService(url){
         return stretches
     }
 }
+
+module.exports = ApiStretchService

@@ -17,3 +17,5 @@ function Speaker(){
         this.synth.cancel()
     }
 }
+
+module.exports = Speaker

@@ -1,3 +1,5 @@
+const StretchRoutine = require('../models/stretch-routines/stretch-routine')
+
 function StretchSetupController(view, navigator, stretchService){
 
     this.view = view
@@ -21,3 +23,5 @@ function StretchSetupController(view, navigator, stretchService){
 
     this.view.addStartHandler(() => this.onStart())
 }
+
+module.exports = StretchSetupController

@@ -14,3 +14,5 @@ function MockStretchService(){
         ]
     }
 }
+
+module.exports = MockStretchService

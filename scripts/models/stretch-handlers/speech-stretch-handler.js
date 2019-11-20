@@ -48,3 +48,5 @@ function SpeechStretchHandler(speakTime, speakInstructions, unilateralMode){
         await this.speaker.setPaused(paused)
     }
 }
+
+module.exports = SpeechStretchHandler

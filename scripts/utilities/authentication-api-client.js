@@ -38,3 +38,5 @@ function AuthenticationApiClient(refreshService){
         }
     }
 }
+
+module.exports = AuthenticationApiClient

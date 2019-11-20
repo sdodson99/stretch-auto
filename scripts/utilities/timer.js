@@ -46,3 +46,5 @@ function Timer(onTimeChange){
         return this.cancelled
     }
 }
+
+module.exports = Timer

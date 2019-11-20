@@ -1,3 +1,5 @@
+const Timer = require('../../utilities/timer')
+
 function StretchPlayer(duration, onTimeChange){
     this.duration = duration
     this.timer = new Timer(onTimeChange)
@@ -23,3 +25,5 @@ function StretchPlayer(duration, onTimeChange){
         return this.timer.isCancelled()
     }
 }
+
+module.exports = StretchPlayer

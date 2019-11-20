@@ -49,3 +49,5 @@ function StretchSetupView(){
 
     this.isNarrateChanged()
 }
+
+module.exports = StretchSetupView

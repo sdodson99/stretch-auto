@@ -22,3 +22,5 @@ function WaitStretchHandler(restSeconds){
     this.onSetPaused = async function(sender, paused){
     }
 }
+
+module.exports = WaitStretchHandler
