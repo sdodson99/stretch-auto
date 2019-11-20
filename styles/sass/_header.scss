@@ -13,12 +13,24 @@
 
     #header-nav{
         background: $color-primary-2;
+        font-size: $font-medium;
+
+        a{
+            color: white;
+            text-decoration: none;
+        }
 
         ul{
             list-style-type: none;
+            display: flex;
+        }
+
+        .nav-grow{
+            flex-grow: 1;
         }
 
         li{
+            cursor: pointer;
             a{
                 padding: $spacing-small $spacing-large;
                 display: inline-block;
@@ -28,10 +40,20 @@
         .selected{
             background: $color-primary-3;
         }
+    }
 
-        #center-nav{
-            font-size: $font-medium;
-            text-align: center;
+    @media screen and (max-width: 1000px){
+        #header-nav ul{
+            flex-direction: column;
+
+            li, a{
+                display: flex;
+                flex-grow: 1;
+            }
+
+            a{
+                justify-content: center;
+            }
         }
     }
 }

@@ -24,13 +24,13 @@ function Navigator(){
 
         switch (displayType) {
             case DisplayType.SETUP:
-                this.displayStretchSetup.style.display = ""
+                this.displayStretchSetup.style.display = "flex"
                 break;
             case DisplayType.STRETCH:
-                this.displayStretch.style.display = ""
+                this.displayStretch.style.display = "flex"
                 break;
             case DisplayType.DONE:
-                this.displayStretchSetup.style.display = ""
+                this.displayStretchSetup.style.display = "flex"
             default:
                 break;
         }

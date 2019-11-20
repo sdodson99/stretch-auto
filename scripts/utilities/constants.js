@@ -1,0 +1,5 @@
+// const stretchApiUrl = "http://52.170.19.168/stretch"
+// const authenticationApiUrl = "http://52.170.19.168/auth"
+const authenticationApiUrl = "http://localhost:5000/auth"
+const stretchApiUrl = "http://localhost:5000/stretch"
+const accountApiUrl = "http://localhost:5000/account"

@@ -1,0 +1,47 @@
+@import 'common-variables';
+
+#login{
+    margin-top: $spacing-medium;
+
+    #login-error{
+        font-size: $font-small;
+        color: red;
+        text-align: center;
+    }
+
+    .fieldset{
+        margin: $spacing-medium;
+        font-size: $font-small;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        label{
+            flex-basis: 25%;
+        }
+
+        input[type=password], input[type=text]{
+            margin: $spacing-small;
+            font-size: $font-small;
+            flex-basis: 45%;
+        }
+    }
+
+    .fieldset-submit{
+        flex-direction: column;
+
+        #login-register{
+            font-size: $font-tiny;
+            margin: $spacing-medium;
+            text-align: center;
+        }
+    }
+}
+
+@media screen and (max-width: 1000px){
+    #login{
+        .fieldset{
+            flex-direction: column;
+        }
+    }
+}

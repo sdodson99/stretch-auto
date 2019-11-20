@@ -10,9 +10,21 @@
 }
 #site-header #header-nav {
   background: #0088cc;
+  font-size: 2rem;
+}
+#site-header #header-nav a {
+  color: white;
+  text-decoration: none;
 }
 #site-header #header-nav ul {
   list-style-type: none;
+  display: flex;
+}
+#site-header #header-nav .nav-grow {
+  flex-grow: 1;
+}
+#site-header #header-nav li {
+  cursor: pointer;
 }
 #site-header #header-nav li a {
   padding: 0.5rem 3rem;
@@ -21,9 +33,17 @@
 #site-header #header-nav .selected {
   background: #004466;
 }
-#site-header #header-nav #center-nav {
-  font-size: 2rem;
-  text-align: center;
+@media screen and (max-width: 1000px) {
+  #site-header #header-nav ul {
+    flex-direction: column;
+  }
+  #site-header #header-nav ul li, #site-header #header-nav ul a {
+    display: flex;
+    flex-grow: 1;
+  }
+  #site-header #header-nav ul a {
+    justify-content: center;
+  }
 }
 
 footer {
@@ -49,7 +69,7 @@ button:hover {
   background: #004466;
 }
 
-input[type=text] {
+input[type=text], input[type=password] {
   padding: 0.5rem;
   border: 1px solid #004466;
   border-radius: 5px;
@@ -147,6 +167,47 @@ input[type=text] {
   }
 }
 
+#login {
+  margin-top: 1.5rem;
+}
+#login #login-error {
+  font-size: 1.5rem;
+  color: red;
+  text-align: center;
+}
+#login .fieldset {
+  margin: 1.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#login .fieldset label {
+  flex-basis: 25%;
+}
+#login .fieldset input[type=password], #login .fieldset input[type=text] {
+  margin: 0.5rem;
+  font-size: 1.5rem;
+  flex-basis: 45%;
+}
+#login .fieldset-submit {
+  flex-direction: column;
+}
+#login .fieldset-submit #login-register {
+  font-size: 1rem;
+  margin: 1.5rem;
+  text-align: center;
+}
+
+@media screen and (max-width: 1000px) {
+  #login .fieldset {
+    flex-direction: column;
+  }
+}
+.not-auth, .auth {
+  display: none;
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -157,8 +218,7 @@ body {
 }
 
 a {
-  color: white;
-  text-decoration: none;
+  color: black;
 }
 
 #page {
@@ -173,13 +233,18 @@ a {
   flex-grow: 1;
 }
 
-.stretch-content {
+.container {
   display: flex;
   flex-direction: column;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.stretch-content {
   flex-grow: 1;
   align-items: center;
   margin: 1.5rem auto;
-  max-width: 75%;
+  display: none;
 }
 
 /*# sourceMappingURL=main.css.map */

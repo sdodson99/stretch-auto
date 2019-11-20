@@ -7,6 +7,10 @@ function StretchHandlerFactory(){
             handler.addHandler(new SpeechStretchHandler(false, options.narrateInstructions, options.unilateralMode))
         }
 
+        if(options.wait){
+            handler.addHandler(new WaitStretchHandler(3))
+        }
+        
         if(options.unilateralMode){
             handler = new UnilateralStretchHandler(handler)
         }

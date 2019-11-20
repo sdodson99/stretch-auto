@@ -7,26 +7,32 @@
 
     <link rel="stylesheet" href="styles/main.css"/>
 
+    <script defer src="scripts/services/api-authentication-service.js"></script>
+    <script defer src="scripts/utilities/constants.js"></script>
+    <script defer src="scripts/utilities/authentication-api-client.js"></script>
+    <script defer src="scripts/services/api-account-service.js"></script>
+    <script defer src="scripts/authentication.js"></script>
     <script defer src="scripts/utilities/modernizr.js"></script>
     <script defer src="scripts/utilities/speaker.js"></script>
     <script defer src="scripts/utilities/timer.js"></script>
-    <script defer src="scripts/stretch-services/mock-stretch-service.js"></script>
-    <script defer src="scripts/stretch-services/api-stretch-service.js"></script>
-    <script defer src="scripts/stretch-players/stretch-player.js"></script>
-    <script defer src="scripts/stretch-players/unilateral-stretch-player.js"></script>
-    <script defer src="scripts/stretch-players/stretch-player-factory.js"></script>
-    <script defer src="scripts/stretch-routines/stretch-routine.js"></script>
-    <script defer src="scripts/stretch-routines/playable-stretch-routine.js"></script>
+    <script defer src="scripts/services/mock-stretch-service.js"></script>
+    <script defer src="scripts/services/api-stretch-service.js"></script>
+    <script defer src="scripts/models/stretch-players/stretch-player.js"></script>
+    <script defer src="scripts/models/stretch-players/unilateral-stretch-player.js"></script>
+    <script defer src="scripts/models/stretch-players/stretch-player-factory.js"></script>
+    <script defer src="scripts/models/stretch-routines/stretch-routine.js"></script>
+    <script defer src="scripts/models/stretch-routines/playable-stretch-routine.js"></script>
     <script defer src="scripts/views/stretch-routine-view.js"></script>
     <script defer src="scripts/views/stretch-setup-view.js"></script>
     <script defer src="scripts/controllers/stretch-routine-controller.js"></script>
     <script defer src="scripts/controllers/stretch-setup-controller.js"></script>
-    <script defer src="scripts/stretch-handlers/speech-stretch-handler.js"></script>
-    <script defer src="scripts/stretch-handlers/composite-stretch-handler.js"></script>
-    <script defer src="scripts/stretch-handlers/unilateral-stretch-handler.js"></script>
-    <script defer src="scripts/stretch-handlers/stretch-handler-factory.js"></script>
-    <script defer src="scripts/navigator.js"></script>
-    <script defer src="scripts/main.js"></script>
+    <script defer src="scripts/models/stretch-handlers/wait-stretch-handler.js"></script>
+    <script defer src="scripts/models/stretch-handlers/speech-stretch-handler.js"></script>
+    <script defer src="scripts/models/stretch-handlers/composite-stretch-handler.js"></script>
+    <script defer src="scripts/models/stretch-handlers/unilateral-stretch-handler.js"></script>
+    <script defer src="scripts/models/stretch-handlers/stretch-handler-factory.js"></script>
+    <script defer src="scripts/stretch-navigator.js"></script>
+    <script defer src="scripts/stretch-main.js"></script>
 
     <title>Stretch Auto</title>
 </head>
@@ -37,13 +43,18 @@
                 <h1>STRETCH AUTO</h1>
             </div>
             <div id="header-nav">
-                <ul id="center-nav">
-                    <li id="nav-stretch"><a href="index.html" class="selected">Home</a></li>
-                </ul>
+                <div class="container">
+                    <ul>
+                        <li><a href="index.html" class="selected">Start</a></li>
+                        <li class="nav-grow"></li>
+                        <li class="not-auth"><a href="login.html">Login</a></li>
+                        <li class="auth"><a href="logout.html">Logout</a></li>
+                    </ul>
+                </div>
             </div>
         </header>
         <div id="main">
-            <section id="stretch-setup" class="stretch-content">
+            <section id="stretch-setup" class="stretch-content container">
                 <div class="stretch-fieldset">
                     <p class="stretch-fieldset-header">Capacity</p>
                     <div class="stretch-field">
@@ -78,7 +89,7 @@
                         the desired amount of stretches may not be provided.</p>
                 </div>
             </section>
-            <section id="stretch" class="stretch-content">
+            <section id="stretch" class="stretch-content container">
                 <div id="stretch-volume">
                     <div id="stretch-set">
                         Set: <span id="stretch-set-current">1</span>/<span id="stretch-set-max">0</span>

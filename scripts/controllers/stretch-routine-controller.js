@@ -25,9 +25,11 @@ function StretchRoutineController(routine, view, navigator, handlerFactory, opti
         this.view.setName(stretch.name)
         this.view.resetInstructions()
         
-        stretch.instructions.forEach(i => {
-            this.view.addInstruction(i)
-        })
+        if(stretch.instructions){
+            stretch.instructions.forEach(i => {
+                this.view.addInstruction(i)
+            })
+        }
         
         this.currentStretch = stretch
         await this.stretchHandler.onStretchChange(this, stretch)

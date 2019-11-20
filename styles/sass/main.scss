@@ -4,6 +4,8 @@
 @import 'form';
 @import 'stretch-setup';
 @import 'stretch';
+@import 'login';
+@import 'authentication';
 
 *{
     padding: 0;
@@ -15,8 +17,7 @@ body{
 }
 
 a{
-    color: white;
-    text-decoration: none;
+    color: black;
 }
 
 #page{
@@ -31,11 +32,16 @@ a{
     flex-grow: 1;
 }
 
-.stretch-content{
+.container{
     display: flex;
     flex-direction: column;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.stretch-content{
     flex-grow: 1;
     align-items: center;
     margin: $spacing-medium auto;
-    max-width: 75%;
+    display: none;
 }
