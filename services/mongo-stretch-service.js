@@ -3,10 +3,10 @@ const mongo = require('mongodb')
 const MongoGenericService = require('./mongo-generic-service')
 
 class MongoStretchService {
-    constructor(connectionString){
-        this.connectionString = connectionString
+    constructor(database){
+        this.database = database
         this.collectionName = "stretches"
-        this.genericService = new MongoGenericService(connectionString, this.collectionName)
+        this.genericService = new MongoGenericService(this.database, this.collectionName)
     }
 
     //Get all stretches in the database.
@@ -18,15 +18,13 @@ class MongoStretchService {
     //Gets a random amount of stretches from the database without duplicates.
     //Returns the list of stretches.
     async getRandomAmount(maxAmount){
-        let connection = await this.genericService.mongoClient.connect(this.connectionString)
-
         let stretches = []
         let ids = []
 
         for (let index = 0; index < maxAmount; index++) {
 
             //Get 1 random stretch from the collection not including stretches already found.
-            let randomStretch = (await connection.db("stretch").collection(this.collectionName).aggregate([
+            let randomStretch = (await this.database.collection(this.collectionName).aggregate([
                 { $match: { _id: {$nin: ids}}},
                 { $sample: {size: 1}}
             ]).toArray())[0]
@@ -40,8 +38,6 @@ class MongoStretchService {
                 break
             }
         }
-
-        connection.close()
 
         return stretches
     }

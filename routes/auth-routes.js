@@ -10,7 +10,7 @@ function createAuthenticationRouter(authService, secretKey, secondsUntilExpirati
     router.post("/login", async (req, res) => {
 
         let email = req.body.email
-        let password = req.body.password
+        let password = req.body.password        
 
         const user = await authService.login(email, password)
 
@@ -31,7 +31,7 @@ function createAuthenticationRouter(authService, secretKey, secondsUntilExpirati
 
             res.json({accessToken: accessToken, refreshToken: refreshToken})
         } else {
-            res.json({error: "Invalid credentials"})
+            res.json({errorMessage: "Invalid credentials."})
         }
     })
 

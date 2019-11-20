@@ -1,11 +1,10 @@
-const mongo = require('mongodb')
 const MongoGenericService = require('./mongo-generic-service')
 
 class MongoRoutineService {
-    constructor(connectionString){
+    constructor(database){
+        this.database = database
         this.collectionName = "routines"
-        this.connectionString = connectionString
-        this.genericService = new MongoGenericService(this.connectionString, this.collectionName)
+        this.genericService = new MongoGenericService(this.database, this.collectionName)
     }
 
     async getAll(){
@@ -13,13 +12,7 @@ class MongoRoutineService {
     }
 
     async getAllForUser(userId){
-        let connection = await this.genericService.mongoClient.connect(this.connectionString)
-
-        let routines = await connection.db("stretch").collection(this.collectionName).find({ownerId: userId}).toArray()
-
-        connection.close()
-
-        return routines
+        return await this.database.collection(this.collectionName).find({ownerId: userId}).toArray()
     }
 
     async getById(id){

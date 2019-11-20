@@ -1,38 +1,27 @@
 const mongo = require('mongodb')
 
 class MongoGenericService{
-    constructor(connectionString, collectionName){
-        this.mongoClient = mongo.MongoClient
-        this.connectionString = connectionString
+    constructor(database, collectionName){
+        this.database = database
         this.collectionName = collectionName
     }
 
     //Get all entities in the collection.
     //Returns the list of entities.
     async getAll(){
-        let connection = await this.mongoClient.connect(this.connectionString)
-        
-        let entities = await connection.db("stretch").collection(this.collectionName).find({}).toArray()
-
-        connection.close()
-
-        return entities
+        return await this.database.collection(this.collectionName).find({}).toArray()
     }
 
     //Get an entity by id.
     //Returns the entity if it exists.
     //Returns undefined if entity not found.
     async getById(id){
-        let connection = await this.mongoClient.connect(this.connectionString)
-        
         try {
             let mongoId = new mongo.ObjectID(id)
-            var entity = await connection.db("stretch").collection(this.collectionName).findOne({_id: mongoId}) 
+            var entity = await this.database.collection(this.collectionName).findOne({_id: mongoId}) 
         } catch (error) {
             //Do nothing, return undefined.
         }
-
-        connection.close()
 
         return entity
     }
@@ -40,24 +29,17 @@ class MongoGenericService{
     //Inserts a new entity into the database.
     //Returns the id of the new entity.
     async create(entity){
-        let connection = await this.mongoClient.connect(this.connectionString)
+        let createResult = await this.database.collection(this.collectionName).insertOne(entity)
 
-        let newEntityId = (await connection.db("stretch").collection(this.collectionName).insertOne(entity)).insertedId
-
-        connection.close()
-
-        return newEntityId
+        return createResult.insertedId
     }
 
     //Update an entity at the id with a new entity.
+    //TODO: Assign id to new object?
     //Returns true/false for success.
     async update(id, entity){
-        let connection = await this.mongoClient.connect(this.connectionString)
-
         let mongoId = new mongo.ObjectID(id)
-        let updateResult = await connection.db("stretch").collection(this.collectionName).replaceOne({_id: mongoId}, entity)
-
-        connection.close()
+        let updateResult = await this.database.collection(this.collectionName).replaceOne({_id: mongoId}, entity)
 
         return updateResult.matchedCount > 0
     }
@@ -65,13 +47,9 @@ class MongoGenericService{
     //Delete an entity by id.
     //Returns true/false for success.
     async delete(id){
-        let connection = await this.mongoClient.connect(this.connectionString)
+        let deleteResult = await this.database.collection(this.collectionName).deleteOne({_id: new mongo.ObjectID(id)})
 
-        let deletedResult = await connection.db("stretch").collection(this.collectionName).deleteOne({_id: new mongo.ObjectID(id)})
-
-        connection.close()
-
-        return deletedResult.deletedCount > 0
+        return deleteResult.deletedCount > 0
     }
 }
 

@@ -12,6 +12,7 @@ function createAuthenticationMiddleware(secretKey){
             
             //Decode the JWT.
             jwt.verify(token, secretKey, async (err, decoded) => {
+
                 if(decoded){
                     //Add token information to the request.
                     req.user = decoded
