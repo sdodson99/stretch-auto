@@ -1,37 +1,34 @@
 const express = require('express')
-const jwt = require('jsonwebtoken')
 
-function createAuthenticationRouter(authService, secretKey, secondsUntilExpiration, refreshSecretKey, refreshSecondsUntilExpiration){
+function createAuthenticationRouter(authService){
     const router = express.Router()
 
     //Login a user. 
-    //Send a signed JWT with username, email, and role if login successful.
-    //Send an invalid credentials error if login unsuccessful.
+    //Send a signed token with user data if successful.
+    //Send a 401 if login unsuccessful.
     router.post("/login", async (req, res) => {
 
         let email = req.body.email
         let password = req.body.password        
 
-        const user = await authService.login(email, password)
+        const loginResponse = await authService.login(email, password)
 
-        if(user){
-            const payload = {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role
-            }
-
-            //Sign tokens.
-            const accessToken = jwt.sign(payload, secretKey, {expiresIn: secondsUntilExpiration})
-            const refreshToken = jwt.sign(payload, refreshSecretKey, {expiresIn: refreshSecondsUntilExpiration})
-
-            //Store refresh token.
-            await authService.insertRefreshToken(refreshToken, user.email)
-
-            res.json({accessToken: accessToken, refreshToken: refreshToken})
+        if(loginResponse.success){
+            res.json({
+                success: true,
+                content: {
+                    accessToken: loginResponse.accessToken,
+                    refreshToken: loginResponse.refreshToken
+                }
+            })
         } else {
-            res.json({errorMessage: "Invalid credentials."})
+            res.status(401).json({
+                success: false,
+                error: {
+                    code: 401,
+                    message: loginResponse.error
+                }
+            })
         }
     })
 
@@ -43,13 +40,22 @@ function createAuthenticationRouter(authService, secretKey, secondsUntilExpirati
         let email = req.body.email
         let username = req.body.username
         let password = req.body.password
+        let confirmPassword = req.body.confirmPassword
 
-        const success = await authService.register(email, username, password)
+        const registerResponse = await authService.register(email, username, password, confirmPassword)
 
-        if(success){
-            res.sendStatus(200)
+        if(registerResponse.success){
+            res.json({
+                success: true
+            })
         } else {
-            res.json({error: "Registration failed"})
+            res.status(400).json({
+                success: false,
+                error: {
+                    code: 400,
+                    message: registerResponse.error
+                }
+            })
         }
     })
 
@@ -59,41 +65,43 @@ function createAuthenticationRouter(authService, secretKey, secondsUntilExpirati
     router.post("/refresh", async (req, res) => {
         let refreshToken = req.body.refreshToken
 
-        jwt.verify(refreshToken, refreshSecretKey, async (err, decoded) => {
-            if(err) res.sendStatus(403)
+        const accessToken = await authService.refresh(refreshToken)
 
-            const user = {
-                id: decoded.id,
-                username: decoded.username,
-                email: decoded.email,
-                role: decoded.role
-            }
-
-            let storedRefreshToken = await authService.getRefreshToken(refreshToken)
-
-            if(storedRefreshToken){
-                let accessToken = jwt.sign(user, secretKey, {expiresIn: secondsUntilExpiration})
-                res.json({accessToken: accessToken})
-            } else {
-                res.sendStatus(403)
-            }
-        })
+        if(accessToken){
+            res.json({
+                success: true,
+                content: accessToken
+            })
+        } else {
+            res.status(403).json({
+                success: false,
+                error: {
+                    code: 403,
+                    message: "Failed to refresh."
+                }
+            })
+        }
     })
 
-    //Logout and clear tokens.
-    //Send a 403 if token verification fails.
+    //Logout user.
     //Send a 204 if successful logout.
+    //Send a 404 if user not found.
     router.delete("/logout", async (req, res) => {
         let refreshToken = req.body.refreshToken
 
-        jwt.verify(refreshToken, refreshSecretKey, async (err, decoded) => {
-            if(err) res.sendStatus(403)
-
-            let email = decoded.email
-            await authService.logout(email)
-
-            res.sendStatus(204)
-        })
+        if(await authService.logout(refreshToken)){
+            res.status(204).json({
+                success: true
+            })
+        } else {
+            res.status(404).json({
+                success: false,
+                error: {
+                    code: 404,
+                    message: "Active user not found."
+                }
+            })
+        }
     })
 
     return router

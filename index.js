@@ -17,22 +17,29 @@
 
     //Setup Mongo database.
     const mongodb = require('mongodb')
-    let connection = await mongodb.connect(connectionString)
+    let connection = await mongodb.connect(connectionString, {useUnifiedTopology: true})
     let database = connection.db("stretch")
+
+    //Setup Mongoose
+    const mongoose = require('mongoose')
+    mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true, dbName: "stretch"})
+
+    //Create services.
+    const MongooseStretchService = require('./services/mongoose/mongoose-stretch-service')
+    const MongooseUserService = require('./services/mongoose/mongoose-user-service')
+    const MongooseRoutineService = require('./services/mongoose/mongoose-routine-service')
+    const MongooseRefreshTokenService = require('./services/mongoose/mongoose-refresh-token-service')
+    const JwtAuthService = require('./services/jwt-auth-service')
+
+    const stretchService = new MongooseStretchService()
+    const userService = new MongooseUserService()
+    const routineService = new MongooseRoutineService()
+    const refreshTokenService = new MongooseRefreshTokenService()
+    const authService = new JwtAuthService(userService, refreshTokenService, jwtSecretKey, jwtExpirationSeconds, jwtRefreshSecretKey, jwtRefreshExpirationSeconds)
 
     //Seed data.
     const adminSeed = require('./seeds/admin-seed')
-    adminSeed(database)
-
-    //Create services.
-    const MongoStretchService = require('./services/mongo-stretch-service')
-    const MongoAuthService = require('./services/mongo-auth-service')
-    const MongoGenericService = require('./services/mongo-generic-service')
-    const MongoRoutineService = require('./services/mongo-routine-service')
-    const stretchService = new MongoStretchService(database)
-    const authService = new MongoAuthService(database)
-    const userService = new MongoGenericService(database, "users")
-    const routineService = new MongoRoutineService(database)
+    adminSeed(userService)
 
     //Create middleware.
     const Authentication = require('./middleware/authentication')

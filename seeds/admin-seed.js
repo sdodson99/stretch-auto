@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 
 //Seeds an admin user in the database if it does not exist.
-async function seedAdminUser(database){
+async function seedAdminUser(userService){
 
     //Create admin user from environment variables.
     let adminUser = {
@@ -13,9 +13,10 @@ async function seedAdminUser(database){
     }
 
     //If user does not already exist, create it.
-    let existingUser = database.collection("users").findOne({email: adminUser.email})
+    let existingUser = await userService.getByEmail(adminUser.email)
+
     if(!existingUser){        
-        await database.collection("users").insertOne(adminUser)
+        await userService.create(adminUser)
     }
 }
 

@@ -7,9 +7,13 @@ function createUserRouter(userService){
     //Send the list of users if successful.
     //Send a 403 if the sender does not have permission.
     router.get("/", async (req, res) => {
+        
         if(req.user && req.user.role == "admin"){
             let users = await userService.getAll()
-            res.json(users)
+            res.json({
+                success: true,
+                content: users
+            })
         } else {
             res.sendStatus(403)
         }

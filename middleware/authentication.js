@@ -20,6 +20,7 @@ function createAuthenticationMiddleware(secretKey){
                 } else {
                     if(err.name == "TokenExpiredError"){
                         res.status(403).json({
+                            success: false,
                             error: {
                                 code: 1,
                                 message: "Token expired."

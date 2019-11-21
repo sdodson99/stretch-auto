@@ -14,12 +14,27 @@ function createAccountRouter(userService){
             let foundUser = await userService.getById(user.id)
 
             if(foundUser){
-                res.json(foundUser)
+                res.json({
+                    success: true,
+                    content: foundUser
+                })
             } else {
-                res.sendStatus(404)
+                res.status(404).json({
+                    success: false,
+                    error: {
+                        code: 404,
+                        message: "User not found."
+                    }
+                })
             }
         } else {
-            res.sendStatus(403)
+            res.status(403).json({
+                success: false,
+                error: {
+                    code: 403,
+                    message: "Unauthorized."
+                }
+            })
         }
     })
 
