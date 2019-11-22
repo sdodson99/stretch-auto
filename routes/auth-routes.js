@@ -1,4 +1,6 @@
 const express = require('express')
+const SuccessResponse = require('../models/responses/success-response')
+const ErrorResponse = require('../models/responses/error-response')
 
 function createAuthenticationRouter(authService){
     const router = express.Router()
@@ -14,21 +16,9 @@ function createAuthenticationRouter(authService){
         const loginResponse = await authService.login(email, password)
 
         if(loginResponse.success){
-            res.json({
-                success: true,
-                content: {
-                    accessToken: loginResponse.accessToken,
-                    refreshToken: loginResponse.refreshToken
-                }
-            })
+            res.json(new SuccessResponse({accessToken: loginResponse.accessToken, refreshToken: loginResponse.refreshToken}))
         } else {
-            res.status(401).json({
-                success: false,
-                error: {
-                    code: 401,
-                    message: loginResponse.error
-                }
-            })
+            res.status(401).json(new ErrorResponse(401, loginResponse.error))
         }
     })
 
@@ -45,17 +35,9 @@ function createAuthenticationRouter(authService){
         const registerResponse = await authService.register(email, username, password, confirmPassword)
 
         if(registerResponse.success){
-            res.json({
-                success: true
-            })
+            res.json(new SuccessResponse({}))
         } else {
-            res.status(400).json({
-                success: false,
-                error: {
-                    code: 400,
-                    message: registerResponse.error
-                }
-            })
+            res.status(400).json(new ErrorResponse(400, registerResponse.error))
         }
     })
 
@@ -68,18 +50,9 @@ function createAuthenticationRouter(authService){
         const accessToken = await authService.refresh(refreshToken)
 
         if(accessToken){
-            res.json({
-                success: true,
-                content: accessToken
-            })
+            res.json(new SuccessResponse(accessToken))
         } else {
-            res.status(403).json({
-                success: false,
-                error: {
-                    code: 403,
-                    message: "Failed to refresh."
-                }
-            })
+            res.status(403).json(new ErrorResponse(403, "Failed to refresh."))
         }
     })
 
@@ -90,17 +63,9 @@ function createAuthenticationRouter(authService){
         let refreshToken = req.body.refreshToken
 
         if(await authService.logout(refreshToken)){
-            res.status(204).json({
-                success: true
-            })
+            res.status(204).json(new SuccessResponse({}))
         } else {
-            res.status(404).json({
-                success: false,
-                error: {
-                    code: 404,
-                    message: "Active user not found."
-                }
-            })
+            res.status(404).json(new ErrorResponse(404, "Active user not found."))
         }
     })
 

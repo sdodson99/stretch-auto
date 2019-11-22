@@ -124,7 +124,7 @@ class JwtAuthService{
     //Returns true/false for success.
     async logout(refreshToken){
         return new Promise((res) => {
-            jwt.verify(refreshToken, refreshSecretKey, async (err, decoded) => {
+            jwt.verify(refreshToken, this.refreshSecretKey, async (err, decoded) => {
                 let success = false
 
                 if(decoded){

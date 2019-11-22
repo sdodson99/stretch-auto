@@ -1,20 +1,20 @@
 const express = require('express')
+const SuccessResponse = require('../models/responses/success-response')
+const ErrorResponse = require('../models/responses/error-response')
 
 function createStretchRouter(stretchService, authenticationMiddleware){
     const router = express.Router()
 
     //Get stretches from stretch service.
     //Send stretches if successful.
-    router.get("/", (req, res) => {
+    router.get("/", async (req, res) => {
         if(req.query['maxAmount']){
-            stretchService.getRandomAmount(req.query['maxAmount']).then((data) => {
-                res.json(data)
-            })
+            var stretches = await stretchService.getRandomAmount(req.query['maxAmount'])
         } else {
-            stretchService.getAll().then((data) => {
-                res.json(data)
-            })  
+            var stretches = await stretchService.getAll()
         }
+
+        res.json(new SuccessResponse(stretches))
     })
 
     //Get a stretch by id from the stretch service.
@@ -25,29 +25,38 @@ function createStretchRouter(stretchService, authenticationMiddleware){
         const stretch = await stretchService.getById(stretchId)
 
         if(stretch){
-            res.json(stretch)
+            res.json(new SuccessResponse(stretch))
         } else {
-            res.sendStatus(404)
+            res.status(404).json(new ErrorResponse(404, "Stretch not found."))
         }
     })
 
     //Create a new stretch.
     //Send the created stretch if successful.
     //Send a 403 if user is not admin.
-    router.post("/", authenticationMiddleware, (req, res) => {
+    router.post("/", authenticationMiddleware, async (req, res) => {
         
         //Only admins can create stretches.
         if(req.user && req.user.role == "admin"){
             const stretch = req.body
             
-            stretchService.create(stretch).then((newStretchId) => {
+            try {
+                let newStretchId = await stretchService.create(stretch)
                 stretch._id = newStretchId
-                res.json(stretch)
-            }).catch(() => {
-                res.sendStatus(400)
-            })
+
+                res.json(new SuccessResponse(stretch))
+            } catch (error) {
+                if(error.name == "ValidationError"){
+                    var message = error.message
+                } else {
+                    var message = "Failed to create stretch."
+                }
+
+                res.status(400).json(new ErrorResponse(400, message))
+            }
+
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
@@ -56,27 +65,34 @@ function createStretchRouter(stretchService, authenticationMiddleware){
     //Send a 400 if invalid stretch body.
     //Send a 404 if no stretch found with the id.
     //Send a 403 if the user is not admin.
-    router.put("/:stretchId", authenticationMiddleware, (req, res) => {
+    router.put("/:stretchId", authenticationMiddleware, async (req, res) => {
         
         //Only admins can delete stretches.
         if(req.user && req.user.role == "admin"){
             const stretchId = req.params.stretchId
             const stretch = req.body
 
-            if(!stretch) res.sendStatus(400)
+            try {
+                let success = await stretchService.update(stretchId, stretch)
 
-            stretchService.update(stretchId, stretch).then((success) => {
                 if(success){
                     stretch._id = stretchId
-                    res.json(stretch)
+                    res.json(new SuccessResponse(stretch))
                 } else {
-                    res.sendStatus(404)
+                    res.status(404).json(new ErrorResponse(404, "Stretch not found."))
+                }         
+            } catch (error) {
+                if(error.name == "ValidationError"){
+                    var message = error.message
+                } else {
+                    var message = "Failed to update stretch."
                 }
-            }).catch(() => {
-                res.sendStatus(400)
-            })                
+
+                res.status(400).json(new ErrorResponse(400, message))
+            }
+
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         } 
     })
 
@@ -90,12 +106,12 @@ function createStretchRouter(stretchService, authenticationMiddleware){
             const stretchId = req.params.stretchId
 
             if(await stretchService.delete(stretchId)){
-                res.sendStatus(204)
+                res.status(204).json(new SuccessResponse({}))
             } else {
-                res.sendStatus(404)
+                res.status(404).json(new ErrorResponse(404, "Stretch not found."))
             }
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 

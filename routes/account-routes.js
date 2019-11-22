@@ -1,4 +1,6 @@
 const express = require('express')
+const SuccessResponse = require('../models/responses/success-response')
+const ErrorResponse = require('../models/responses/error-response')
 
 function createAccountRouter(userService){
     const router = express.Router()
@@ -14,27 +16,12 @@ function createAccountRouter(userService){
             let foundUser = await userService.getById(user.id)
 
             if(foundUser){
-                res.json({
-                    success: true,
-                    content: foundUser
-                })
+                res.json(new SuccessResponse(foundUser))
             } else {
-                res.status(404).json({
-                    success: false,
-                    error: {
-                        code: 404,
-                        message: "User not found."
-                    }
-                })
+                res.status(404).json(new ErrorResponse(404, "User not found."))
             }
         } else {
-            res.status(403).json({
-                success: false,
-                error: {
-                    code: 403,
-                    message: "Unauthorized."
-                }
-            })
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 

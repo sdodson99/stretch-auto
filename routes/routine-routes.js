@@ -1,4 +1,6 @@
 const express = require('express')
+const SuccessResponse = require('../models/responses/success-response')
+const ErrorResponse = require('../models/responses/error-response')
 
 function createRoutineRouter(routineService){
     const router = express.Router()
@@ -7,17 +9,15 @@ function createRoutineRouter(routineService){
         const user = req.user
 
         if(user){
-            let stretches
-
             if(user.role == "admin"){
-                stretches = await routineService.getAll()
+                var routines = await routineService.getAll()
             } else {
-                stretches = await routineService.getAllForUser(user.id)
+                var routines = await routineService.getAllForUser(user.id)
             }
 
-            res.json(stretches)
+            res.json(new SuccessResponse(routines))
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
@@ -30,15 +30,15 @@ function createRoutineRouter(routineService){
 
             if(routine){
                 if(routine.ownerId == user.id || user.role == "admin"){
-                    res.json(routine)
+                    res.json(new SuccessResponse(routine))
                 } else {
-                    res.sendStatus(403)
+                    res.status(403).json(new ErrorResponse(403, "Unauthorized."))
                 }
             } else {
-                res.sendStatus(404)
+                res.status(404).json(new ErrorResponse(404, "Routine not found."))
             }
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
@@ -52,12 +52,19 @@ function createRoutineRouter(routineService){
             try {
                 let newId = await routineService.create(routine)
                 routine._id = newId
-                res.json(routine)
+
+                res.json(new SuccessResponse(routine))
             } catch (error) {
-                res.sendStatus(400)
+                if(error.name == "ValidationError"){
+                    var message = error.message
+                } else {
+                    var message = "Failed to create routine."
+                }
+
+                res.status(400).json(new ErrorResponse(400, message))
             }
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
@@ -71,18 +78,18 @@ function createRoutineRouter(routineService){
             if(routine){
                 if(routine.ownerId == user.id || user.role == "admin"){
                     if(await routineService.delete(routine._id)){
-                        res.sendStatus(204)
+                        res.status(204).json(new SuccessResponse({}))
                     } else {
-                        res.sendStatus(404)
+                        res.status(404).json(new ErrorResponse(404, "Routine not found."))
                     }
                 } else {
-                    res.sendStatus(403)
+                    res.status(403).json(new ErrorResponse(404, "Unauthorized."))
                 }
             } else {
-                res.sendStatus(404)
+                res.status(404).json(new ErrorResponse(404, "Routine not found."))
             }
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))            
         }
     })
 

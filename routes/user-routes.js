@@ -1,4 +1,6 @@
 const express = require('express')
+const SuccessResponse = require('../models/responses/success-response')
+const ErrorResponse = require('../models/responses/error-response')
 
 function createUserRouter(userService){
     const router = express.Router()
@@ -10,12 +12,9 @@ function createUserRouter(userService){
         
         if(req.user && req.user.role == "admin"){
             let users = await userService.getAll()
-            res.json({
-                success: true,
-                content: users
-            })
+            res.json(new SuccessResponse(users))
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
@@ -26,9 +25,14 @@ function createUserRouter(userService){
         const userId = req.params.userId
         if(req.user && (req.user.id == userId || res.user.role == "admin")){
             let user = await userService.getById(userId)
-            res.json(user)
+
+            if(user){
+                res.json(new SuccessResponse(user))
+            } else {
+                res.status(404).json(new ErrorResponse(404, "User not found."))
+            }
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
@@ -41,21 +45,30 @@ function createUserRouter(userService){
         const userId = req.params.userId
         const user = req.body
 
-        if(!user) res.sendStatus(400)
-
         if(req.user && (req.user.id == userId || res.user.role == "admin")){
 
             //Prevent user from changing role.
             user.role = req.user.role
 
-            if(await userService.update(userId, user)){
-                user._id = userId
-                res.json(user)
-            }else{
-                res.sendStatus(404)
+            try {
+                if(await userService.update(userId, user)){
+                    user._id = userId
+                    res.json(new SuccessResponse(user))
+                }else{
+                    res.status(404).json(new ErrorResponse(404, "User not found."))
+                }
+            } catch (error) {
+                if(error.name == "ValidationError"){
+                    var message = error.message
+                } else {
+                    var message = "Failed to update user."
+                }
+
+                res.status(400).json(new ErrorResponse(400, message))
             }
+
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
@@ -67,12 +80,12 @@ function createUserRouter(userService){
         const userId = req.params.userId
         if(req.user && (req.user.id == userId || res.user.role == "admin")){
             if(await userService.delete(userId)){
-                res.sendStatus(204)
+                res.status(204).json(new SuccessResponse({}))
             } else {
-                res.sendStatus(404)
+                res.status(404).json(new ErrorResponse(404, "User not found."))
             }
         } else {
-            res.sendStatus(403)
+            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
         }
     })
 
