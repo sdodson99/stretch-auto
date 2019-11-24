@@ -43,9 +43,6 @@ async function register(){
                 errorLabel.innerText = registerResponse.error
             }
         }
-    } else {
-        console.log(grecaptcha);
-        
     }
 }
 
