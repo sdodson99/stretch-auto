@@ -14,11 +14,12 @@ function RoutineListController(view, navigator, routineService){
         })
     
         let routines = await this.routineService.getAll()
-        routines.forEach(r => {
-            this.view.addRoutine(r._id, r.name, (id) => {
 
-            }, (id) => {
-                this.routineService.delete(id)
+        routines.forEach(r => {
+            this.view.addRoutine(r._id, r.name, () => {
+                this.navigator.playRoutine(r)
+            }, () => {
+                this.routineService.delete(r._id)
             })
         })
 
@@ -28,6 +29,8 @@ function RoutineListController(view, navigator, routineService){
             this.view.setListCaption("")
         }
     }
+
+    this.initialize()
 }
 
 module.exports = RoutineListController

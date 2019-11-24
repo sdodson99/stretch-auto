@@ -1,7 +1,4 @@
 function RoutineListView(){
-    this.createButton = document.querySelector('#routine-view-create')
-    this.list = document.querySelector('#routine-list-items')
-    this.listCaption = document.querySelector('#routine-list-caption')
 
     this.addCreateButtonHandler = function(handler){
         this.createButton.addEventListener('click', handler)
@@ -9,6 +6,7 @@ function RoutineListView(){
 
     this.addRoutine = function(routineId, routineName, playHandler, deleteHandler){
         let newRoutineItem = document.createElement('li')
+        newRoutineItem.classList.add('routine-list-item')
         newRoutineItem.innerHTML = `
             <div class="routine-name">${routineName}</div>
             <div class="routine-operations">
@@ -40,6 +38,25 @@ function RoutineListView(){
     this.reset = function(){
         this.listCaption.innerText = ""
         this.list.innerHTML = ""
+    }
+
+    this.draw = function(root){
+        root.innerHTML = this.getMarkup()
+
+        this.createButton = document.querySelector('#routine-view-create')
+        this.list = document.querySelector('#routine-list-items')
+        this.listCaption = document.querySelector('#routine-list-caption')
+    }
+
+    this.getMarkup = function(){
+        return `
+        <section id="routine-list" class="routine-content center-content container">
+            <button id="routine-view-create" class="routine-header-button">Create Routine</button>
+            <div class="routine-section-header">Saved Routines</div>
+            <p id="routine-list-caption"></p>
+            <ul id="routine-list-items">
+            </ul>
+        </section>`
     }
 }
 

@@ -18,7 +18,7 @@ button:hover{
     background: $color-primary-3;
 }
 
-input[type=text], input[type=password], select{
+input[type=text], input[type=password], input[type=email], select{
     padding: $spacing-small;
     border: $form-border;
     border-radius: $form-border-radius;

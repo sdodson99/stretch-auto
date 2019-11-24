@@ -20,6 +20,7 @@ function RoutineCreateController(view, navigator, routineService, stretchService
     })
 
     this.view.addCreateButtonHandler(async () => {
+
         let routineName = this.view.getRoutineName()
         let routineStretches = this.view.getRoutineStretches()
         let routine = {
@@ -28,7 +29,7 @@ function RoutineCreateController(view, navigator, routineService, stretchService
         }
 
         let createdRoutine = await this.routineService.create(routine)
-        
+    
         if(createdRoutine){
             this.navigator.show(DisplayType.LIST)
         }

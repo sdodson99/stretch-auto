@@ -13,17 +13,39 @@ const passwordInput = document.querySelector('#register-password')
 const confirmPasswordInput = document.querySelector('#register-confirm-password')
 const registerButton = document.querySelector('#register-submit')
 const errorLabel = document.querySelector('#register-error')
+const registerForm = document.querySelector('form')
 
 const authenticationService = new ApiAuthenticationService(Constants.authenticationApiUrl)
 
-async function register(){
-    const registerResponse = await authenticationService.register(emailInput.value, usernameInput.value, 
-        passwordInput.value, confirmPasswordInput.value)
+passwordInput.addEventListener('input', () => passwordMatch(passwordInput))
+confirmPasswordInput.addEventListener('input', () => passwordMatch(confirmPasswordInput))
 
-    if(registerResponse.success){
-        window.location.href = 'login.html'
+function passwordMatch(sender){
+    if(passwordInput.value != confirmPasswordInput.value){
+        sender.setCustomValidity("Password and Confirm Password must match.")
     } else {
-        errorLabel.innerText = registerResponse.error
+        sender.setCustomValidity("")
+    }
+}
+
+async function register(){
+    registerForm.reportValidity()
+
+    if(grecaptcha.getResponse())
+    {
+        if(registerForm.checkValidity()){
+            const registerResponse = await authenticationService.register(emailInput.value, usernameInput.value, 
+                passwordInput.value, confirmPasswordInput.value)
+        
+            if(registerResponse.success){
+                window.location.href = 'login.html'
+            } else {
+                errorLabel.innerText = registerResponse.error
+            }
+        }
+    } else {
+        console.log(grecaptcha);
+        
     }
 }
 

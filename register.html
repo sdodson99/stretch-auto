@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <script defer src="scripts/register-main.js"></script>
+    <script async defer src="https://www.google.com/recaptcha/api.js"></script>
 
     <title>Register - Stretch Auto</title>
 </head>
@@ -29,29 +30,32 @@
             </div>
         </header>
         <div id="main">
-            <div id="register" class="container">
+            <form id="register" class="container">
                 <p id="register-error"></p>
                 <div class="fieldset">
                     <label>Email</label>
-                    <input id="register-email" type="text" value="admin2@stretchauto.com"/>
+                    <input id="register-email" type="email" required value="admin2@stretchauto.com"/>
                 </div>
                 <div class="fieldset">
                     <label>Username</label>
-                    <input id="register-username" type="text" value="sdodson"/>
+                    <input id="register-username" type="text" required value="sdodson"/>
                 </div>
                 <div class="fieldset">
                     <label>Password</label>
-                    <input id="register-password" type="password" value="test1234"/>
+                    <input id="register-password" type="password" required value="test1234"/>
                 </div>
                 <div class="fieldset">
                     <label>Confirm Password</label>
-                    <input id="register-confirm-password" type="password" value="test1234"/>
+                    <input id="register-confirm-password" type="password" required value="test1234"/>
+                </div>
+                <div class="fieldset">
+                    <div class="g-recaptcha" data-sitekey="6LdEXsQUAAAAANAWkPdORthn5-8hAyILDg1QCdHM"></div>
                 </div>
                 <div class="fieldset fieldset-submit">
-                    <button id="register-submit">Register</button>      
+                    <button id="register-submit" type="button">Register</button>      
                     <a id="register-login" href="login.html">Already have an account? Click here to login.</a>              
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     <footer>

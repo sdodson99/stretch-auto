@@ -1,29 +1,34 @@
-const DisplayType = require('../navigators/stretch-display-type')
+const StretchPlayerFactory = require('../../models/stretch-players/stretch-player-factory')
+const PlayableStretchRoutine = require('../../models/stretch-routines/playable-stretch-routine')
 
-function StretchRoutineController(routine, view, navigator, handlerFactory, options){
+function StretchRoutineController(routine, view, stretchHandler, options, onDone){
     this.routine = routine
+    this.playableRoutine = new PlayableStretchRoutine(routine.stretches, new StretchPlayerFactory(options.unilateralMode))
     this.view = view
-    this.navigator = navigator
+    this.onDone = onDone
     this.options = options
-    this.stretchHandler = handlerFactory.createStretchHandler(options)
+    this.stretchHandler = stretchHandler
     
     this.startRoutine = async function(){
+
         this.view.setPaused(false)
-        this.view.setMaxSet(this.routine.sets)
         this.view.addPauseHandler(() => this.onPause())
         this.view.addCancelHandler(() => this.onCancel())
 
-        this.routine.onStretchChange = this.onStretchChange.bind(this)
-        this.routine.onSetChange = this.onSetChange.bind(this)
-        this.routine.onTimeChange = this.onTimeChange.bind(this)
-        this.routine.onFinish = this.onFinish.bind(this)
+        this.playableRoutine.onStretchChange = this.onStretchChange.bind(this)
+        this.playableRoutine.onSetChange = this.onSetChange.bind(this)
+        this.playableRoutine.onTimeChange = this.onTimeChange.bind(this)
+        this.playableRoutine.onFinish = this.onFinish.bind(this)
 
-        await this.routine.start()
+        await this.playableRoutine.start()
     }
 
-    this.onStretchChange = async function(stretch){   
+    this.onStretchChange = async function(playableStretch){   
         
-        this.view.setTime(this.routine.duration)
+        this.view.setTime(playableStretch.duration)
+        this.view.setMaxSet(playableStretch.sets)
+
+        let stretch = playableStretch.stretch
         this.view.setName(stretch.name)
         this.view.resetInstructions()
         
@@ -49,21 +54,23 @@ function StretchRoutineController(routine, view, navigator, handlerFactory, opti
     }
 
     this.onFinish = async function(){
-        this.navigator.show(DisplayType.DONE)
         this.stretchHandler.onFinish(this)
+        this.onDone()
     }
     
     this.onPause = function(){
-        this.routine.setPaused(!this.routine.isPaused())
-        this.view.setPaused(this.routine.isPaused())
-        this.stretchHandler.onSetPaused(this, this.routine.isPaused())
+        this.playableRoutine.setPaused(!this.playableRoutine.isPaused())
+        this.view.setPaused(this.playableRoutine.isPaused())
+        this.stretchHandler.onSetPaused(this, this.playableRoutine.isPaused())
     }
 
     this.onCancel = function(){
-        this.routine.cancel()
-        this.navigator.show(DisplayType.SETUP)
+        this.playableRoutine.cancel()
         this.stretchHandler.onCancel(this)
+        this.onDone()
     }
+
+    this.startRoutine()
 }
 
 module.exports = StretchRoutineController

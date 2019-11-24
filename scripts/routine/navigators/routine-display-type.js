@@ -1,6 +1,7 @@
 const DisplayType = {
     LIST: "List",
-    CREATE: "Create"
+    CREATE: "Create",
+    PLAY: "Play"
 }
 
 module.exports = DisplayType

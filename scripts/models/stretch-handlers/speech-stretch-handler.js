@@ -1,3 +1,5 @@
+const Speaker = require('../../utilities/speaker')
+
 function SpeechStretchHandler(speakTime, speakInstructions, unilateralMode){
     this.speaker = new Speaker()
     this.speakTime = speakTime
