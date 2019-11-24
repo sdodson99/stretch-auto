@@ -12,7 +12,7 @@
     const connectionString = process.env.STRETCH_CONNECTION_STRING || "mongodb://localhost:27017/"
     const jwtSecretKey = process.env.JWT_SECRET_KEY || "ilovetostretch"
     const jwtRefreshSecretKey = process.env.JWT_REFRESH_SECRET_KEY || "ilovetorefreshstretch"
-    const jwtExpirationSeconds = "10s"
+    const jwtExpirationSeconds = "15m"
     const jwtRefreshExpirationSeconds = "90d"
 
     //Setup Mongoose

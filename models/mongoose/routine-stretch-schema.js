@@ -9,6 +9,10 @@ let routineStretchSchema = new Schema({
         required: true,
         autopopulate: true
     },
+    order: {
+        type: Number,
+        required: true
+    },
     sets: {
         type: Number,
         required: false,

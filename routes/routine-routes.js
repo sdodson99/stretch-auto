@@ -78,7 +78,7 @@ function createRoutineRouter(routineService){
             if(routine){
                 if(routine.ownerId == user.id || user.role == "admin"){
                     if(await routineService.delete(routine._id)){
-                        res.status(204).json(new SuccessResponse({}))
+                        res.json(new SuccessResponse({}))
                     } else {
                         res.status(404).json(new ErrorResponse(404, "Routine not found."))
                     }
