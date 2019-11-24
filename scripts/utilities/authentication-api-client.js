@@ -8,13 +8,14 @@ function AuthenticationApiClient(refreshService){
 
         //If request error code is token expired.
         if(response.error && response.error.code == 1){
-
+            
             //Refresh the token.
             let refreshResponse = await this.refreshService.refresh(localStorage.getItem('refreshToken'))
 
             //If successful refresh, set new access token and retry the request.
             if(refreshResponse.success){
-                localStorage.setItem('accessToken', refreshResponse.content.accessToken)
+
+                localStorage.setItem('accessToken', refreshResponse.content)
                 response = await this.makeAuthenticatedRequest(url, request)
             }
         }

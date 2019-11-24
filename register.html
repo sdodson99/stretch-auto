@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script defer src="scripts/login-main.js"></script>
+    <script defer src="scripts/register-main.js"></script>
 
-    <title>Login - Stretch Auto</title>
+    <title>Register - Stretch Auto</title>
 </head>
 <body>
     <div id="page">
@@ -21,27 +21,35 @@
                         <li><a href="index.html">Quick Start</a></li>
                         <li><a href="routine.html">Routine</a></li>
                         <li class="nav-grow"></li>
-                        <li class="not-auth"><a href="login.html" class="selected">Login</a></li>
-                        <li class="not-auth"><a href="register.html">Register</a></li>
+                        <li class="not-auth"><a href="login.html">Login</a></li>
+                        <li class="not-auth"><a href="register.html" class="selected">Register</a></li>
                         <li class="auth"><a href="logout.html">Logout</a></li>
                     </ul>
                 </div>
             </div>
         </header>
         <div id="main">
-            <div id="login" class="container">
-                <p id="login-error"></p>
+            <div id="register" class="container">
+                <p id="register-error"></p>
                 <div class="fieldset">
                     <label>Email</label>
-                    <input id="login-email" type="text" value="admin@stretchauto.com"/>
+                    <input id="register-email" type="text" value="admin2@stretchauto.com"/>
+                </div>
+                <div class="fieldset">
+                    <label>Username</label>
+                    <input id="register-username" type="text" value="sdodson"/>
                 </div>
                 <div class="fieldset">
                     <label>Password</label>
-                    <input id="login-password" type="password" value="test123"/>
+                    <input id="register-password" type="password" value="test1234"/>
+                </div>
+                <div class="fieldset">
+                    <label>Confirm Password</label>
+                    <input id="register-confirm-password" type="password" value="test1234"/>
                 </div>
                 <div class="fieldset fieldset-submit">
-                    <button id="login-submit">Login</button>      
-                    <a id="login-register" href="register.html">Don't have an account? Click here to register.</a>              
+                    <button id="register-submit">Register</button>      
+                    <a id="register-login" href="login.html">Already have an account? Click here to login.</a>              
                 </div>
             </div>
         </div>

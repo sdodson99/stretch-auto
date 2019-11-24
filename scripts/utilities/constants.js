@@ -1,9 +1,11 @@
-// const stretchApiUrl = "http://52.170.19.168/stretch"
-// const authenticationApiUrl = "http://52.170.19.168/auth"
+let baseUrl = "http://localhost:5000"
+// let baseUrl = "http://52.170.19.168"
+
 const Constants = {
-    authenticationApiUrl: "http://localhost:5000/auth",
-    stretchApiUrl: "http://localhost:5000/stretch",
-    accountApiUrl: "http://localhost:5000/account"
+    authenticationApiUrl: baseUrl + "/auth",
+    stretchApiUrl: baseUrl + "/stretch",
+    accountApiUrl: baseUrl + "/account",
+    routineApiUrl: baseUrl + "/routine"
 }
 
 module.exports = Constants

@@ -1,12 +1,21 @@
 function ApiStretchService(url){
     this.url = url
 
-    this.getStretches = async function(amount){
-        let fetchResult = await fetch(this.url + `/?maxAmount=${amount}`)
-        let stretches = await fetchResult.json()
+    this.getAll = async function(){
+        return await this.fetchStretches()
+    }
+
+    this.getMaxAmount = async function(amount){
+        return await this.fetchStretches(`/?maxAmount=${amount}`)
+    }
+
+    this.fetchStretches = async function(params = ""){
+        let fetchResult = await fetch(this.url + params)
+
+        let stretchResult = await fetchResult.json()
+        let stretches = stretchResult.content || []
 
         stretches.forEach((stretch) => {
-            stretch.name = stretch.name + " Stretch"
             if(stretch.instructions){
                 stretch.instructions.sort((a, b) => a.order > b.order)
             }

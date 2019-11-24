@@ -1,12 +1,12 @@
-const StretchHandlerFactory = require('../models/stretch-handlers/stretch-handler-factory')
-const StretchPlayerFactory = require('../models/stretch-players/stretch-player-factory')
+const StretchHandlerFactory = require('../../models/stretch-handlers/stretch-handler-factory')
+const StretchPlayerFactory = require('../../models/stretch-players/stretch-player-factory')
 const StretchRoutineView = require('../views/stretch-routine-view')
 const StretchSetupView = require('../views/stretch-setup-view')
-const ApiStretchService = require('../services/api-stretch-service')
+const ApiStretchService = require('../../services/api-stretch-service')
 const StretchSetupController = require('../controllers/stretch-setup-controller')
 const StretchRoutineController = require('../controllers/stretch-routine-controller')
-const PlayableStretchRoutine = require('../models/stretch-routines/playable-stretch-routine')
-const Constants = require('../utilities/constants')
+const PlayableStretchRoutine = require('../../models/stretch-routines/playable-stretch-routine')
+const Constants = require('../../utilities/constants')
 const DisplayType = require('./stretch-display-type')
 
 function Navigator(){

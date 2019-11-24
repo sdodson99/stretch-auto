@@ -13,7 +13,12 @@
 
     #header-nav{
         background: $color-primary-2;
-        font-size: $font-medium;
+        font-size: $font-tiny;
+
+        .container{
+            flex-direction: row;
+            width: 70%;
+        }
 
         a{
             color: white;
@@ -23,36 +28,33 @@
         ul{
             list-style-type: none;
             display: flex;
+            flex-wrap: wrap;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        li{
+
+            a{
+                display: flex;
+                flex-grow: 1;
+                text-align: center;
+                cursor: pointer;
+                padding: $spacing-small $spacing-large;
+            }
         }
 
         .nav-grow{
             flex-grow: 1;
         }
 
-        li{
-            cursor: pointer;
-            a{
-                padding: $spacing-small $spacing-large;
-                display: inline-block;
-            }
-        }
-
         .selected{
             background: $color-primary-3;
         }
-    }
 
-    @media screen and (max-width: 1000px){
-        #header-nav ul{
-            flex-direction: column;
-
-            li, a{
-                display: flex;
-                flex-grow: 1;
-            }
-
-            a{
-                justify-content: center;
+        @media screen and (max-width: 1000px){
+            .nav-grow{
+                display: none;
             }
         }
     }

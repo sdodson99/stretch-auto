@@ -1,0 +1,31 @@
+@import 'common';
+@import 'routine-list';
+@import 'routine-create';
+
+#main{
+    section{
+        padding: $spacing-medium;
+    }
+
+    .routine-section-header{
+        display: flex;
+        padding: $spacing-medium 0;
+        font-size: $font-medium;
+    }
+
+    .routine-header-button{
+        align-self: flex-start;
+    }
+
+    ul{
+        list-style: none;
+        margin: $spacing-medium;
+    }
+
+    li{
+        display: flex;
+        padding: $spacing-medium;
+        border: 1px solid black;
+        font-size: $font-tiny;
+    }
+}

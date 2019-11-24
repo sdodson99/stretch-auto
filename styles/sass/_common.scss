@@ -1,11 +1,9 @@
 @import 'header';
 @import 'footer';
-@import 'common-variables';
 @import 'form';
-@import 'stretch-setup';
-@import 'stretch';
-@import 'login';
 @import 'authentication';
+@import 'common-variables';
+
 
 *{
     padding: 0;
@@ -39,9 +37,16 @@ a{
     margin: 0 auto;
 }
 
-.stretch-content{
-    flex-grow: 1;
+.center-content{
+    display: flex;
     align-items: center;
-    margin: $spacing-medium auto;
-    display: none;
+    padding: $spacing-medium;
+}
+
+.delete-button{
+    background: red;
+}
+
+.delete-button:hover{
+    background: darkred;
 }

@@ -12,7 +12,7 @@ function ApiAccountService(url, client){
             },
         })
 
-        return accountResponse
+        return accountResponse.content
     }
 }
 

@@ -1,4 +1,6 @@
 require('babel-polyfill')
+require('../styles/sass/_common.scss')
+
 const authenticate = require('./authenticate')
 const ApiAuthenticationService = require('./services/api-authentication-service')
 const Constants = require('./utilities/constants')

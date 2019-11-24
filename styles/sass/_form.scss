@@ -4,7 +4,7 @@ $form-border-radius: 5px;
 $form-border: 1px solid $color-primary-3;
 
 button{
-    font-size: $font-small;
+    font-size: $font-tiny;
     text-decoration: none;
     padding: $spacing-small;
     border: $form-border;
@@ -18,8 +18,9 @@ button:hover{
     background: $color-primary-3;
 }
 
-input[type=text], input[type=password]{
+input[type=text], input[type=password], select{
     padding: $spacing-small;
     border: $form-border;
     border-radius: $form-border-radius;
+    font-size: $font-tiny;
 }

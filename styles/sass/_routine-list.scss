@@ -1,0 +1,23 @@
+@import 'common-variables';
+
+#routine-list{
+
+    #routine-list-caption{
+        padding: $spacing-medium 0;
+        font-size: $font-small;
+    }
+
+    #routine-list-items{
+        display: flex;
+        flex-grow: 1;
+        align-self: stretch;
+        justify-content: center;
+
+        li{
+            justify-self: center;
+            justify-content: space-between;
+            align-items: center;
+            width: 75%;
+        }
+    }
+}

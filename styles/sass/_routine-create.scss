@@ -1,0 +1,88 @@
+@import 'common-variables';
+
+#routine-create{
+
+    font-size: $font-small;
+
+    .routine-create-content{
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        align-items: center;
+    }
+
+    .routine-create-fieldset{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        justify-items: center;
+        flex-wrap: wrap;
+        padding: $spacing-medium 0;
+        width: 75%;
+    }
+
+    .routine-create-stretches{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        justify-items: center;
+        flex-wrap: wrap;
+        padding: $spacing-medium 0;
+        width: 75%;
+    }
+
+    #routine-stretch-header{
+        display: flex;
+        align-items: center;
+    }
+
+    #routine-stretch-add{
+        margin-left: 10px;
+        padding: 2px 5px;
+    }
+
+    .routine-field{
+        flex-basis: 60%;
+    }
+
+    ul{
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        margin: $spacing-medium;
+    }
+
+    li{
+        flex-wrap: wrap;
+        justify-content: center;
+
+        input[type=text]{
+            font-size: $font-tiny;
+            width: 10px;
+        }
+
+        select{
+            flex-grow: 1;
+        }
+
+        .stretch-remove{
+            font-size: $font-medium;
+            flex-grow: 1;
+            display: flex;
+            align-self: flex-end;
+            margin: $spacing-small;
+            justify-content: flex-end;
+        }
+    }
+
+    .stretch-option{
+        display: flex;
+        flex-direction: column;
+        margin: $spacing-small;
+        align-items: center;
+    }
+
+    #routine-create-submit{
+        align-self: center;
+    }
+}

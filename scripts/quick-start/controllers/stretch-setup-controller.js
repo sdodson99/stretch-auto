@@ -1,4 +1,4 @@
-const StretchRoutine = require('../models/stretch-routines/stretch-routine')
+const StretchRoutine = require('../../models/stretch-routines/stretch-routine')
 
 function StretchSetupController(view, navigator, stretchService){
 
@@ -16,8 +16,13 @@ function StretchSetupController(view, navigator, stretchService){
             narrateInstructions: this.view.isNarrateInstructions(),
             unilateralMode: true
         }
+
+        let stretches = await this.stretchService.getMaxAmount(amount)
+        stretches.forEach(s => {
+            s.name += " Stretch"
+        });
         
-        let routine = new StretchRoutine(await this.stretchService.getStretches(amount), maxSets, duration)
+        let routine = new StretchRoutine(stretches, maxSets, duration)
         this.navigator.playRoutine(routine, options)
     }
 

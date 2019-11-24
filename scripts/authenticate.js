@@ -9,16 +9,17 @@ async function authenticate(){
     
     let account = await accountService.getAccountInfo()
     
-    if(account.success){
+    if(account){
         document.querySelectorAll('.auth').forEach((e) => {
-            e.style.display = "block"
+            e.style.display = "flex"
         })
     } else {
         document.querySelectorAll('.not-auth').forEach((e) => {
-            e.style.display = "block"
+            e.style.display = "flex"
         })
     }
 
+    return account
 }
 
 module.exports = authenticate

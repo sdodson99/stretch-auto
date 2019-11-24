@@ -1,4 +1,6 @@
 require('babel-polyfill')
+require('../styles/sass/login.scss')
+
 const ApiAuthenticationService = require('./services/api-authentication-service')
 const Constants = require('./utilities/constants')
 const authenticate = require('./authenticate')
@@ -6,7 +8,6 @@ const authenticate = require('./authenticate')
 const emailInput = document.querySelector('#login-email')
 const passwordInput = document.querySelector('#login-password')
 const loginButton = document.querySelector('#login-submit')
-const registerButton = document.querySelector('#login-register')
 const errorLabel = document.querySelector('#login-error')
 
 authenticate()
