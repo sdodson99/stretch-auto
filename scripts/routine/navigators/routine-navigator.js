@@ -2,6 +2,8 @@ const DisplayType = require('./routine-display-type')
 const StretchHandlerFactory = require('../../models/stretch-handlers/stretch-handler-factory')
 const RoutineListView = require('../views/routine-list-view')
 const RoutineListController = require('../controllers/routine-list-controller')
+const RoutinePreviewView = require('../views/routine-preview-view')
+const RoutinePreviewController = require('../controllers/routine-preview-controller')
 const RoutineCreateView = require('../views/routine-create-view')
 const RoutineCreateController = require('../controllers/routine-create-controller')
 const RoutinePlayView = require('../../quick-start/views/stretch-routine-view')
@@ -23,6 +25,7 @@ function RoutineNavigator(){
     this.routineService = new RoutineService(Constants.routineApiUrl, new ApiClient(new RefreshService(Constants.authenticationApiUrl)))
     this.routineCreateView = new RoutineCreateView()
     this.routineListView = new RoutineListView()
+    this.routinePreviewView = new RoutinePreviewView()
     this.routinePlayView = new RoutinePlayView()
 
     this.show = function(displayType){
@@ -39,13 +42,21 @@ function RoutineNavigator(){
             case DisplayType.PLAY:
                 this.routinePlayView.draw(this.root)
                 break
+            case DisplayType.PREVIEW:
+                this.routinePreviewView.draw(this.root)
+                break
         }
     }
 
-    this.playRoutine = function(routine){
+    this.previewRoutine = function(routine) {
+        this.show(DisplayType.PREVIEW)
+        this.currentController = new RoutinePreviewController(routine, this.routinePreviewView, this)
+    }
+
+    this.playRoutine = function(routine, options = {}){
         this.show(DisplayType.PLAY)
-        let stretchHandler = this.stretchHandlerFactory.createStretchHandler({})
-        this.currentController = new RoutinePlayController(routine, this.routinePlayView, stretchHandler, {}, () => this.show(DisplayType.LIST))
+        let stretchHandler = this.stretchHandlerFactory.createStretchHandler(options)
+        this.currentController = new RoutinePlayController(routine, this.routinePlayView, stretchHandler, options, () => this.previewRoutine(routine))
     }
 }
 

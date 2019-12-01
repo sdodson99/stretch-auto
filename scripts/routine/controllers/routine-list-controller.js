@@ -5,19 +5,17 @@ function RoutineListController(view, navigator, routineService){
     this.navigator = navigator
     this.routineService = routineService
 
-    this.initialize = async function(){
-        this.view.reset()
-        this.view.setListCaption("Loading routines...")
-    
-        this.view.addCreateButtonHandler(() => {
-            this.navigator.show(DisplayType.CREATE)
-        })
-    
-        let routines = await this.routineService.getAll()
+    this.view.reset()
+    this.view.setListCaption("Loading routines...")
 
+    this.view.addCreateButtonHandler(() => {
+        this.navigator.show(DisplayType.CREATE)
+    })
+
+    this.routineService.getAll().then((routines) => {
         routines.forEach(r => {
             this.view.addRoutine(r._id, r.name, () => {
-                this.navigator.playRoutine(r)
+                this.navigator.previewRoutine(r)
             }, () => {
                 this.routineService.delete(r._id)
             })
@@ -28,9 +26,7 @@ function RoutineListController(view, navigator, routineService){
         } else {
             this.view.setListCaption("")
         }
-    }
-
-    this.initialize()
+    })
 }
 
 module.exports = RoutineListController

@@ -24,3 +24,8 @@ input[type=text], input[type=password], input[type=email], select{
     border-radius: $form-border-radius;
     font-size: $font-tiny;
 }
+
+input[type=checkbox]{
+    width: 30px;
+    height: 30px;
+}

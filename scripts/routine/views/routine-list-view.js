@@ -10,7 +10,7 @@ function RoutineListView(){
         newRoutineItem.innerHTML = `
             <div class="routine-name">${routineName}</div>
             <div class="routine-operations">
-                <button class="routine-play" type="button">Play</button>
+                <button class="routine-play" type="button">Play...</button>
                 <button class="routine-delete delete-button" type="button">Delete</button>
             </div>`
 
