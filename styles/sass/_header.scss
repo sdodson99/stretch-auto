@@ -1,60 +1,66 @@
 @import 'common-variables';
 
-#site-header{
-    color: white;
-    background: $color-primary-1;
-    border-bottom: 1px solid $color-primary-3;
+header{
+    font-size: $font-tiny;
+    display: flex;
+    background: $color-primary-2;
 
-    #header-logo{
-        font-size: $font-small;
-        text-align: center;
-        padding: $spacing-large;
+    a{
+        text-decoration: none;
+        color: white;
     }
 
-    #header-nav{
-        background: $color-primary-2;
-        font-size: $font-tiny;
+    ul{
+        max-width: 70%;
+        margin: auto;
+        display: flex;
+        flex: 1;
+        list-style: none;
+        flex-wrap: wrap;
 
-        .container{
-            flex-direction: row;
-            width: 70%;
-        }
-
-        a{
-            color: white;
-            text-decoration: none;
-        }
-
-        ul{
-            list-style-type: none;
+        .nav-item{
             display: flex;
-            flex-wrap: wrap;
-            flex-grow: 1;
-            justify-content: center;
-        }
-
-        li{
+            flex-basis: 10%;
 
             a{
                 display: flex;
-                flex-grow: 1;
+                align-items: center;
+                justify-content: center;
                 text-align: center;
-                cursor: pointer;
-                padding: $spacing-small $spacing-large;
+                flex: 1;
+                padding: 10px;
+            }
+
+            a:hover, .selected{
+                background: $color-primary-3;
             }
         }
 
-        .nav-grow{
-            flex-grow: 1;
-        }
+        #logo{ 
+            flex: 1;
+            display: flex;
 
-        .selected{
-            background: $color-primary-3;
-        }
+            img{
+                width: 150px;
+            }
 
-        @media screen and (max-width: 1000px){
-            .nav-grow{
-                display: none;
+            a{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 700px){
+        ul {
+            .nav-item, #logo{
+                flex-basis: 100%;
+            }
+
+            #logo a{
+                flex-basis: 100%;
             }
         }
     }

@@ -10,8 +10,8 @@ function RoutineListView(){
         newRoutineItem.innerHTML = `
             <div class="routine-name">${routineName}</div>
             <div class="routine-operations">
-                <button class="routine-play">Play</button>
-                <button class="routine-delete delete-button">Delete</button>
+                <button class="routine-play" type="button">Play</button>
+                <button class="routine-delete delete-button" type="button">Delete</button>
             </div>`
 
         this.list.appendChild(newRoutineItem)
@@ -51,7 +51,7 @@ function RoutineListView(){
     this.getMarkup = function(){
         return `
         <section id="routine-list" class="routine-content center-content container">
-            <button id="routine-view-create" class="routine-header-button">Create Routine</button>
+            <button id="routine-view-create" class="routine-header-button" type="button">Create Routine</button>
             <div class="routine-section-header">Saved Routines</div>
             <p id="routine-list-caption"></p>
             <ul id="routine-list-items">

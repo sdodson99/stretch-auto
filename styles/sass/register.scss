@@ -3,7 +3,13 @@
 #register{
     margin-top: $spacing-medium;
 
+    #register-header{
+        align-self: center;
+        font-size: $font-large;
+    }
+
     #register-error{
+        margin: $spacing-small;
         font-size: $font-small;
         color: red;
         text-align: center;

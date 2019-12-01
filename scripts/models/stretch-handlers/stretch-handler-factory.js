@@ -16,10 +16,10 @@ function StretchHandlerFactory(){
             handler.addHandler(new WaitStretchHandler(3))
         }
         
-        //if(options.unilateralMode){
+        if(options.unilateralMode){
             handler = new UnilateralStretchHandler(handler)
-        //}
-    
+        }
+        
         return handler
     }
 }

@@ -50,3 +50,7 @@ a{
 .delete-button:hover{
     background: darkred;
 }
+
+.auth, .not-auth{
+    display: none;
+}

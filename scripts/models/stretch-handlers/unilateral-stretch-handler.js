@@ -1,10 +1,10 @@
 function UnilateralStretchHandler(stretchHandler){
     this.stretchHandler = stretchHandler
 
-    this.onStretchChange = async function(sender, stretch){
+    this.onStretchChange = async function(sender, stretch){        
         if(stretch.isUnilateral && !(stretch.name.startsWith("Left") || stretch.name.startsWith("Right")))
             return
-        
+
         await stretchHandler.onStretchChange(sender, stretch)
     }
 

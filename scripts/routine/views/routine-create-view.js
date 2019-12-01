@@ -106,7 +106,7 @@ function RoutineCreateView(){
                 <input class="stretch-duration" type="text" required pattern="^[0-9]*$"}>
             </div>
             <div class="stretch-remove">
-                <button class="routine-stretch-remove delete-button">Remove</button>
+                <button class="routine-stretch-remove delete-button" type="button">Remove</button>
             </div>`
 
         this.stretchList.appendChild(newListItem)

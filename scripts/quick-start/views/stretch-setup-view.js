@@ -84,7 +84,7 @@ function StretchSetupView(){
                 </div>
             </div>
             <div class="stretch-fieldset">
-                <button id="stretch-start">Start Stretching</button>
+                <button id="stretch-start" type="button">Start Stretching</button>
             </div>
             <div id="stretch-legend">
                 <p>* This is a maximum number. If the number entered is too large, 

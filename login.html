@@ -11,38 +11,36 @@
 </head>
 <body>
     <div id="page">
-        <header id="site-header">
-            <div id="header-logo">
-                <h1>STRETCH AUTO</h1>
-            </div>
-            <div id="header-nav">
-                <div class="container">
-                    <ul>
-                        <li><a href="index.html">Quick Start</a></li>
-                        <li><a href="routine.html">Routine</a></li>
-                        <li class="nav-grow"></li>
-                        <li class="not-auth"><a href="login.html" class="selected">Login</a></li>
-                        <li class="not-auth"><a href="register.html">Register</a></li>
-                        <li class="auth"><a href="logout.html">Logout</a></li>
-                    </ul>
-                </div>
-            </div>
+        <header>
+            <ul>
+                <li id="logo"><a href="index.html"><img src="./images/stretchauto-white.png"/></a></li>
+                <li class="nav-item"><a href="index.html">Quick Start</a></li>
+                <li class="nav-item"><a href="routine.html">Routines</a></li>
+                <li class="nav-item not-auth"><a href="login.html" class="selected">Login</a></li>
+                <li class="nav-item not-auth"><a href="register.html">Register</a></li>
+                <li class="nav-item auth"><a href="logout.html">Logout</a></li>
+            </ul>
         </header>
         <div id="main">
             <div id="login" class="container">
-                <p id="login-error"></p>
-                <div class="fieldset">
-                    <label>Email</label>
-                    <input id="login-email" type="text"/>
-                </div>
-                <div class="fieldset">
-                    <label>Password</label>
-                    <input id="login-password" type="password"/>
-                </div>
-                <div class="fieldset fieldset-submit">
-                    <button id="login-submit">Login</button>      
-                    <a id="login-register" href="register.html">Don't have an account? Click here to register.</a>              
-                </div>
+                <form id="login-form">
+                    <div id="login-header">
+                        Login
+                    </div>
+                    <p id="login-error"></p>
+                    <div class="fieldset">
+                        <label>Email</label>
+                        <input id="login-email" type="text"/>
+                    </div>
+                    <div class="fieldset">
+                        <label>Password</label>
+                        <input id="login-password" type="password"/>
+                    </div>
+                    <div class="fieldset fieldset-submit">
+                        <button id="login-submit" type="button">Login</button>      
+                        <a id="login-register" href="register.html">Don't have an account? Click here to register.</a>              
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -8,16 +8,14 @@ async function authenticate(){
     const accountService = new ApiAccountService(Constants.accountApiUrl, apiClient)
     
     let account = await accountService.getAccountInfo()
-    
-    if(account){
-        document.querySelectorAll('.auth').forEach((e) => {
-            e.style.display = "flex"
-        })
-    } else {
-        document.querySelectorAll('.not-auth').forEach((e) => {
-            e.style.display = "flex"
-        })
-    }
+
+    document.querySelectorAll('.auth').forEach((e) => {
+        e.style.display = account ? "flex" : "none"
+    })
+
+    document.querySelectorAll('.not-auth').forEach((e) => {
+        e.style.display = account ? "none" : "flex"
+    })
 
     return account
 }

@@ -4,11 +4,11 @@ const UnilateralStretchPlayer = require('./unilateral-stretch-player')
 function StretchPlayerFactory(unilateralMode){
     this.unilateralMode = unilateralMode
 
-    this.createStretchPlayer = function(stretch, duration, onStretchChange, onTimeChange){
-        let stretchPlayer = new StretchPlayer(duration, onTimeChange)
+    this.createStretchPlayer = function(playableStretch, onStretchChange, onTimeChange){
+        let stretchPlayer = new StretchPlayer(playableStretch.duration, onTimeChange)
         
-        if(this.unilateralMode && stretch.isUnilateral){
-            stretchPlayer = new UnilateralStretchPlayer(stretchPlayer, stretch, onStretchChange)
+        if(this.unilateralMode && playableStretch.stretch.isUnilateral){
+            stretchPlayer = new UnilateralStretchPlayer(stretchPlayer, playableStretch, onStretchChange)
         }
 
         return stretchPlayer

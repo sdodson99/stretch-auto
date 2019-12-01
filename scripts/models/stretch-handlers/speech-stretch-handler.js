@@ -19,7 +19,7 @@ function SpeechStretchHandler(speakTime, speakInstructions, unilateralMode){
         } else {
             await this.speaker.speakAsync(stretch.name)     
             
-            if(this.speakInstructions){
+            if(this.speakInstructions && stretch.instructions){
                 for (let i = 0; i < stretch.instructions.length; i++) {
                     if(this.cancelled) return
                     const instruction = stretch.instructions[i]

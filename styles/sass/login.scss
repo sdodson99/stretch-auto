@@ -3,14 +3,25 @@
 #login{
     margin-top: $spacing-medium;
 
+    #login-form{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #login-header{
+        align-self: center;
+        font-size: $font-large;
+    }
+
     #login-error{
+        margin: $spacing-small;
         font-size: $font-small;
         color: red;
         text-align: center;
     }
 
     .fieldset{
-        margin: $spacing-medium;
+        margin: $spacing-small;
         font-size: $font-small;
         display: flex;
         align-items: center;

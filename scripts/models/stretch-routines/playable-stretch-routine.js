@@ -13,15 +13,15 @@ function PlayableStretchRoutine(stretches, playerFactory){
         for (let i = 0; i < this.stretches.length; i++) {
             if(this.isCancelled()) return
 
-            const currentStretch = this.stretches[i]
+            const playingStretch = this.stretches[i]
 
-            for (let currentSet = 1; currentSet <= currentStretch.sets; currentSet++) {
+            for (let currentSet = 1; currentSet <= playingStretch.sets; currentSet++) {
                 if(this.isCancelled()) return
                 await this.onSetChange(currentSet)
     
                 if(this.isCancelled()) return
-                this.currentPlayer = this.createStretchPlayer(currentStretch)
-                await this.onStretchChange(currentStretch)
+                this.currentPlayer = this.createStretchPlayer(playingStretch)
+                await this.onStretchChange(playingStretch)
     
                 if(this.isCancelled()) return
                 await this.currentPlayer.start()
@@ -49,8 +49,8 @@ function PlayableStretchRoutine(stretches, playerFactory){
         return this.currentPlayer && this.currentPlayer.isCancelled()
     }
 
-    this.createStretchPlayer = function(stretch){
-        return this.playerFactory.createStretchPlayer(stretch, stretch.duration, this.onStretchChange, this.onTimeChange)
+    this.createStretchPlayer = function(playableStretch){
+        return this.playerFactory.createStretchPlayer(playableStretch, this.onStretchChange, this.onTimeChange)
     }
 }
 

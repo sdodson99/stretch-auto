@@ -70,8 +70,8 @@ function StretchRoutineView(){
                 </ol>
             </div>
             <div id="stretch-buttons">
-                <button id="stretch-pause">Pause Routine</button>
-                <button id="stretch-cancel">Cancel Routine</button>
+                <button id="stretch-pause" type="button">Pause Routine</button>
+                <button id="stretch-cancel" type="button">Cancel Routine</button>
             </div>
         </section>`
     }
