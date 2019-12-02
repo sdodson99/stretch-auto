@@ -20,6 +20,9 @@ header{
 
         .nav-item{
             display: flex;
+        }
+
+        .nav-item, .nav-item-auth{
             flex-basis: 10%;
 
             a{
