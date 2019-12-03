@@ -4,6 +4,7 @@ function Timer(onTimeChange){
     this.onTimeChange = onTimeChange
     this.cancelled = false
     this.paused = false
+    this.tickRate = 10
 
     this.waitForDuration = async function(duration){
         this.cancelled = false
@@ -14,7 +15,11 @@ function Timer(onTimeChange){
 
             await this.onTimeChange(time)
 
-            await this.wait(1)
+            for (let ms = 0; ms < this.tickRate; ms++) {
+                if(this.isCancelled()) return
+
+                await this.wait(1 / this.tickRate)                
+            }
 
             while(this.isPaused()){
                 await this.wait(1)

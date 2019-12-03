@@ -14,6 +14,7 @@ function StretchRoutineController(routine, view, stretchHandler, options, onDone
         this.view.setPaused(false)
         this.view.addPauseHandler(() => this.onPause())
         this.view.addCancelHandler(() => this.onCancel())
+        this.view.addSkipHandler(() => this.onSkip())
 
         this.playableRoutine.onStretchChange = this.onStretchChange.bind(this)
         this.playableRoutine.onSetChange = this.onSetChange.bind(this)
@@ -68,6 +69,10 @@ function StretchRoutineController(routine, view, stretchHandler, options, onDone
         this.playableRoutine.cancel()
         this.stretchHandler.onCancel(this)
         this.onDone()
+    }
+
+    this.onSkip = function(){
+        this.playableRoutine.skip()
     }
 
     this.startRoutine()

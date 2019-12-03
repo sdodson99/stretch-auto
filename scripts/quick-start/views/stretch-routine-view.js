@@ -33,11 +33,15 @@ function StretchRoutineView(){
     }
 
     this.addPauseHandler = function(handler){
-        this.pauseButton.addEventListener("click", (e) => handler())
+        this.pauseButton.addEventListener("click", () => handler())
     }
 
     this.addCancelHandler = function(handler){
-        this.cancelButton.addEventListener("click", (e) => handler())
+        this.cancelButton.addEventListener("click", () => handler())
+    }
+
+    this.addSkipHandler = function(handler){
+        this.skipButton.addEventListener("click", () => handler());
     }
     
     this.draw = function(root){
@@ -50,6 +54,7 @@ function StretchRoutineView(){
         this.instructionsList = document.querySelector("#stretch-instructions")
         this.pauseButton = document.querySelector("#stretch-pause")
         this.cancelButton = document.querySelector("#stretch-cancel")
+        this.skipButton = document.querySelector('#stretch-skip')
     }
 
     this.getMarkup = function(){
@@ -63,15 +68,16 @@ function StretchRoutineView(){
                     Time Remaining: <span id="stretch-timer-value"><span>0</span> second(s)</span> 
                 </div>
             </div>
+            <div id="routine-buttons">
+                <button id="stretch-skip" type="button">Skip Stretch</button>
+                <button id="stretch-pause" type="button">Pause Routine</button>
+                <button id="stretch-cancel" type="button">Cancel Routine</button>
+            </div>
             <div id="stretch-information">
                 <div id="stretch-name">Stretch</div>
                 <ol id="stretch-instructions">
 
                 </ol>
-            </div>
-            <div id="stretch-buttons">
-                <button id="stretch-pause" type="button">Pause Routine</button>
-                <button id="stretch-cancel" type="button">Cancel Routine</button>
             </div>
         </section>`
     }

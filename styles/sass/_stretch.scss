@@ -3,17 +3,18 @@
 #stretch{
 
     #stretch-volume{
-        margin-bottom: $spacing-large;
         text-align: center;
     }
 
     #stretch-timer, #stretch-set{
         font-size: $font-large;
-        margin-bottom: $spacing-medium;
+    }
+
+    #stretch-set{
+        padding-bottom: $spacing-medium
     }
 
     #stretch-information{
-        padding-bottom: $spacing-large;
         text-align: center;
     }
 
@@ -32,12 +33,18 @@
         padding: $spacing-small 0;
     }
 
-    #stretch-buttons{
-        align-self: center;
+    #routine-buttons{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin: $spacing-medium 0;
+
+        button{
+            margin: $spacing-small;
+        }
     }
 
     #stretch-cancel{
-        margin-left: $spacing-small;
         background: red;
     }
 

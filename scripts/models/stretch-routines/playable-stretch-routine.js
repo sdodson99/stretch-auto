@@ -14,16 +14,20 @@ function PlayableStretchRoutine(stretches, playerFactory){
             if(this.isCancelled()) return
 
             const playingStretch = this.stretches[i]
+            this.skipped = false
 
             for (let currentSet = 1; currentSet <= playingStretch.sets; currentSet++) {
                 if(this.isCancelled()) return
+                if(this.skipped) break
                 await this.onSetChange(currentSet)
     
                 if(this.isCancelled()) return
+                if(this.skipped) break
                 this.currentPlayer = this.createStretchPlayer(playingStretch)
                 await this.onStretchChange(playingStretch)
     
                 if(this.isCancelled()) return
+                if(this.skipped) break
                 await this.currentPlayer.start()
             }
         }
@@ -43,10 +47,16 @@ function PlayableStretchRoutine(stretches, playerFactory){
     this.cancel = function(){
         this.currentPlayer.cancel()
         this.onCancel()
+        this.cancelled = true
+    }
+
+    this.skip = function(){
+        this.currentPlayer.cancel()
+        this.skipped = true
     }
 
     this.isCancelled = function(){
-        return this.currentPlayer && this.currentPlayer.isCancelled()
+        return this.cancelled
     }
 
     this.createStretchPlayer = function(playableStretch){
