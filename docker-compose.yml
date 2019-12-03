@@ -5,7 +5,8 @@ services:
     restart: always
     build: .
     ports: 
-      - '80:5000'
+      - '80:80'
+      - '443:443'
     links:
       - mongo
     environment:
@@ -15,6 +16,7 @@ services:
       - ADMIN_PASSWORD=PASSWORD
       - JWT_SECRET_KEY=SECRET
       - JWT_REFRESH_SECRET_KEY=SECRET
+      - PRODUCTION=TRUE
   mongo:
     container_name: stretch-db
     image: mongo
