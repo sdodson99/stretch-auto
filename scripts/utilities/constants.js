@@ -1,5 +1,5 @@
 // let baseUrl = "http://localhost:5000"
-let baseUrl = "http://52.170.19.168"
+let baseUrl = "http://api.stretchauto.com"
 
 const Constants = {
     authenticationApiUrl: baseUrl + "/auth",

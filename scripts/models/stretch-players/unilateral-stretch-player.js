@@ -5,20 +5,26 @@ function UnilateralStretchPlayer(stretchPlayer, playableStretch, onStretchChange
     this.onStretchChange = onStretchChange
 
     this.start = async function(){
-        if(this.isCancelled()) return
-        this.originalStretchName = this.stretch.name
-        this.stretch.name = "Left " + this.originalStretchName
-        await this.onStretchChange(this.playableStretch)
+        if(!this.isCancelled()){
+            this.originalStretchName = this.stretch.name
+            this.stretch.name = "Left " + this.originalStretchName
+            await this.onStretchChange(this.playableStretch)
+        }
 
-        if(this.isCancelled()) return
-        await this.stretchPlayer.start()
 
-        if(this.isCancelled()) return
-        this.stretch.name = "Right " + this.originalStretchName
-        await this.onStretchChange(this.playableStretch)
+        if(!this.isCancelled()){
+            await this.stretchPlayer.start()
+        }
+
+        if(!this.isCancelled()){
+            this.stretch.name = "Right " + this.originalStretchName
+            await this.onStretchChange(this.playableStretch)
+        }
+
         
-        if(this.isCancelled()) return
-        await this.stretchPlayer.start()
+        if(!this.isCancelled()){
+            await this.stretchPlayer.start()
+        }
 
         this.stretch.name = this.originalStretchName
     }
