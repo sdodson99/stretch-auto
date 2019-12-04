@@ -2,7 +2,7 @@
 
 const app = require('./app.js');
 
-if(process.env.PRODUCTION){
+if(process.env.PRODUCTION == "TRUE"){
     require('greenlock-express')
         .init(function() {
             return {
@@ -14,5 +14,5 @@ if(process.env.PRODUCTION){
             glx.serveApp(app);
         });
 } else {
-    app.listen(5000, () => console.log('Server running on port 5000.'));
+    app.listen(80, () => console.log('Server running on port 80.'));
 }
