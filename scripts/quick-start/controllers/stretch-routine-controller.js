@@ -73,6 +73,7 @@ function StretchRoutineController(routine, view, stretchHandler, options, onDone
 
     this.onSkip = function(){
         this.playableRoutine.skip()
+        this.stretchHandler.onCancel(this)
     }
 
     this.startRoutine()
