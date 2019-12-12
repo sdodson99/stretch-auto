@@ -1,9 +1,5 @@
 {
   "defaults": {
-    "store": {
-      "module": "greenlock-store-fs",
-      "basePath": "./greenlock.d"
-    },
     "challenges": {
       "http-01": {
         "module": "acme-http-01-standalone"
@@ -20,7 +16,6 @@
     {
       "subject": "stretchauto.com",
       "altnames": [
-        "stretchauto.com",
         "api.stretchauto.com"
       ],
       "renewAt": 1
