@@ -1,0 +1,20 @@
+{
+  "defaults": {
+    "store": {
+      "module": "greenlock-store-fs",
+      "basePath": "./greenlock.d"
+    },
+    "challenges": {
+      "http-01": {
+        "module": "acme-http-01-standalone"
+      }
+    },
+    "renewOffset": "-45d",
+    "renewStagger": "3d",
+    "accountKeyType": "EC-P256",
+    "serverKeyType": "RSA-2048",
+    "subscriberEmail": "bballheat6@gmail.com",
+    "agreeToTerms": true
+  },
+  "sites": []
+}
