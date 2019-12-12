@@ -11,7 +11,8 @@ let routineStretchSchema = new Schema({
     },
     order: {
         type: Number,
-        required: true
+        required: false,
+        default: 0
     },
     sets: {
         type: Number,

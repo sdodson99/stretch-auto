@@ -57,13 +57,13 @@ function createAuthenticationRouter(authService){
     })
 
     //Logout user.
-    //Send a 204 if successful logout.
+    //Send a 200 if successful logout.
     //Send a 404 if user not found.
-    router.delete("/logout", async (req, res) => {
+    router.post("/logout", async (req, res) => {
         let refreshToken = req.body.refreshToken
 
         if(await authService.logout(refreshToken)){
-            res.status(204).json(new SuccessResponse({}))
+            res.json(new SuccessResponse({}))
         } else {
             res.status(404).json(new ErrorResponse(404, "Active user not found."))
         }

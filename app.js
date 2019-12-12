@@ -14,6 +14,12 @@ const jwtRefreshSecretKey = process.env.JWT_REFRESH_SECRET_KEY || "ilovetorefres
 const jwtExpirationSeconds = "15m"
 const jwtRefreshExpirationSeconds = "90d"
 
+//Setup Swagger
+const swaggerUI = require('swagger-ui-express')
+const swaggerDocument = require('yamljs').load('./swagger/swagger.yaml')
+
+app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocument))
+
 //Setup Mongoose
 const mongoose = require('mongoose')
 mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true, dbName: "stretch"})

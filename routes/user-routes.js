@@ -10,6 +10,7 @@ function createUserRouter(userService){
     //Send a 403 if the sender does not have permission.
     router.get("/", async (req, res) => {
         
+        //Check if user is admin.
         if(req.user && req.user.role == "admin"){
             let users = await userService.getAll()
             res.json(new SuccessResponse(users))
@@ -23,6 +24,8 @@ function createUserRouter(userService){
     //Send a 403 if the sender does not have permission.
     router.get("/:userId", async (req, res) => {
         const userId = req.params.userId
+
+        //Check if user has matching id or is an admin.
         if(req.user && (req.user.id == userId || res.user.role == "admin")){
             let user = await userService.getById(userId)
 
@@ -45,6 +48,7 @@ function createUserRouter(userService){
         const userId = req.params.userId
         const user = req.body
 
+        //Check if user has matching id or is an admin.
         if(req.user && (req.user.id == userId || res.user.role == "admin")){
 
             //Prevent user from changing role.
@@ -78,6 +82,8 @@ function createUserRouter(userService){
     //Send a 403 if the sender does not have permission.
     router.delete('/:userId', async (req, res) => {
         const userId = req.params.userId
+
+        //Check if user has matching id or is an admin.
         if(req.user && (req.user.id == userId || res.user.role == "admin")){
             if(await userService.delete(userId)){
                 res.status(204).json(new SuccessResponse({}))

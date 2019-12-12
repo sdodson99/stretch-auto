@@ -6,7 +6,7 @@ if(process.env.PRODUCTION == "TRUE"){
     require('greenlock-express')
         .init(function() {
             return {
-                greenlock: require('./greenlock.js'),
+                greenlock: require('./greenlock/greenlock'),
                 cluster: false
             };
         })
