@@ -1,5 +1,4 @@
 require('babel-polyfill')
-require('../utilities/modernizr')
 require('../../styles/sass/quick-start.scss')
 
 const authenticate = require('../authenticate')

@@ -90,7 +90,7 @@ function ApiAuthenticationService(url){
     this.logout = async function(refreshToken){
 
         let logoutResult = await fetch(this.url + "/logout", {
-            method: 'DELETE',
+            method: 'POST',
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json'

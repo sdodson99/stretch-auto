@@ -31,7 +31,7 @@ function RoutinePreviewView(){
         }
     }
 
-    this.draw = function(root){
+    this.draw = function(root, displayNarration){
         root.innerHTML = this.getMarkup()
 
         this.listButton = document.querySelector("#routine-view-list")
@@ -45,6 +45,10 @@ function RoutinePreviewView(){
         })
     
         this.isNarrateChanged()
+
+        if(!displayNarration){
+            document.querySelector("#narration").style.display = "none"
+        }
     }
 
     this.getMarkup = function(){

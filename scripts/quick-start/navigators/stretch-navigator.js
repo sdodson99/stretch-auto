@@ -6,6 +6,8 @@ const StretchSetupController = require('../controllers/stretch-setup-controller'
 const StretchRoutineController = require('../controllers/stretch-routine-controller')
 const Constants = require('../../utilities/constants')
 const DisplayType = require('./stretch-display-type')
+require('../../utilities/modernizr')
+const isMobile = require('../../utilities/mobile-check')
 
 function Navigator(){
 
@@ -13,6 +15,7 @@ function Navigator(){
     this.displayStretchSetup = document.querySelector("#stretch-setup")
     this.displayStretch = document.querySelector("#stretch")
     this.displays = document.querySelectorAll(".stretch-content")
+    this.displayNarration = Modernizr.speechsynthesis && !isMobile()
 
     this.handlerFactory = new StretchHandlerFactory()
     this.routineView = new StretchRoutineView()
@@ -23,7 +26,7 @@ function Navigator(){
     this.show = function(displayType){
         switch (displayType) {
             case DisplayType.SETUP:
-                this.setupView.draw(this.root)
+                this.setupView.draw(this.root, this.displayNarration)
                 break;
             case DisplayType.STRETCH:
                 this.routineView.draw(this.root)

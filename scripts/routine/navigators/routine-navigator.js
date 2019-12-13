@@ -13,6 +13,8 @@ const RoutineService = require('../../services/api-routine-service')
 const RefreshService = require('../../services/api-authentication-service')
 const ApiClient = require('../../utilities/authentication-api-client')
 const Constants = require('../../utilities/constants')
+require('../../utilities/modernizr')
+const isMobile = require('../../utilities/mobile-check')
 
 function RoutineNavigator(){
 
@@ -27,6 +29,7 @@ function RoutineNavigator(){
     this.routineListView = new RoutineListView()
     this.routinePreviewView = new RoutinePreviewView()
     this.routinePlayView = new RoutinePlayView()
+    this.displayNarration = Modernizr.speechsynthesis && !isMobile()
 
     this.show = function(displayType){
 
@@ -43,7 +46,7 @@ function RoutineNavigator(){
                 this.routinePlayView.draw(this.root)
                 break
             case DisplayType.PREVIEW:
-                this.routinePreviewView.draw(this.root)
+                this.routinePreviewView.draw(this.root, this.displayNarration)
                 break
         }
     }

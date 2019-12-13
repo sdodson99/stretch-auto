@@ -32,7 +32,7 @@ function StretchSetupView(){
         }
     }
 
-    this.draw = function(root){
+    this.draw = function(root, displayNarration){
         root.innerHTML = this.getMarkup()
 
         this.startButton = document.querySelector("#stretch-start")
@@ -43,7 +43,7 @@ function StretchSetupView(){
         this.instructionsNarrateCheckbox = document.querySelector("#stretch-narrate-instructions")
         this.narrateFieldset = document.querySelector("#narration-fieldset")
     
-        if(!Modernizr.speechsynthesis){
+        if(!displayNarration){
             this.narrateFieldset.style.display = "none"
         }
 
