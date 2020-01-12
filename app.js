@@ -22,7 +22,14 @@ app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 //Setup Mongoose
 const mongoose = require('mongoose')
-mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true, dbName: "stretch"})
+mongoose.connect(connectionString, 
+    {useNewUrlParser: true, reconnectTries: 60, reconnectInterval: 5000, useUnifiedTopology: true, dbName: "stretch"},
+    (err) => {
+        if(err){
+            console.log("MongoDB connection failed: " + err);
+        }
+    }
+);
 
 //Create services.
 const MongooseStretchService = require('./services/mongoose/mongoose-stretch-service')

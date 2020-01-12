@@ -10,17 +10,20 @@ services:
     links:
       - mongo
     environment:
-      - STRETCH_CONNECTION_STRING=mongodb://localhost:27017/
+      - STRETCH_CONNECTION_STRING=mongodb://super:PASSWORD@mongo:27017/
       - ADMIN_EMAIL=EMAIL
       - ADMIN_USERNAME=USERNAME
       - ADMIN_PASSWORD=PASSWORD
       - JWT_SECRET_KEY=SECRET
       - JWT_REFRESH_SECRET_KEY=SECRET
-      - PRODUCTION=TRUE
+      - PRODUCTION=FALSE
   mongo:
     container_name: stretch-db
     image: mongo
-    command: [--auth]
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=super
+      - MONGO_INITDB_ROOT_PASSWORD=PASSWORD
     ports:
       - '27017:27017'
     volumes:
