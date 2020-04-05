@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script defer src="scripts/login-main.js"></script>
+
+    <title>Login - Stretch Auto</title>
+</head>
+<body>
+    <div id="page">
+        <header>
+            <ul>
+                <li id="logo"><a href="index.html"><img src="./images/stretchauto-white.png"/></a></li>
+                <li class="nav-item"><a href="index.html">Quick Start</a></li>
+                <li class="nav-item"><a href="routine.html">Routines</a></li>
+                <li class="nav-item-auth not-auth"><a href="login.html" class="selected">Login</a></li>
+                <li class="nav-item-auth not-auth"><a href="register.html">Register</a></li>
+                <li class="nav-item-auth auth"><a href="logout.html">Logout</a></li>
+            </ul>
+        </header>
+        <div id="main">
+            <div id="login" class="container">
+                <form id="login-form">
+                    <div id="login-header">
+                        Login
+                    </div>
+                    <p id="login-error"></p>
+                    <div class="fieldset">
+                        <label>Email</label>
+                        <input id="login-email" type="text"/>
+                    </div>
+                    <div class="fieldset">
+                        <label>Password</label>
+                        <input id="login-password" type="password"/>
+                    </div>
+                    <div class="fieldset fieldset-submit">
+                        <button id="login-submit" type="button">Login</button>      
+                        <a id="login-register" href="register.html">Don't have an account? Click here to register.</a>              
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2019 Stretch Auto</p>
+    </footer>
+</body>
+</html>

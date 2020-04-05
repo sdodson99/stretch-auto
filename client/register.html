@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script defer src="scripts/register-main.js"></script>
+    <script async defer src="https://www.google.com/recaptcha/api.js"></script>
+
+    <title>Register - Stretch Auto</title>
+</head>
+<body>
+    <div id="page">
+        <header>
+            <ul>
+                <li id="logo"><a href="index.html"><img src="./images/stretchauto-white.png"/></a></li>
+                <li class="nav-item"><a href="index.html">Quick Start</a></li>
+                <li class="nav-item"><a href="routine.html">Routines</a></li>
+                <li class="nav-item-auth not-auth"><a href="login.html">Login</a></li>
+                <li class="nav-item-auth not-auth"><a href="register.html" class="selected">Register</a></li>
+                <li class="nav-item-auth auth"><a href="logout.html">Logout</a></li>
+            </ul>
+        </header>
+        <div id="main">
+            <form id="register" class="container">
+                <div id="register-header">
+                    Register
+                </div>
+                <p id="register-error"></p>
+                <div class="fieldset">
+                    <label>Email</label>
+                    <input id="register-email" type="email" required/>
+                </div>
+                <div class="fieldset">
+                    <label>Username</label>
+                    <input id="register-username" type="text" required/>
+                </div>
+                <div class="fieldset">
+                    <label>Password</label>
+                    <input id="register-password" type="password" required/>
+                </div>
+                <div class="fieldset">
+                    <label>Confirm Password</label>
+                    <input id="register-confirm-password" type="password" required/>
+                </div>
+                <div class="fieldset">
+                    <div class="g-recaptcha" data-sitekey="6LdEXsQUAAAAANAWkPdORthn5-8hAyILDg1QCdHM"></div>
+                </div>
+                <div class="fieldset fieldset-submit">
+                    <button id="register-submit" type="button">Register</button>      
+                    <a id="register-login" href="login.html">Already have an account? Click here to login.</a>              
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2019 Stretch Auto</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,9 @@
+@import 'common-variables';
+
+footer{
+    font-size: $font-tiny;
+    color: white;
+    background: $color-primary-2;
+    padding: $spacing-small;
+    text-align: center;
+}

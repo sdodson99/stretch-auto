@@ -1,0 +1,72 @@
+@import 'common-variables';
+
+#stretch{
+
+    #stretch-volume{
+        text-align: center;
+    }
+
+    #stretch-timer, #stretch-set{
+        font-size: $font-large;
+    }
+
+    #stretch-set{
+        padding-bottom: $spacing-medium
+    }
+
+    #stretch-information{
+        text-align: center;
+    }
+
+    #stretch-name{
+        font-size: $font-large;
+        text-align: center;
+    }
+
+    #stretch-instructions{
+        display: inline-block;
+        text-align: left;
+    }
+
+    #stretch-instructions .instruction{
+        font-size: $font-small;
+        padding: $spacing-small 0;
+    }
+
+    #routine-buttons{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin: $spacing-medium 0;
+
+        button{
+            margin: $spacing-small;
+        }
+    }
+
+    #stretch-cancel{
+        background: red;
+    }
+
+    #stretch-cancel:hover{
+        background: darkred;
+    }
+
+    @media screen and (max-width: 800px){
+        #stretch-timer-value{
+            display: block;
+        }
+    }
+
+    @media screen and (max-width: 500px){
+        #stretch-buttons{
+            display: flex;
+            flex-direction: column;
+            
+            button{
+                margin: $spacing-small 0;
+            }
+        }
+    }
+}
+

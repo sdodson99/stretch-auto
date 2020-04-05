@@ -1,0 +1,21 @@
+@import 'common';
+@import 'routine-list';
+@import 'routine-create';
+@import 'routine-preview';
+@import 'stretch';
+
+#main{
+    section{
+        padding: $spacing-medium;
+    }
+
+    .routine-section-header{
+        display: flex;
+        padding: $spacing-medium 0;
+        font-size: $font-medium;
+    }
+
+    .routine-header-button{
+        align-self: flex-start;
+    }
+}
