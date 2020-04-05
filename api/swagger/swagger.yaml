@@ -1,0 +1,792 @@
+openapi: 3.0.0
+info:
+  title: StretchAutoAPI
+  version: 1.0.0
+  description: >-
+    RestAPI serving stretches, storing stretch routines, and authenticating
+    stretch users. Visit the StretchAuto web application at
+    http://www.stretchauto.com.
+servers:
+  - url: 'http://api.stretchauto.com'
+    description: Production API
+tags:
+  - name: Stretch
+  - name: Routine
+  - name: Authentication
+  - name: User
+paths:
+  /stretch:
+    get:
+      tags: 
+      - Stretch
+      operationId: getAllStretches
+      description: Retrieve all stretches.
+      responses:
+        '200':
+          description: The list of all stretches.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StretchResponse'
+      parameters: 
+      - name: maxAmount
+        in: query
+        required: false
+        schema:
+          type: integer
+    post:
+      tags:
+      - Stretch
+      operationId: createStretch
+      description: Create a new stretch. Admin authentication required.
+      requestBody:
+        description: New stretch content.
+        content: 
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/StretchRequest'
+      responses:
+        '200':
+          description: The created stretch.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StretchResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid stretch content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+  /stretch/{stretchId}:
+    get:
+      tags: 
+      - Stretch
+      operationId: getStretchById
+      description: Retrieve a stretch by id.
+      responses:
+        '200':
+          description: The stretch with the corresponding id.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    $ref: '#/components/schemas/StretchResponse'
+        '404':
+          description: Stretch not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: 
+      - Stretch
+      operationId: updateStretch
+      description: Update a stretch at an id. Admin authentication required.
+      requestBody:
+        description: Updated stretch content.
+        content: 
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/StretchRequest'
+      responses:
+        '200':
+          description: The updated stretch.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    $ref: '#/components/schemas/StretchResponse'
+        '404':
+          description: Stretch not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid stretch content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+    delete:
+      tags: 
+      - Stretch
+      operationId: deleteStretch
+      description: Delete a stretch at an id. Admin authentication required.
+      responses:
+        '200':
+          description: Successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+        '404':
+          description: Stretch not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+    parameters:
+    - name: stretchId
+      in: path
+      required: true
+      schema:
+        type: string
+  /routine:
+    get:
+      tags:
+      - Routine
+      operationId: getAllRoutines
+      description: Retrieve all accessible routines. Authentication required.
+      responses:
+        '200':
+          description: The list of all accessible routines.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RoutineResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+    post:
+      tags:
+      - Routine
+      operationId: createRoutine
+      description: Create a new routine. Authentication required.
+      requestBody:
+        description: New routine content.
+        content: 
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/RoutineRequest'
+      responses:
+        '200':
+          description: The created routine.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RoutineResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid routine content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+  /routine/{routineId}:
+    get:
+      tags: 
+      - Routine
+      operationId: getRoutineById
+      description: Retrieve a routine by id.
+      responses:
+        '200':
+          description: The routine with the corresponding id.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    $ref: '#/components/schemas/RoutineResponse'
+        '404':
+          description: Routine not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+    put:
+      tags: 
+      - Routine
+      operationId: updateRoutine
+      description: Update a routine at an id. Authentication required.
+      requestBody:
+        description: Updated routine content.
+        content: 
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/RoutineRequest'
+      responses:
+        '200':
+          description: The updated routine.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    $ref: '#/components/schemas/RoutineResponse'
+        '404':
+          description: Routine not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid routine content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+    delete:
+      tags: 
+      - Routine
+      operationId: deleteRoutine
+      description: Delete a routine at an id. Authentication required.
+      responses:
+        '200':
+          description: Successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+        '404':
+          description: Routine not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+    parameters:
+    - name: routineId
+      in: path
+      required: true
+      schema:
+        type: string
+  /auth/login:
+    post:
+      tags: 
+      - Authentication
+      operationId: login
+      description: Validate user credentials.
+      requestBody:
+        description: User credentials.
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Access and refresh tokens.
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/logout:
+    post:
+      tags: 
+      - Authentication
+      operationId: logout
+      description: Logout a user and invalidate tokens.
+      requestBody:
+        description: User refresh token.
+        content: 
+          application/json:
+            schema:
+              required: 
+              - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: New access token.
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+        '404':
+          description: Active user not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/refresh:
+    post:
+      tags: 
+      - Authentication
+      operationId: refresh
+      description: Refresh token.
+      requestBody:
+        description: User refresh token.
+        content: 
+          application/json:
+            schema:
+              required: 
+              - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: New access token.
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    type: string
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/register:
+    post:
+      tags: 
+      - Authentication
+      operationId: register
+      description: Register a new user.
+      requestBody:
+        description: New user content.
+        content: 
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Successfully registered.
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          description: Invalid registration content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user:
+    get:
+      tags:
+      - User
+      operationId: getAllUsers
+      description: Retrieve all users. Admin authentication required.
+      responses:
+        '200':
+          description: The list of all users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserResponse'
+                
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - jwt: []
+  /user/{userId}:
+    get:
+      tags:
+      - User
+      operationId: getUserById
+      description: Retrieve a user by id. Authentication required.
+      responses:
+        '200':
+          description: The user with the corresponding id.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    $ref: '#/components/schemas/UserResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+        - jwt: []
+    put:
+      tags: 
+      - User
+      operationId: updateUser
+      description: Update a user at an id. Authentication required.
+      requestBody:
+        description: Updated user content.
+        content: 
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: The updated user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  content:
+                    $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid user content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+        - jwt: []
+    delete:
+      tags: 
+      - User
+      operationId: deleteUser
+      description: Delete a user at an id. Authentication required.
+      responses:
+        '200':
+          description: Successfully deleted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security: 
+      - jwt: []
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+components:
+  schemas:
+    StretchResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        isUnilateral:
+          type: boolean
+        instructions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Instruction'
+    StretchRequest:
+      type: object
+      required: 
+      - name
+      properties:
+        name:
+          type: string
+        isUnilateral:
+          type: boolean
+        instructions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Instruction'
+    Instruction:
+      type: object
+      required:
+      - order
+      - content
+      properties:
+        order:
+          type: integer
+        content:
+          type: string
+    RoutineResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        ownerId:
+          type: string
+        stretches:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutineStretch'
+    RoutineRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        ownerId:
+          type: string
+        stretches:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutineStretch'
+    RoutineStretch:
+      type: object
+      required: 
+      - stretch
+      properties:
+        stretch:
+          type: string
+        order:
+          type: integer
+          default: 0
+        duration:
+          type: integer
+          default: 10
+        sets:
+          type: integer
+          default: 1
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+    LoginRequest:
+      type: object
+      required: 
+      - email
+      - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    RegisterRequest:
+      type: object
+      required: 
+      - email
+      - username
+      - password
+      - confirmPassword
+      properties:
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        confirmPassword:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+    UserResponse:
+      type: object
+      properties:
+        email:
+          type: string
+        username: 
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    UserRequest:
+      type: object
+      required:
+      - email
+      - username
+      - password
+      properties:
+        email:
+          type: string
+        username: 
+          type: string
+        password:
+          type: string
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+        
