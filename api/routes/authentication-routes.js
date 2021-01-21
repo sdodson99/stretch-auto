@@ -1,5 +1,5 @@
 const express = require('express')
-const { EmailAlreadyExistsError, ConfirmPasswordError, EmailNotFoundError, InvalidPasswordError, RefreshTokenNotFoundError } = require('../errors')
+const { EmailAlreadyExistsError, ConfirmPasswordError, EmailNotFoundError, InvalidPasswordError, InvalidRefreshTokenError } = require('../errors')
 const { ValidationError } = require("mongoose").Error
 const SuccessResponse = require('../models/responses/success-response')
 const ErrorResponse = require('../models/responses/error-response')
@@ -9,6 +9,11 @@ class AuthenticationRouter {
         this.authService = authService
     }
 
+    /**
+     * Handle a login.
+     * @param {object} req The login request.
+     * @param {object} res The login response.
+     */
     async login(req, res) {
         const { email, password }  = req.body;   
 
@@ -30,6 +35,11 @@ class AuthenticationRouter {
         }
     }
 
+    /**
+     * Handle a register.
+     * @param {object} req The register request.
+     * @param {object} res The register response.
+     */
     async register(req, res) {
         const { email, username, password, confirmPassword} = req.body
 
@@ -51,6 +61,11 @@ class AuthenticationRouter {
         }
     }
 
+    /**
+     * Handle a token refresh.
+     * @param {object} req The refresh request.
+     * @param {object} res The refresh response.
+     */
     async refresh(req, res) {
         const  {refreshToken } = req.body
 
@@ -58,14 +73,19 @@ class AuthenticationRouter {
             const tokenResponse = await this.authService.refresh(refreshToken)
             return res.json(new SuccessResponse(tokenResponse))
         } catch (error) {
-            if(error instanceof RefreshTokenNotFoundError) {
-                return res.status(404).send(error.message)
+            if(error instanceof InvalidRefreshTokenError) {
+                return res.status(400).send(error.message)
             }
 
             return res.sendStatus(500)
         }
     }
 
+    /**
+     * Handle a logout.
+     * @param {object} req The logout request.
+     * @param {object} res The logout response.
+     */
     async logout(req, res) {
         const { user } = req;
 

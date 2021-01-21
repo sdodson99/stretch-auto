@@ -37,13 +37,13 @@ const MongooseStretchService = require('./services/mongoose/mongoose-stretch-ser
 const MongooseUserService = require('./services/mongoose/mongoose-user-service')
 const MongooseRoutineService = require('./services/mongoose/mongoose-routine-service')
 const MongooseRefreshTokenService = require('./services/mongoose/mongoose-refresh-token-service')
-const JwtAuthService = require('./services/jwt-auth-service')
+const AuthenticationService = require('./services/authentication-service')
 
 const stretchService = new MongooseStretchService()
 const userService = new MongooseUserService()
 const routineService = new MongooseRoutineService()
 const refreshTokenService = new MongooseRefreshTokenService()
-const authService = new JwtAuthService(userService, refreshTokenService, jwtConfiguration)
+const authService = new AuthenticationService(userService, refreshTokenService, jwtConfiguration)
 
 // Seed data.
 const adminSeed = require('./seeds/admin-seed')

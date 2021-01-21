@@ -2,9 +2,9 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
 
-const { EmailNotFoundError, EmailAlreadyExistsError, ConfirmPasswordError, InvalidPasswordError, RefreshTokenNotFoundError } = require('../errors')
+const { EmailNotFoundError, EmailAlreadyExistsError, ConfirmPasswordError, InvalidPasswordError, InvalidRefreshTokenError } = require('../errors')
 
-class JwtAuthService{
+class AuthenticationService{
     constructor(userService, refreshTokenService, jwtConfiguration){
         this.userService = userService
         this.refreshTokenService = refreshTokenService
@@ -81,13 +81,15 @@ class JwtAuthService{
     /**
      * Refresh a user's refresh token with new access and refresh tokens.
      * @param {string} refreshToken The user's refresh token.
-     * @returns {object} Token credentials if login successful.
+     * @returns {object} The user's token credentials.
+     * @throws {InvalidRefreshTokenError} Thrown if refresh token invalid.
+     * @throws {Error} Thrown if refresh fails.
      */
     async refresh(refreshToken){
         return new Promise((resolve, reject) => {
             jwt.verify(refreshToken, this.refreshSecret, async (err, decoded) => {
                 if(err) {
-                    return reject(err);
+                    return reject(new InvalidRefreshTokenError(err.message));
                 } 
                   
                 const user = {
@@ -101,7 +103,7 @@ class JwtAuthService{
                     const storedRefreshToken = await this.refreshTokenService.getByRefreshToken(refreshToken)
 
                     if(!storedRefreshToken){
-                        return reject(new RefreshTokenNotFoundError("Refresh token not found."));
+                        return reject(new InvalidRefreshTokenError("Refresh token not found."));
                     }
 
                     await this.refreshTokenService.deleteById(storedRefreshToken._id)
@@ -110,7 +112,7 @@ class JwtAuthService{
 
                     return resolve(tokens)
                 } catch (error) {
-                    return reject(error)
+                    return reject(new InvalidRefreshTokenError("Unknown refresh token error."));
                 }
             })
         })
@@ -118,13 +120,20 @@ class JwtAuthService{
 
     /**
      * Logout a user everywhere by deleting all of their refresh tokens.
-     * @param {*} userId The id of the user. 
+     * @param {string} userId The id of the user. 
      * @throws {Error} Thrown if logout everywhere fails.
      */
     async logoutEverywhere(userId){
         await this.refreshTokenService.deleteAllForUserId(userId)
     }
 
+    /**
+     * Generate access and refresh tokens for a user.
+     * @param {string} userId The user's id.
+     * @param {object} payload The payload to sign into the token.
+     * @returns {object} The user's generated tokens.
+     * @throws {Error} Thrown if generation fails.
+     */
     async generateTokens(userId, payload) {
         const accessToken = jwt.sign(payload, this.accessSecret, { expiresIn: this.accessExpiration })
         const refreshToken = jwt.sign(payload, this.refreshSecret, { expiresIn: this.refreshExpiration })
@@ -138,4 +147,4 @@ class JwtAuthService{
     }
 }
 
-module.exports = JwtAuthService
+module.exports = AuthenticationService

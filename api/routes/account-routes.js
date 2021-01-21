@@ -7,6 +7,11 @@ class AccountRouter {
         this.userService = userService
     }
 
+    /**
+     * Handle a get account request.
+     * @param {object} req The get account request.
+     * @param {object} res The get account response.
+     */
     async getAccount(req, res) {
         const { user } = req
 
@@ -15,7 +20,13 @@ class AccountRouter {
             return res.sendStatus(404);
         } 
 
-        return res.json(new SuccessResponse(foundUser))
+        const userResponse = {
+            id: foundUser._id,
+            email: foundUser.email,
+            username: foundUser.username,
+        }
+
+        return res.json(new SuccessResponse(userResponse))
     }
 }
 
