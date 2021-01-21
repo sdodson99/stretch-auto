@@ -2,139 +2,139 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
 
+const { EmailNotFoundError, EmailAlreadyExistsError, ConfirmPasswordError, InvalidPasswordError, RefreshTokenNotFoundError } = require('../errors')
+
 class JwtAuthService{
-    constructor(userService, refreshTokenService, secretKey, secondsUntilExpiration, refreshSecretKey, refreshSecondsUntilExpiration){
+    constructor(userService, refreshTokenService, jwtConfiguration){
         this.userService = userService
         this.refreshTokenService = refreshTokenService
 
-        this.secretKey = secretKey
-        this.secondsUntilExpiration = secondsUntilExpiration
-        this.refreshSecretKey = refreshSecretKey
-        this.refreshSecondsUntilExpiration = refreshSecondsUntilExpiration
+        this.accessSecret = jwtConfiguration.accessSecret
+        this.refreshSecret = jwtConfiguration.refreshSecret
+        this.accessExpiration = jwtConfiguration.accessExpiration
+        this.refreshExpiration = jwtConfiguration.refreshExpiration
     }   
 
-    //Login a user by checking credentials.
-    //Return the token and refresh token if valid credentials.
-    //Return null if invalid credentials.
+    /**
+     * Login a user by checking credentials.
+     * @param {string} email The user's email.
+     * @param {string} password The user's password.
+     * @returns {object} Token credentials if login successful.
+     * @throws {EmailNotFoundError} Thrown if user with email not found.
+     * @throws {InvalidPasswordError} Thrown if user's password is incorrect.
+     * @throws {Error} Thrown if login fails.
+     */
     async login(email, password){
-        let loginResponse = {}
+        const user = await this.userService.getByEmail(email)
 
-        //Find the user in the database.
-        let user = await this.userService.getByEmail(email)
-
-        //Check user has valid credentials.
-        if(user && await bcrypt.compare(password, user.password)){
-            const payload = {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role
-            }
-
-            //Sign tokens.
-            const accessToken = jwt.sign(payload, this.secretKey, {expiresIn: this.secondsUntilExpiration})
-            const refreshToken = jwt.sign(payload, this.refreshSecretKey, {expiresIn: this.refreshSecondsUntilExpiration})
-
-            //Store refresh token.
-            await this.refreshTokenService.create({email: email, refreshToken: refreshToken})
-
-            loginResponse.success = true
-            loginResponse.accessToken = accessToken
-            loginResponse.refreshToken = refreshToken
-        } else {
-            loginResponse.success = false
-            loginResponse.error = "Invalid credentials."
+        if(!user) {
+            throw new EmailNotFoundError(`User with email ${email} does not exist.`, email);
         }
 
-        return loginResponse
+        const hasCorrectPassword = await bcrypt.compare(password, user.password)
+        if(!hasCorrectPassword) {
+            throw new InvalidPasswordError('Incorrect password.');
+        }
+
+        const payload = {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role
+        }
+
+        const tokens = await this.generateTokens(user._id, payload)
+
+        return tokens
     }
 
-    //Register a user.
-    //Return true/false for success.
+    /**
+     * Register a new user.
+     * @param {string} email The user's email.
+     * @param {string} username The user's username.
+     * @param {string} password The user's password.
+     * @param {string} confirmPassword The user's password confirmation.
+     * @throws {ConfirmPasswordError} Thrown if password and confirm password do not match.
+     * @throws {EmailAlreadyExistsError} Thrown if email already exists.
+     * @throws {Error} Thrown if registration fails.
+     */
     async register(email, username, password, confirmPassword){
-        let registerResponse = {}        
-        let existingUser = await this.userService.getByEmail(email)
-
-        if(password == confirmPassword){
-
-            //If the user does not already exist, register them.
-            if(!existingUser){
-
-                //Hash the password.
-                let hashedPassword = await bcrypt.hash(password, saltRounds)
-                let newUser = {
-                    email: email,
-                    username: username,
-                    password: hashedPassword
-                }
-
-                //Create the new user.
-                try {
-                    await this.userService.create(newUser)    
-                    
-                    registerResponse.success = true
-                } catch (error) {
-                    if(error.name == "ValidationError"){
-                        registerResponse.error = error.message
-                    } else {
-                        registerResponse.error = "Failed to register user."
-                    }
-                }
-            } else {
-                registerResponse.success = false
-                registerResponse.error = "User with email already exists."
-            }
-        } else {
-            registerResponse.success = false
-            registerResponse.error = "Password and confirm password must match."
+        if(password !== confirmPassword) {
+            throw new ConfirmPasswordError("Password and confirm password do not match.")
         }
 
-        return registerResponse
+        const existingUser = await this.userService.getByEmail(email)
+        if(existingUser) {
+            throw new EmailAlreadyExistsError(`Email ${email} is already in use.`, email)
+        }
+
+        const hashedPassword = await bcrypt.hash(password, saltRounds)
+        const newUser = {
+            email: email,
+            username: username,
+            password: hashedPassword
+        }
+
+        await this.userService.create(newUser)    
     }
 
-    //Get a new access token from a refresh token.
-    //Returns the new access token if successful.
-    //Returns null if refresh fails.
+    /**
+     * Refresh a user's refresh token with new access and refresh tokens.
+     * @param {string} refreshToken The user's refresh token.
+     * @returns {object} Token credentials if login successful.
+     */
     async refresh(refreshToken){
-        return new Promise((res) => {
-            let accessToken = null
-
-            jwt.verify(refreshToken, this.refreshSecretKey, async (err, decoded) => {
-                if(decoded){
-                    const user = {
-                        id: decoded.id,
-                        username: decoded.username,
-                        email: decoded.email,
-                        role: decoded.role
-                    }
-
-                    let storedRefreshToken = await this.refreshTokenService.getByRefreshToken(refreshToken)
-
-                    if(storedRefreshToken){
-                        accessToken = jwt.sign(user, this.secretKey, {expiresIn: this.secondsUntilExpiration})    
-                    }
+        return new Promise((resolve, reject) => {
+            jwt.verify(refreshToken, this.refreshSecret, async (err, decoded) => {
+                if(err) {
+                    return reject(err);
+                } 
+                  
+                const user = {
+                    id: decoded.id,
+                    username: decoded.username,
+                    email: decoded.email,
+                    role: decoded.role
                 }
 
-                res(accessToken)
+                try {
+                    const storedRefreshToken = await this.refreshTokenService.getByRefreshToken(refreshToken)
+
+                    if(!storedRefreshToken){
+                        return reject(new RefreshTokenNotFoundError("Refresh token not found."));
+                    }
+
+                    await this.refreshTokenService.deleteById(storedRefreshToken._id)
+
+                    const tokens = await this.generateTokens(user.id, user)
+
+                    return resolve(tokens)
+                } catch (error) {
+                    return reject(error)
+                }
             })
         })
     }
 
-    //Logout a user by deleting all of their refresh tokens.
-    //Returns true/false for success.
-    async logout(refreshToken){
-        return new Promise((res) => {
-            jwt.verify(refreshToken, this.refreshSecretKey, async (err, decoded) => {
-                let success = false
+    /**
+     * Logout a user everywhere by deleting all of their refresh tokens.
+     * @param {*} userId The id of the user. 
+     * @throws {Error} Thrown if logout everywhere fails.
+     */
+    async logoutEverywhere(userId){
+        await this.refreshTokenService.deleteAllForUserId(userId)
+    }
 
-                if(decoded){
-                    let email = decoded.email
-                    success = await this.refreshTokenService.deleteAllForEmail(email)
-                }
+    async generateTokens(userId, payload) {
+        const accessToken = jwt.sign(payload, this.accessSecret, { expiresIn: this.accessExpiration })
+        const refreshToken = jwt.sign(payload, this.refreshSecret, { expiresIn: this.refreshExpiration })
 
-                res(success)
-            })
-        })
+        await this.refreshTokenService.create({ userId: userId, refreshToken: refreshToken })
+
+        return {
+            accessToken, 
+            refreshToken
+        }
     }
 }
 

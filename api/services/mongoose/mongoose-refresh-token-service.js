@@ -11,11 +11,17 @@ class MongooseRefreshTokenService extends MongooseGenericService{
         return await RefreshToken.findOne({refreshToken: refreshToken}).exec()
     }
 
-    async deleteAllForEmail(email){
-        let deleteResult = await RefreshToken.deleteMany({email: email})
+    async deleteAllForUserId(userId){
+        const deleteResult = await RefreshToken.deleteMany({userId: userId})
         
         return deleteResult.ok
     }
-}
+
+    async deleteById(id) {
+        const deleteResult = await RefreshToken.deleteMany({_id: id})
+        
+        return deleteResult.ok
+    }
+ }
 
 module.exports = MongooseRefreshTokenService

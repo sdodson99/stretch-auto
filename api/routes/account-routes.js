@@ -2,28 +2,28 @@ const express = require('express')
 const SuccessResponse = require('../models/responses/success-response')
 const ErrorResponse = require('../models/responses/error-response')
 
+class AccountRouter {
+    constructor(userService) {
+        this.userService = userService
+    }
+
+    async getAccount(req, res) {
+        const { user } = req
+
+        const foundUser = await this.userService.getById(user.id)
+        if(!foundUser){
+            return res.sendStatus(404);
+        } 
+
+        return res.json(new SuccessResponse(foundUser))
+    }
+}
+
 function createAccountRouter(userService){
     const router = express.Router()
+    const accountRouter = new AccountRouter(userService)
 
-    //Get account information.
-    //Returns the user if successful.
-    //Returns a 404 if the user not found.
-    //Returns a 403 if unauthorized.
-    router.get("/", async (req, res) => {
-        let user = req.user
-
-        if(user){
-            let foundUser = await userService.getById(user.id)
-
-            if(foundUser){
-                res.json(new SuccessResponse(foundUser))
-            } else {
-                res.status(404).json(new ErrorResponse(404, "User not found."))
-            }
-        } else {
-            res.status(403).json(new ErrorResponse(403, "Unauthorized."))
-        }
-    })
+    router.get("/", (req, res) => accountRouter.getAccount(req, res))
 
     return router
 }

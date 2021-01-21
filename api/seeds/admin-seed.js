@@ -1,21 +1,21 @@
 const bcrypt = require('bcrypt')
 const saltRounds = 10
 
-//Seeds an admin user in the database if it does not exist.
+/**
+ * Seed an admin user for the application if one does not exist.
+ * @param {*} userService The user service to save the user with.
+ */
 async function seedAdminUser(userService){
-
-    //Create admin user from environment variables.
-    let adminUser = {
-        email: process.env.ADMIN_EMAIL || "admin@stretchauto.com",
-        username: process.env.ADMIN_USERNAME || "admin",
-        password: await bcrypt.hash(process.env.ADMIN_PASSWORD || "test123", saltRounds),
+    const adminUser = {
+        email: process.env.ADMIN_USER_EMAIL,
+        username: process.env.ADMIN_USER_USERNAME,
+        password: await bcrypt.hash(process.env.ADMIN_USER_PASSWORD, saltRounds),
         role: "admin"
     }
 
-    //If user does not already exist, create it.
-    let existingUser = await userService.getByEmail(adminUser.email)
+    const existingAdmin = await userService.getByEmail(adminUser.email)
 
-    if(!existingUser){        
+    if(!existingAdmin){        
         await userService.create(adminUser)
     }
 }

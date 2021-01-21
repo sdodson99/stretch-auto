@@ -8,7 +8,7 @@ let routineSchema = new Schema({
         type: String,
         required: true
     },
-    ownerId: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
