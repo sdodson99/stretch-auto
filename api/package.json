@@ -1,11 +1,13 @@
 {
   "name": "sretch-auto-api",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Rest API for stretching exercises.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index"
+    "dev": "nodemon index",
+    "lint:prettier": "prettier --check */**/*.js",
+    "fix:prettier": "prettier --write */**/*.js"
   },
   "author": "sc.dodson4@gmail.com",
   "license": "ISC",
@@ -20,5 +22,8 @@
     "nodemon": "^1.19.4",
     "swagger-ui-express": "^4.1.2",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1"
   }
 }

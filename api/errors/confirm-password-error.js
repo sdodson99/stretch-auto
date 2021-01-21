@@ -1,7 +1,7 @@
 class ConfirmPasswordError extends Error {
-    constructor(message)  {
-        super(message)
-    }
+  constructor(message) {
+    super(message);
+  }
 }
 
-module.exports = ConfirmPasswordError
+module.exports = ConfirmPasswordError;

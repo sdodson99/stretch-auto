@@ -1,5 +1,5 @@
-function SuccessResponse(data){
-    this.data = data
+function SuccessResponse(data) {
+  this.data = data;
 }
 
-module.exports = SuccessResponse
+module.exports = SuccessResponse;

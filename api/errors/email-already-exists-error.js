@@ -1,9 +1,9 @@
 class EmailAlredyExistsError extends Error {
-    constructor(message, email)  {
-        super(message)
+  constructor(message, email) {
+    super(message);
 
-        this.email = email
-    }
+    this.email = email;
+  }
 }
 
-module.exports = EmailAlredyExistsError
+module.exports = EmailAlredyExistsError;

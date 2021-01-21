@@ -1,7 +1,7 @@
-class InvalidRefreshTokenError extends Error{
-    constructor(message) {
-        super(message)
-    }
+class InvalidRefreshTokenError extends Error {
+  constructor(message) {
+    super(message);
+  }
 }
 
-module.exports = InvalidRefreshTokenError
+module.exports = InvalidRefreshTokenError;

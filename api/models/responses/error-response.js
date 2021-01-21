@@ -1,8 +1,8 @@
-function ErrorResponse(code, message){
-    this.error = {
-        code: code,
-        message: message
-    }
+function ErrorResponse(code, message) {
+  this.error = {
+    code: code,
+    message: message,
+  };
 }
 
-module.exports = ErrorResponse
+module.exports = ErrorResponse;
