@@ -17,15 +17,17 @@ class AuthenticationRouter {
     async login(req, res) {
         const { email, password }  = req.body;   
 
+        if(!email || !password) {
+            return res.status(400).send("Please provide an email and password.")
+        }
+
         try {
             const tokenResponse = await this.authService.login(email, password)
             return res.json(new SuccessResponse(tokenResponse))
         } catch (error) {
-            if(error instanceof EmailAlreadyExistsError) {
-                return res.status(409).send(error.message)
-            }
-            if(error instanceof ConfirmPasswordError) {
-                return res.status(400).send(error.message)
+            if(error instanceof EmailNotFoundError || 
+                error instanceof InvalidPasswordError) {
+                return res.status(401).send("Invalid credentials.")
             }
             if(error instanceof ValidationError) {
                 return res.status(400).send(error.message)
@@ -42,6 +44,10 @@ class AuthenticationRouter {
      */
     async register(req, res) {
         const { email, username, password, confirmPassword} = req.body
+
+        if(!email || !username || !password || !confirmPassword) {
+            return res.status(400).send("Please provide an email, username, password, and confirm password.")
+        }
 
         try {
             await this.authService.register(email, username, password, confirmPassword)
@@ -74,7 +80,7 @@ class AuthenticationRouter {
             return res.json(new SuccessResponse(tokenResponse))
         } catch (error) {
             if(error instanceof InvalidRefreshTokenError) {
-                return res.status(400).send(error.message)
+                return res.status(400).send("Invalid refresh token.")
             }
 
             return res.sendStatus(500)

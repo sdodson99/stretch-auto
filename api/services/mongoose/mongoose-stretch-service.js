@@ -22,7 +22,7 @@ class MongooseStretchService {
         const ids = []
 
         for (let index = 0; index < maxAmount; index++) {
-            const randomStretchQuery = await this.model.aggregate([
+            const randomStretchQuery = await Stretch.aggregate([
                 { $match: { _id: {$nin: ids}}},
                 { $sample: {size: 1}}
             ]);

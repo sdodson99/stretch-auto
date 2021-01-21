@@ -15,18 +15,22 @@ function createAuthenticationMiddleware(secretKey){
 
         const splitBearerHeader = bearerHeader.split(" ")
         if(splitBearerHeader.length < 2) {
-            console.log(2);
             return res.sendStatus(401)
         }
 
         const token = splitBearerHeader[1]
 
-        const user = jwt.verify(token, secretKey)
-        if(!user) {
+        try {
+            const user = jwt.verify(token, secretKey)
+
+            if(!user) {
+                return res.sendStatus(401)
+            }
+
+            req.user = user
+        } catch (error) {
             return res.sendStatus(401)
         }
-
-        req.user = user
 
         next()
     }

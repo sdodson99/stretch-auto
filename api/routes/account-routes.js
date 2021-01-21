@@ -15,18 +15,23 @@ class AccountRouter {
     async getAccount(req, res) {
         const { user } = req
 
-        const foundUser = await this.userService.getById(user.id)
-        if(!foundUser){
-            return res.sendStatus(404);
-        } 
+        try {
+            const foundUser = await this.userService.getById(user.id)
 
-        const userResponse = {
-            id: foundUser._id,
-            email: foundUser.email,
-            username: foundUser.username,
+            if(!foundUser){
+                return res.sendStatus(404);
+            } 
+
+            const userResponse = {
+                id: foundUser._id,
+                email: foundUser.email,
+                username: foundUser.username,
+            }
+
+            return res.json(new SuccessResponse(userResponse))
+        } catch (error) {
+            return res.sendStatus(500)
         }
-
-        return res.json(new SuccessResponse(userResponse))
     }
 }
 
