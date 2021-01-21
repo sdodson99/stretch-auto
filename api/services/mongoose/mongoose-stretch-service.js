@@ -1,34 +1,41 @@
 const Stretch = require('../../models/mongoose/stretch-schema')
-const MongooseGenericService = require('./mongoose-generic-service')
 
-class MongooseStretchService extends MongooseGenericService{
-    constructor(){
-        super(Stretch)
-        this.model = Stretch
+class MongooseStretchService {
+
+    /**
+     * Get all stretches.
+     * @returns {object[]} The list of stretches.
+     * @throws {Error} Thrown if getting stretches fails.
+     */
+    async getAll() {
+        return await Stretch.find({}).exec()
     }
 
-    //Gets a random amount of stretches from the database without duplicates.
-    //Returns the list of stretches.
+    /**
+     * Get a random amount of stretches.
+     * @param {number} maxAmount The amount of stretches to get.
+     * @returns {object[]} The random amount of stretches.
+     * @throws {Error} Thrown if getting stretches fails.
+     */
     async getRandomAmount(maxAmount){
-        let stretches = []
-        let ids = []
+        const stretches = []
+        const ids = []
 
         for (let index = 0; index < maxAmount; index++) {
-
-            //Get 1 random stretch from the collection not including stretches already found.
-            let randomStretch = (await this.model.aggregate([
+            const randomStretchQuery = await this.model.aggregate([
                 { $match: { _id: {$nin: ids}}},
                 { $sample: {size: 1}}
-            ]))[0]
+            ]);
 
-            //If the collection returned a stretch, add it to the collection. Otherwise, there are no 
-            //more possible stretches to be found and we can simply break.
-            if(randomStretch){
-                stretches.push(randomStretch)
-                ids.push(randomStretch._id)
-            } else {
-                break
+            const noStretchesRemaining = randomStretchQuery.length == 0
+            if(noStretchesRemaining) {
+                break;
             }
+
+            const randomStretch = randomStretchQuery[0]
+
+            stretches.push(randomStretch)
+            ids.push(randomStretch._id)
         }
 
         return stretches
