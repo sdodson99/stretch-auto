@@ -7,7 +7,7 @@ info:
     stretch users. Visit the StretchAuto web application at
     http://www.stretchauto.com.
 servers:
-  - url: 'http://api.stretchauto.com'
+  - url: 'https://stretch-auto-api.azurewebsites.net'
     description: Production API
   - url: 'http://localhost:8000'
     description: Development API
