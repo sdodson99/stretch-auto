@@ -1,19 +1,19 @@
 {
-  "name": "auto-stretch-api",
+  "name": "sretch-auto-api",
   "version": "0.0.1",
   "description": "Rest API for stretching exercises.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "sudo nodemon index"
+    "dev": "nodemon index"
   },
-  "author": "bballheat6@gmail.com",
+  "author": "sc.dodson4@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^3.0.8",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "greenlock-express": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.3.3",
     "mongoose": "^5.7.12",
