@@ -9,7 +9,7 @@ function createAuthenticationMiddleware(secretKey){
     return async function(req, res, next){
         const bearerHeader = req.headers['authorization']
 
-        if(!bearerHeader) {
+        if(!bearerHeader || !bearerHeader.startsWith("Bearer ")) {
             return res.sendStatus(401)
         }
 
