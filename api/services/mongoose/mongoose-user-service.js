@@ -1,5 +1,4 @@
 const User = require('../../models/mongoose/user-schema')
-const MongooseGenericService = require('./mongoose-generic-service')
 
 class MongooseUserService {
     

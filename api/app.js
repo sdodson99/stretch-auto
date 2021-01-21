@@ -35,13 +35,11 @@ mongoose.connect(connectionString,
 // Create services.
 const MongooseStretchService = require('./services/mongoose/mongoose-stretch-service')
 const MongooseUserService = require('./services/mongoose/mongoose-user-service')
-const MongooseRoutineService = require('./services/mongoose/mongoose-routine-service')
 const MongooseRefreshTokenService = require('./services/mongoose/mongoose-refresh-token-service')
 const AuthenticationService = require('./services/authentication-service')
 
 const stretchService = new MongooseStretchService()
 const userService = new MongooseUserService()
-const routineService = new MongooseRoutineService()
 const refreshTokenService = new MongooseRefreshTokenService()
 const authService = new AuthenticationService(userService, refreshTokenService, jwtConfiguration)
 
@@ -57,10 +55,8 @@ const authenticationMiddleware = createAuthenticationMiddleware(jwtConfiguration
 const StretchRouter = require('./routes/stretch-routes')
 const createAuthenticationRouter = require('./routes/authentication-routes')
 const createAccountRouter = require('./routes/account-routes')
-const RoutineRouter = require('./routes/routine-routes')
 app.use("/stretch", StretchRouter(stretchService, authenticationMiddleware))
 app.use(createAuthenticationRouter(authService, authenticationMiddleware))
 app.use("/account", authenticationMiddleware, createAccountRouter(userService))
-app.use("/routine", authenticationMiddleware, RoutineRouter(routineService))
 
 module.exports = app

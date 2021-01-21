@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-let refreshTokenSchema = new Schema({
+const refreshTokenSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
