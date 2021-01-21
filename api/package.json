@@ -7,7 +7,14 @@
     "start": "node index.js",
     "dev": "nodemon index",
     "lint:prettier": "prettier --check */**/*.js",
-    "fix:prettier": "prettier --write */**/*.js"
+    "lint": "npm run lint:prettier",
+    "fix:prettier": "prettier --write */**/*.js",
+    "fix": "npm run fix:prettier"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run fix"
+    }
   },
   "author": "sc.dodson4@gmail.com",
   "license": "ISC",
@@ -24,6 +31,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "husky": "^4.3.8",
     "prettier": "^2.2.1"
   }
 }
