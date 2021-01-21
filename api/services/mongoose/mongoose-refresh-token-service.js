@@ -12,15 +12,11 @@ class MongooseRefreshTokenService extends MongooseGenericService{
     }
 
     async deleteAllForUserId(userId){
-        const deleteResult = await RefreshToken.deleteMany({userId: userId})
-        
-        return deleteResult.ok
+        await RefreshToken.deleteMany({userId: userId})
     }
 
     async deleteById(id) {
-        const deleteResult = await RefreshToken.deleteMany({_id: id})
-        
-        return deleteResult.ok
+        await RefreshToken.deleteOne({_id: id})
     }
  }
 
