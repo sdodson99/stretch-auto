@@ -91,13 +91,6 @@ class AuthenticationService{
                 if(err) {
                     return reject(new InvalidRefreshTokenError(err.message));
                 } 
-                  
-                const user = {
-                    id: decoded.id,
-                    username: decoded.username,
-                    email: decoded.email,
-                    role: decoded.role
-                }
 
                 try {
                     const storedRefreshToken = await this.refreshTokenService.getByRefreshToken(refreshToken)
@@ -107,6 +100,14 @@ class AuthenticationService{
                     }
 
                     await this.refreshTokenService.deleteById(storedRefreshToken._id)
+
+                    const { user: refreshTokenUser} = storedRefreshToken
+                    const user = {
+                        id: refreshTokenUser._id,
+                        username: refreshTokenUser.username,
+                        email: refreshTokenUser.email,
+                        role: refreshTokenUser.role
+                    }
 
                     const tokens = await this.generateTokens(user.id, user)
 
@@ -138,7 +139,7 @@ class AuthenticationService{
         const accessToken = jwt.sign(payload, this.accessSecret, { expiresIn: this.accessExpiration })
         const refreshToken = jwt.sign(payload, this.refreshSecret, { expiresIn: this.refreshExpiration })
 
-        await this.refreshTokenService.create({ userId: userId, refreshToken: refreshToken })
+        await this.refreshTokenService.create({ user: userId, refreshToken: refreshToken })
 
         return {
             accessToken, 

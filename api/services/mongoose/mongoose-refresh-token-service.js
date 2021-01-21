@@ -9,7 +9,7 @@ class MongooseRefreshTokenService{
      * @throws {Error} Thrown if query fails.
      */
     async getByRefreshToken(refreshToken){
-        return await RefreshToken.findOne({refreshToken: refreshToken}).exec()
+        return await RefreshToken.findOne({refreshToken: refreshToken}).populate('user').exec()
     }
 
     /**

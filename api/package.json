@@ -17,7 +17,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.3.3",
     "mongoose": "^5.7.12",
-    "mongoose-autopopulate": "^0.9.1",
     "nodemon": "^1.19.4",
     "swagger-ui-express": "^4.1.2",
     "yamljs": "^0.3.0"

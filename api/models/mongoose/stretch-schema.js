@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const InstructionSchema = require('./instruction-schema')
+const StretchInstructionSchema = require('./stretch-instruction-schema')
 
 const stretchSchema = new Schema({
     name: {
@@ -14,7 +14,7 @@ const stretchSchema = new Schema({
         default: false
     },
     instructions: {
-        type: [InstructionSchema],
+        type: [StretchInstructionSchema],
         required: false
     }
 })
