@@ -1,0 +1,41 @@
+name: Release Client
+
+on:
+  push:
+    branches:
+      - 'release/client'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      STORAGE_ACCOUNT_KEY: ${{ secrets.STORAGE_ACCOUNT_KEY }}
+      STORAGE_ACCOUNT_NAME: stretchautoclient
+      STORAGE_CONTAINER_NAME: $web
+      CLIENT_DIRECTORY: ./client
+      BUILD_OUTPUT_DIRECTORY: ./client/dist
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+
+      - name: Install Client Dependencies
+        run: npm ci
+        working-directory: ${{ env.CLIENT_DIRECTORY }}
+
+      - name: Build Production Client
+        run: npm run build
+        working-directory: ${{ env.CLIENT_DIRECTORY }}
+
+      - name: Deploy
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az storage blob delete-batch -s '${{ env.STORAGE_CONTAINER_NAME }}' --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ env.STORAGE_ACCOUNT_KEY }}
+            az storage blob upload-batch -s ${{ env.BUILD_OUTPUT_DIRECTORY }} -d '${{ env.STORAGE_CONTAINER_NAME }}' --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --account-key ${{ env.STORAGE_ACCOUNT_KEY }}

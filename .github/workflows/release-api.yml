@@ -1,0 +1,42 @@
+name: Release API
+
+on:
+  push:
+    branches:
+      - 'release/api'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      API_WORKING_DIRECTORY: ./api
+      DOCKER_REPOSITORY_USERNAME: ${{ secrets.DOCKER_REPOSITORY_USERNAME }}
+      DOCKER_REPOSITORY_PASSWORD: ${{ secrets.DOCKER_REPOSITORY_PASSWORD }}
+      DOCKER_REPOSITORY_TAG: ${{ secrets.DOCKER_REPOSITORY_USERNAME }}/stretch-auto-api
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZURE_RESOURCE_GROUP: stretch-auto
+      AZURE_APP_NAME: stretch-auto-api
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Docker
+        run: docker login -u ${{ env.DOCKER_REPOSITORY_USERNAME }} -p ${{ env.DOCKER_REPOSITORY_PASSWORD }}
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ env.AZURE_CREDENTIALS }}
+
+      - name: Build API Docker Image
+        run: docker build . --no-cache -t ${{ env.DOCKER_REPOSITORY_TAG }}
+        working-directory: ${{ env.API_WORKING_DIRECTORY }}
+
+      - name: Deploy API to Docker Repository
+        run: docker push ${{ env.DOCKER_REPOSITORY_TAG }}
+
+      - name: Deploy API to Azure App Service
+        uses: azure/CLI@v1
+        with:
+          inlineScript: az webapp restart --name ${{ env.AZURE_APP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
