@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      API_WORKING_DIRECTORY: ./api
+      CLIENT_DIRECTORY: ./client
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+
+      - name: Build API Docker Image
+        run: docker build . --no-cache
+        working-directory: ${{ env.API_WORKING_DIRECTORY }}
+
+      - name: Install Client Dependencies
+        run: npm ci
+        working-directory: ${{ env.CLIENT_DIRECTORY }}
+
+      - name: Build Production Client
+        run: npm run build
+        working-directory: ${{ env.CLIENT_DIRECTORY }}
