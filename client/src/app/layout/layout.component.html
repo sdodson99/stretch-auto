@@ -1,14 +1,16 @@
-<div>
-    <header>
+<div class="vh-100 d-flex flex-column">
+    <header class="shadow">
         <div class="container py-3">
             <div class="row">
                 <div class="col col-sm-auto text-center">
-                    <img src="assets/stretchauto-white.png" />
+                    <a routerLink="/">
+                        <img src="assets/stretchauto-white.png" />
+                    </a>
                 </div>
             </div>
         </div>
     </header>
-    <div class="container py-3">
+    <div class="container py-4 flex-grow-1">
         <ng-content></ng-content>
     </div>
 </div>

@@ -1,1 +1,26 @@
-<p>live-routine works!</p>
+<div class="h-100">
+    <h3>Routine</h3>
+
+    <div *ngIf="isLoadingRoutine; then isLoading else isNotLoading"></div>
+
+    <ng-template #isLoading>
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #isNotLoading>
+        <div class="mt-4">
+            <div *ngIf="hasNoStretches">
+                <div> The current routine has no stretches.</div>
+                <button class="mt-4 btn btn-primary">
+                    <a class="text-white text-decoration-none" routerLink="/">
+                        Back to Start
+                    </a>
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</div>
