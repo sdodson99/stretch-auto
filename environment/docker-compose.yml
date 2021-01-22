@@ -15,7 +15,6 @@ services:
       - JWT_SECRET_KEY=ilovetostretch
       - JWT_REFRESH_SECRET_KEY=ilovetostretch2
       - PORT=8000
-      - PRODUCTION=FALSE
   mongo:
     container_name: stretch-db
     image: mongo
