@@ -1,7 +1,7 @@
 <div>
     <h3>Start</h3>
 
-    <form class="mt-4" [formGroup]="startStretchingForm" (ngSubmit)="start()">
+    <form class="mt-4" [formGroup]="startRoutineForm" (ngSubmit)="start()">
         <div class="form-group">
             <div class="row align-items-center">
                 <label for="inputStretchAmount" class="col-lg-6 col-md-8 col-sm-9 col-form-label">How many stretches
@@ -14,10 +14,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col small mt-1 text-danger" *ngIf="startStretchingForm.controls.amount.errors?.min">
+                <div class="col small mt-1 text-danger" *ngIf="startRoutineForm.controls.amount.errors?.min">
                     * Stretch amount must be greater than 0.
                 </div>
-                <div class="col small mt-1 text-danger" *ngIf="startStretchingForm.controls.amount.errors?.required">
+                <div class="col small mt-1 text-danger" *ngIf="startRoutineForm.controls.amount.errors?.required">
                     * Please provide a value for stretch amount.
                 </div>
             </div>
@@ -31,21 +31,20 @@
                 <div class="col">
                     <input type="number" class="number-input form-control" formControlName="duration"
                         id="inputSecondsDuration">
-                    {{startStretchingForm.errors}}
                 </div>
             </div>
             <div class="row">
-                <div class="col small mt-1 text-danger" *ngIf="startStretchingForm.controls.duration.errors?.min">
+                <div class="col small mt-1 text-danger" *ngIf="startRoutineForm.controls.duration.errors?.min">
                     * Seconds must be greater than 0.
                 </div>
-                <div class="col small mt-1 text-danger" *ngIf="startStretchingForm.controls.duration.errors?.required">
+                <div class="col small mt-1 text-danger" *ngIf="startRoutineForm.controls.duration.errors?.required">
                     * Please provide a value for seconds.
                 </div>
             </div>
         </div>
         <div class="mt-4 form-group row">
             <div class="col">
-                <button type="submit" class="btn btn-primary" [disabled]="!startStretchingForm.valid">
+                <button type="submit" class="btn btn-primary" [disabled]="!startRoutineForm.valid">
                     Start Stretching
                 </button>
             </div>

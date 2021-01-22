@@ -3,15 +3,15 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {StretchService} from './services/stretch.service';
-import { StretchComponent } from './stretch/stretch.component';
+import {RoutineService} from './services/routine.service';
+import { StartRoutineComponent } from './start-routine/start-routine.component';
 import { LayoutComponent } from './layout/layout.component';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    StretchComponent,
+    StartRoutineComponent,
     LayoutComponent
   ],
   imports: [
@@ -20,7 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     AppRoutingModule
   ],
-  providers: [StretchService],
+  providers: [RoutineService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

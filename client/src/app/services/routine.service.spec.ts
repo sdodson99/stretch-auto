@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { StretchService } from './stretch.service';
+import { RoutineService } from './routine.service';
 
-describe('StretchService', () => {
-  let service: StretchService;
+describe('RoutineService', () => {
+  let service: RoutineService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(StretchService);
+    service = TestBed.inject(RoutineService);
   });
 
   it('should be created', () => {

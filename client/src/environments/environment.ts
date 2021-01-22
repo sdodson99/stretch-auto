@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  baseAPIUrl: 'http://localhost:8000/'
+  baseAPIUrl: 'https://stretch-auto-api.azurewebsites.net/'
 };
 
 /*
