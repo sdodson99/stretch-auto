@@ -5,7 +5,7 @@ info:
   description: >-
     RestAPI serving stretches, storing stretch routines, and authenticating
     stretch users. Visit the StretchAuto web application at
-    http://www.stretchauto.com.
+    http://stretch-auto.seandodson.com.
 servers:
   - url: 'https://stretch-auto-api.azurewebsites.net'
     description: Production API
