@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import Stretch from '../models/stretch';
 import { RoutineService } from '../services/routine.service';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-start-routine',
@@ -17,7 +18,7 @@ export class StartRoutineComponent implements OnInit {
     duration: [30, [Validators.min(1), Validators.required]]
   });
 
-  constructor(private routineService: RoutineService, private fb: FormBuilder) {
+  constructor(private routineService: RoutineService, private fb: FormBuilder, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -27,5 +28,7 @@ export class StartRoutineComponent implements OnInit {
     const {amount, duration } = this.startRoutineForm.value;
 
     this.routineService.configureRoutine(amount, duration);
+
+    this.router.navigate(['routine']);
   }
 }

@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import Stretch from '../models/stretch';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import Response from '../models/response';
 import Routine from '../models/routine';
 
