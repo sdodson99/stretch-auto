@@ -12,15 +12,23 @@
     </ng-template>
 
     <ng-template #isNotLoading>
+
         <div class="mt-4">
-            <div *ngIf="hasNoStretches">
+            <div *ngIf="hasNoStretches; then hasNoStretchesTemplate else hasStretchesTemplate"></div>
+
+            <ng-template #hasNoStretchesTemplate>
                 <div> The current routine has no stretches.</div>
                 <button class="mt-4 btn btn-primary">
                     <a class="text-white text-decoration-none" routerLink="/">
                         Back to Start
                     </a>
                 </button>
-            </div>
+            </ng-template>
+
+            <ng-template #hasStretchesTemplate>
+                {{ currentStretch?.name }}
+                {{ currentSecondsRemaining }}
+            </ng-template>
         </div>
     </ng-template>
 </div>
