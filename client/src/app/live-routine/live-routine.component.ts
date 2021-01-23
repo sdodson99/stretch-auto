@@ -87,13 +87,13 @@ export class LiveRoutineComponent implements OnInit {
     if (this.routine) {
       this.chartDatasets = [{
         data: [
-          this.routine.stretchSecondsDuration - this._currentSecondsRemaining,
           this._currentSecondsRemaining,
+          this.routine.stretchSecondsDuration - this._currentSecondsRemaining,
         ],
         borderWidth: 0,
         backgroundColor: [
-          'lightgray',
           'green',
+          'lightgray',
         ],
       }];
     }
