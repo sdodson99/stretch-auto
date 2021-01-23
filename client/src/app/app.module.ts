@@ -9,13 +9,15 @@ import { LayoutComponent } from './layout/layout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LiveRoutineComponent } from './live-routine/live-routine.component';
 import { ChartsModule } from 'ng2-charts';
+import { RoutineCountdownComponent } from './routine-countdown/routine-countdown.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StartRoutineComponent,
     LayoutComponent,
-    LiveRoutineComponent
+    LiveRoutineComponent,
+    RoutineCountdownComponent
   ],
   imports: [
     ChartsModule,

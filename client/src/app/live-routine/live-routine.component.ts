@@ -15,23 +15,9 @@ export class LiveRoutineComponent implements OnInit {
   isLoadingRoutine = true;
   isComplete = false;
 
-  routine: Routine | undefined;
   currentStretch: Stretch | undefined;
-  _currentSecondsRemaining = 0;
-
-  chartOptions: ChartOptions = {
-    responsive: true,
-    hover: {
-      mode: undefined
-    },
-    tooltips: {
-      enabled: false
-    },
-    animation: {
-      duration: 0
-    }
-  };
-  chartDatasets: ChartDataSets[] = [];
+  currentSecondsRemaining = 0;
+  stretchSecondsDuration = 0;
 
   constructor(private routineService: RoutineService) { }
 
@@ -40,18 +26,18 @@ export class LiveRoutineComponent implements OnInit {
   }
 
   async startRoutine(routine: Routine): Promise<void> {
-    this.routine = routine;
     this.isLoadingRoutine = false;
 
-    if (this.routine.stretches.length === 0) {
+    if (routine.stretches.length === 0) {
       return;
     }
 
     this.hasStretches = true;
+    this.stretchSecondsDuration = routine.stretchSecondsDuration;
 
     const stretches: Stretch[] = [];
 
-    for (const stretch of this.routine.stretches) {
+    for (const stretch of routine.stretches) {
         stretch.instructions?.sort((a, b) => a.order - b.order);
 
         if (stretch.isUnilateral) {
@@ -70,7 +56,7 @@ export class LiveRoutineComponent implements OnInit {
     }
 
     for (const stretch of stretches) {
-      for (let remainingSeconds = this.routine.stretchSecondsDuration; remainingSeconds >= 0; remainingSeconds--) {
+      for (let remainingSeconds = routine.stretchSecondsDuration; remainingSeconds >= 0; remainingSeconds--) {
         this.currentStretch = stretch;
         this.currentSecondsRemaining = remainingSeconds;
 
@@ -79,24 +65,6 @@ export class LiveRoutineComponent implements OnInit {
     }
 
     this.isComplete = true;
-  }
-
-  set currentSecondsRemaining(seconds: number) {
-    this._currentSecondsRemaining = seconds;
-
-    if (this.routine) {
-      this.chartDatasets = [{
-        data: [
-          this._currentSecondsRemaining,
-          this.routine.stretchSecondsDuration - this._currentSecondsRemaining,
-        ],
-        borderWidth: 0,
-        backgroundColor: [
-          'green',
-          'lightgray',
-        ],
-      }];
-    }
   }
 
   setTimeoutAsync(duration: number): Promise<void> {
