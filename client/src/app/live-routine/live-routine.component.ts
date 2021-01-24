@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import LiveRoutine, { LiveRoutineEvent } from '../models/live-routine';
 import Routine from '../models/routine';
 import Stretch from '../models/stretch';
@@ -11,24 +13,23 @@ import { RoutineService } from '../services/routine.service';
 })
 export class LiveRoutineComponent implements OnInit {
   hasStretches = false;
-  isLoadingRoutine = true;
   isComplete = false;
+
+  startRoutine$: Observable<Promise<void>>;
 
   currentStretch: Stretch | undefined;
   currentSecondsRemaining = 0;
   stretchSecondsDuration = 0;
 
-  constructor(private routineService: RoutineService) {}
-
-  ngOnInit(): void {
-    this.routineService
+  constructor(private routineService: RoutineService) {
+    this.startRoutine$ = this.routineService
       .getRoutine()
-      .subscribe((routine) => this.startRoutine(routine));
+      .pipe(map((routine) => this.startRoutine(routine)));
   }
 
-  async startRoutine(routine: Routine): Promise<void> {
-    this.isLoadingRoutine = false;
+  ngOnInit(): void {}
 
+  async startRoutine(routine: Routine): Promise<void> {
     if (routine.stretches.length === 0) {
       return;
     }
