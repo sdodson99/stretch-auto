@@ -4,10 +4,9 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
 @Component({
   selector: 'app-routine-countdown',
   templateUrl: './routine-countdown.component.html',
-  styleUrls: ['./routine-countdown.component.scss']
+  styleUrls: ['./routine-countdown.component.scss'],
 })
 export class RoutineCountdownComponent implements OnChanges {
-
   @Input() secondsRemaining = 0;
 
   @Input() totalSeconds = 0;
@@ -17,29 +16,28 @@ export class RoutineCountdownComponent implements OnChanges {
   chartOptions: ChartOptions = {
     responsive: true,
     hover: {
-      mode: undefined
+      mode: undefined,
     },
     tooltips: {
-      enabled: false
+      enabled: false,
     },
     animation: {
-      duration: 0
-    }
+      duration: 0,
+    },
   };
 
   constructor() {}
 
   ngOnChanges(): void {
-    this.chartDatasets = [{
+    this.chartDatasets = [
+      {
         data: [
           this.secondsRemaining,
           this.totalSeconds - this.secondsRemaining,
         ],
         borderWidth: 0,
-        backgroundColor: [
-          'green',
-          'lightgray',
-        ],
-      }];
+        backgroundColor: ['green', 'lightgray'],
+      },
+    ];
   }
 }

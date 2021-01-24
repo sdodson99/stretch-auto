@@ -8,10 +8,9 @@ import Response from '../models/response';
 import Routine from '../models/routine';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoutineService {
-
   private baseUrl;
 
   private amount = 0;
@@ -30,22 +29,26 @@ export class RoutineService {
     return this.amount > 0 && this.duration > 0;
   }
 
-  getRountine(): Observable<Routine> {
-    return this.getRoutineStretches().pipe(map(response => {
-      if (response.error) {
-        throw new Error('Failed to get stretches.');
-      }
+  getRoutine(): Observable<Routine> {
+    return this.getRoutineStretches().pipe(
+      map((response) => {
+        if (response.error) {
+          throw new Error('Failed to get stretches.');
+        }
 
-      return {
-        stretchSecondsDuration: this.duration,
-        stretches: response.data
-      };
-    }));
+        return {
+          stretchSecondsDuration: this.duration,
+          stretches: response.data,
+        };
+      })
+    );
   }
 
-  getRoutineStretches(): Observable<Response<Stretch[]>>{
+  getRoutineStretches(): Observable<Response<Stretch[]>> {
     const params = new HttpParams().set('maxAmount', this.amount.toString());
 
-    return this.http.get<Response<Stretch[]>>(this.baseUrl + 'stretch', { params });
+    return this.http.get<Response<Stretch[]>>(this.baseUrl + 'stretch', {
+      params,
+    });
   }
 }
