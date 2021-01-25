@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, OperatorFunction } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, OperatorFunction, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import Routine from '../models/routine';
 import Stretch from '../models/stretch';
@@ -11,7 +11,7 @@ import { RoutineService } from '../services/routine.service';
   templateUrl: './live-routine.component.html',
   styleUrls: ['./live-routine.component.scss'],
 })
-export class LiveRoutineComponent implements OnInit {
+export class LiveRoutineComponent implements OnInit, OnDestroy {
   hasStretches = true;
   isComplete = false;
 
@@ -20,6 +20,8 @@ export class LiveRoutineComponent implements OnInit {
   currentStretch: Stretch | undefined;
   currentSecondsRemaining = 0;
   stretchSecondsDuration = 0;
+
+  liveRoutineSubscription: Subscription | undefined;
 
   constructor(
     private routineService: RoutineService,
@@ -33,6 +35,10 @@ export class LiveRoutineComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  ngOnDestroy(): void {
+    this.liveRoutineSubscription?.unsubscribe();
+  }
+
   async startRoutine(routine: Routine): Promise<void> {
     if (routine.stretches.length === 0) {
       this.hasStretches = false;
@@ -41,16 +47,18 @@ export class LiveRoutineComponent implements OnInit {
 
     this.stretchSecondsDuration = routine.stretchSecondsDuration;
 
-    this.liveRoutineService.getLiveRoutine$(routine).subscribe({
-      next: (s) => {
-        this.currentStretch = s.stretch;
-        this.currentSecondsRemaining = s.secondsRemaining;
-      },
-      error: (e) => console.log(e),
-      complete: () => {
-        this.isComplete = true;
-      },
-    });
+    this.liveRoutineSubscription = this.liveRoutineService
+      .getLiveRoutine$(routine)
+      .subscribe({
+        next: (s) => {
+          this.currentStretch = s.stretch;
+          this.currentSecondsRemaining = s.secondsRemaining;
+        },
+        error: (e) => console.log(e),
+        complete: () => {
+          this.isComplete = true;
+        },
+      });
   }
 
   private preprocessRoutine(): OperatorFunction<Routine, Routine> {
