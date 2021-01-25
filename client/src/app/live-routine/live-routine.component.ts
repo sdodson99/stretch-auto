@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import LiveRoutine, { LiveRoutineEvent } from '../models/live-routine';
+import LiveRoutine from '../models/live-routine';
 import Routine from '../models/routine';
 import Stretch from '../models/stretch';
 import { RoutineService } from '../services/routine.service';
@@ -39,20 +39,14 @@ export class LiveRoutineComponent implements OnInit {
 
     const liveRoutine = new LiveRoutine(routine);
 
-    liveRoutine.subscribe(LiveRoutineEvent.StretchChanged, () => {
-      this.currentStretch = liveRoutine.currentStretch;
+    liveRoutine.getRoutine$().subscribe({
+      next: (s) => {
+        this.currentStretch = s.stretch;
+        this.currentSecondsRemaining = s.secondsRemaining;
+      },
+      complete: () => {
+        this.isComplete = true;
+      },
     });
-
-    liveRoutine.subscribe(
-      LiveRoutineEvent.StretchRemainingSecondsChanged,
-      () => {
-        this.currentSecondsRemaining =
-          liveRoutine.currentStretchRemainingSeconds;
-      }
-    );
-
-    await liveRoutine.start();
-
-    this.isComplete = true;
   }
 }

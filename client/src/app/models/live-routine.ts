@@ -1,33 +1,10 @@
+import { Observable, OperatorFunction, timer } from 'rxjs';
+import { map, takeWhile } from 'rxjs/operators';
+import LiveRoutineStretch from './live-routine-stretch';
 import Routine from './routine';
 import Stretch from './stretch';
 
-type EventHandler = () => void;
-type Unsubscribe = () => void;
-
-enum LiveRoutineEvent {
-  StretchChanged,
-  StretchRemainingSecondsChanged,
-}
-
-class LiveRoutineEventHandlers {
-  [LiveRoutineEvent.StretchChanged]: EventHandler[] = [];
-  [LiveRoutineEvent.StretchRemainingSecondsChanged]: EventHandler[] = [];
-}
-
 class LiveRoutine {
-  private _currentStretch: Stretch | undefined;
-  private _currentStretchRemainingSeconds = 0;
-
-  private eventHandlers = new LiveRoutineEventHandlers();
-
-  get currentStretch(): Stretch | undefined {
-    return this._currentStretch;
-  }
-
-  get currentStretchRemainingSeconds(): number {
-    return this._currentStretchRemainingSeconds;
-  }
-
   constructor(private routine: Routine) {
     const processedStretches = [];
 
@@ -52,57 +29,31 @@ class LiveRoutine {
     this.routine.stretches = processedStretches;
   }
 
-  async start(): Promise<void> {
-    for (const stretch of this.routine.stretches) {
-      this.setCurrentStretch(stretch);
-
-      for (
-        let remainingSeconds = this.routine.stretchSecondsDuration;
-        remainingSeconds >= 0;
-        remainingSeconds--
-      ) {
-        this.setCurrentStretchRemainingSeconds(remainingSeconds);
-
-        await this.setTimeoutAsync(1000);
-      }
-    }
-  }
-
-  private setCurrentStretch(stretch: Stretch): void {
-    this._currentStretch = stretch;
-    this.raise(LiveRoutineEvent.StretchChanged);
-  }
-
-  private setCurrentStretchRemainingSeconds(remainingSeconds: number): void {
-    this._currentStretchRemainingSeconds = remainingSeconds;
-    this.raise(LiveRoutineEvent.StretchRemainingSecondsChanged);
-  }
-
-  private setTimeoutAsync(duration: number): Promise<void> {
-    return new Promise((res) => {
-      setTimeout(() => {
-        res();
-      }, duration);
-    });
-  }
-
-  subscribe(event: LiveRoutineEvent, handler: EventHandler): Unsubscribe {
-    this.eventHandlers[event].push(handler);
-
-    return () => this.unsubcribe(event, handler);
-  }
-
-  private raise(event: LiveRoutineEvent): void {
-    this.eventHandlers[event].forEach((handler) => handler());
-  }
-
-  private unsubcribe(event: LiveRoutineEvent, handler: EventHandler): void {
-    this.eventHandlers[event] = this.eventHandlers[event].filter(
-      (h) => h !== handler
+  getRoutine$(): Observable<LiveRoutineStretch> {
+    return timer(0, 1000).pipe(
+      takeWhile(
+        (i) =>
+          i <
+          this.routine.stretchSecondsDuration * this.routine.stretches.length
+      ),
+      this.toRoutineStretch(
+        this.routine.stretches,
+        this.routine.stretchSecondsDuration
+      )
     );
+  }
+
+  private toRoutineStretch(
+    stretches: Stretch[],
+    stretchDuration: number
+  ): OperatorFunction<number, LiveRoutineStretch> {
+    return map((value: number) => {
+      return {
+        stretch: stretches[Math.trunc(value / stretchDuration)],
+        secondsRemaining: stretchDuration - (value % stretchDuration),
+      };
+    });
   }
 }
 
 export default LiveRoutine;
-
-export { LiveRoutineEvent };
