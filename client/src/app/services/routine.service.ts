@@ -44,7 +44,7 @@ export class RoutineService {
     );
   }
 
-  getRoutineStretches(): Observable<Response<Stretch[]>> {
+  private getRoutineStretches(): Observable<Response<Stretch[]>> {
     const params = new HttpParams().set('maxAmount', this.amount.toString());
 
     return this.http.get<Response<Stretch[]>>(this.baseUrl + 'stretch', {

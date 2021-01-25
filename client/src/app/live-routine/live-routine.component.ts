@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, OperatorFunction } from 'rxjs';
 import { map } from 'rxjs/operators';
-import LiveRoutine from '../models/live-routine';
 import Routine from '../models/routine';
 import Stretch from '../models/stretch';
+import { LiveRoutineService } from '../services/live-routine.service';
 import { RoutineService } from '../services/routine.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { RoutineService } from '../services/routine.service';
   styleUrls: ['./live-routine.component.scss'],
 })
 export class LiveRoutineComponent implements OnInit {
-  hasStretches = false;
+  hasStretches = true;
   isComplete = false;
 
   startRoutine$: Observable<Promise<void>>;
@@ -21,32 +21,64 @@ export class LiveRoutineComponent implements OnInit {
   currentSecondsRemaining = 0;
   stretchSecondsDuration = 0;
 
-  constructor(private routineService: RoutineService) {
-    this.startRoutine$ = this.routineService
-      .getRoutine()
-      .pipe(map((routine) => this.startRoutine(routine)));
+  constructor(
+    private routineService: RoutineService,
+    private liveRoutineService: LiveRoutineService
+  ) {
+    this.startRoutine$ = this.routineService.getRoutine().pipe(
+      this.preprocessRoutine(),
+      map((routine) => this.startRoutine(routine))
+    );
   }
 
   ngOnInit(): void {}
 
   async startRoutine(routine: Routine): Promise<void> {
     if (routine.stretches.length === 0) {
+      this.hasStretches = false;
       return;
     }
 
-    this.hasStretches = true;
     this.stretchSecondsDuration = routine.stretchSecondsDuration;
 
-    const liveRoutine = new LiveRoutine(routine);
-
-    liveRoutine.getRoutine$().subscribe({
+    this.liveRoutineService.getLiveRoutine$(routine).subscribe({
       next: (s) => {
         this.currentStretch = s.stretch;
         this.currentSecondsRemaining = s.secondsRemaining;
       },
+      error: (e) => console.log(e),
       complete: () => {
         this.isComplete = true;
       },
+    });
+  }
+
+  private preprocessRoutine(): OperatorFunction<Routine, Routine> {
+    return map((routine) => {
+      const processedStretches = [];
+
+      for (const stretch of routine.stretches) {
+        stretch.instructions?.sort((a, b) => a.order - b.order);
+
+        if (stretch.isUnilateral) {
+          const unilateralStretches: Stretch[] = ['Left', 'Right'].map(
+            (side) => {
+              return {
+                id: stretch.id,
+                name: `${side} ${stretch.name}`,
+                isUnilateral: true,
+                instructions: stretch.instructions,
+              };
+            }
+          );
+          processedStretches.push(...unilateralStretches);
+        } else {
+          processedStretches.push(stretch);
+        }
+      }
+
+      routine.stretches = processedStretches;
+      return routine;
     });
   }
 }
