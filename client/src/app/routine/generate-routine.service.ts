@@ -7,11 +7,12 @@ import { map } from 'rxjs/operators';
 import Response from '../models/response';
 import Routine from '../models/routine';
 import RoutineConfiguration from '../models/routine-configuration';
+import { CurrentRoutineService } from './current-routine.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RoutineService {
+export class GenerateRoutineService {
   private baseUrl;
 
   private _routineConfiguration: RoutineConfiguration;
@@ -21,10 +22,14 @@ export class RoutineService {
   }
 
   set routineConfiguration(value: RoutineConfiguration) {
+    this.currentRoutineService.clearRoutine();
     this._routineConfiguration = value;
   }
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private currentRoutineService: CurrentRoutineService
+  ) {
     this.baseUrl = environment.baseAPIUrl;
 
     this._routineConfiguration = {
@@ -33,7 +38,7 @@ export class RoutineService {
     };
   }
 
-  getRoutine(): Observable<Routine> {
+  generateRoutine(): Observable<Routine> {
     return this.getRoutineStretches().pipe(
       map((response) => {
         if (response.error) {

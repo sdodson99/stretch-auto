@@ -4,12 +4,13 @@ import { QuickStartRoutineComponent } from './quick-start-routine/quick-start-ro
 import { PreviewRoutineComponent } from './preview-routine/preview-routine.component';
 import { LiveRoutineComponent } from './live-routine/live-routine.component';
 import { RoutineCountdownComponent } from './live-routine/routine-countdown/routine-countdown.component';
-import { RoutineService } from './routine.service';
+import { GenerateRoutineService } from './generate-routine.service';
 import { LiveRoutineService } from './live-routine.service';
 import { ChartsModule } from 'ng2-charts';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { CurrentRoutineService } from './current-routine.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,11 @@ import { SharedModule } from '../shared/shared.module';
     LiveRoutineComponent,
     RoutineCountdownComponent,
   ],
-  providers: [RoutineService, LiveRoutineService],
+  providers: [
+    GenerateRoutineService,
+    LiveRoutineService,
+    CurrentRoutineService,
+  ],
   imports: [
     CommonModule,
     ChartsModule,

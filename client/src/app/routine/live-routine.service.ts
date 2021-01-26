@@ -4,6 +4,7 @@ import { takeWhile, map } from 'rxjs/operators';
 import LiveRoutineStretch from '../models/live-routine-stretch';
 import Routine from '../models/routine';
 import Stretch from '../models/stretch';
+import { CurrentRoutineService } from './current-routine.service';
 import NoRoutineError from './errors/no-routine-error';
 import NoStretchesError from './errors/no-stretches-error';
 
@@ -11,17 +12,11 @@ import NoStretchesError from './errors/no-stretches-error';
   providedIn: 'root',
 })
 export class LiveRoutineService {
-  private _currentRoutine: Routine | undefined;
-
-  get currentRoutine(): Routine | undefined {
-    return this._currentRoutine;
+  private get currentRoutine(): Routine | undefined {
+    return this.currentRoutineService.currentRoutine;
   }
 
-  set currentRoutine(routine: Routine | undefined) {
-    this._currentRoutine = routine;
-  }
-
-  constructor() {}
+  constructor(private currentRoutineService: CurrentRoutineService) {}
 
   /**
    * Get an observable for a live routine.
@@ -30,18 +25,18 @@ export class LiveRoutineService {
    * @returns The observable to hook into the live routine.
    */
   getLiveRoutine$(): Observable<LiveRoutineStretch> {
-    if (!this._currentRoutine) {
+    if (!this.currentRoutine) {
       throw new NoRoutineError();
     }
 
-    if (
-      !this._currentRoutine.stretches ||
-      this._currentRoutine.stretches.length === 0
-    ) {
+    const hasStretches =
+      this.currentRoutine.stretches && this.currentRoutine.stretches.length > 0;
+
+    if (!hasStretches) {
       throw new NoStretchesError();
     }
 
-    const routine = this.preprocessRoutine(this._currentRoutine);
+    const routine = this.preprocessRoutine(this.currentRoutine);
 
     const routineDuration =
       routine.stretchSecondsDuration * routine.stretches.length;
