@@ -2,7 +2,7 @@
     <h3>Routine</h3>
 
     <div class="mt-4 row justify-content-center">
-        <div *ngIf="!isComplete && hasStretches;" class="col">
+        <div *ngIf="!isComplete && hasStretches && hasRoutine;" class="col">
             <div class="row justify-content-center">
                 <div class="col-md-4">
                     <app-routine-countdown [secondsRemaining]="currentSecondsRemaining"
@@ -23,6 +23,15 @@
 
         <div *ngIf="!hasStretches" class="col">
             <div>The current routine has no stretches.</div>
+            <button class="mt-4 btn btn-primary">
+                <a class="text-white text-decoration-none" routerLink="/">
+                    Back to Start
+                </a>
+            </button>
+        </div>
+
+        <div *ngIf="!hasRoutine" class="col">
+            <div>No routine has been configured.</div>
             <button class="mt-4 btn btn-primary">
                 <a class="text-white text-decoration-none" routerLink="/">
                     Back to Start

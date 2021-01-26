@@ -4,6 +4,8 @@ import { takeWhile, map } from 'rxjs/operators';
 import LiveRoutineStretch from '../models/live-routine-stretch';
 import Routine from '../models/routine';
 import Stretch from '../models/stretch';
+import NoRoutineError from './errors/no-routine-error';
+import NoStretchesError from './errors/no-stretches-error';
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +23,22 @@ export class LiveRoutineService {
 
   constructor() {}
 
+  /**
+   * Get an observable for a live routine.
+   * @throws {NoRoutineError} Thrown if no routine has been configured.
+   * @throws {NoStretchError} Thrown if routine has no stretches.
+   * @returns The observable to hook into the live routine.
+   */
   getLiveRoutine$(): Observable<LiveRoutineStretch> {
     if (!this._currentRoutine) {
-      throw new Error('No routine configured.');
+      throw new NoRoutineError();
+    }
+
+    if (
+      !this._currentRoutine.stretches ||
+      this._currentRoutine.stretches.length === 0
+    ) {
+      throw new NoStretchesError();
     }
 
     const routine = this.preprocessRoutine(this._currentRoutine);

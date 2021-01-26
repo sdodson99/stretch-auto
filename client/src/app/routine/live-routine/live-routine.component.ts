@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, OperatorFunction, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import Routine from '../../models/routine';
+import { Subscription } from 'rxjs';
 import Stretch from '../../models/stretch';
+import NoRoutineError from '../errors/no-routine-error';
+import NoStretchesError from '../errors/no-stretches-error';
 import { LiveRoutineService } from '../live-routine.service';
-import { RoutineService } from '../routine.service';
 
 @Component({
   selector: 'app-live-routine',
@@ -13,6 +12,7 @@ import { RoutineService } from '../routine.service';
 })
 export class LiveRoutineComponent implements OnInit, OnDestroy {
   hasStretches = true;
+  hasRoutine = true;
   isComplete = false;
 
   currentStretch: Stretch | undefined;
@@ -31,18 +31,31 @@ export class LiveRoutineComponent implements OnInit, OnDestroy {
     this.liveRoutineSubscription?.unsubscribe();
   }
 
-  async startRoutine(): Promise<void> {
-    this.liveRoutineSubscription = this.liveRoutineService
-      .getLiveRoutine$()
-      .subscribe({
-        next: (s) => {
-          this.currentStretch = s.stretch;
-          this.currentSecondsRemaining = s.secondsRemaining;
-          this.stretchSecondsDuration = s.totalSeconds;
-        },
-        complete: () => {
-          this.isComplete = true;
-        },
-      });
+  startRoutine(): void {
+    try {
+      this.liveRoutineSubscription = this.liveRoutineService
+        .getLiveRoutine$()
+        .subscribe({
+          next: (s) => {
+            this.currentStretch = s.stretch;
+            this.currentSecondsRemaining = s.secondsRemaining;
+            this.stretchSecondsDuration = s.totalSeconds;
+          },
+          complete: () => {
+            this.isComplete = true;
+          },
+        });
+
+      this.hasRoutine = true;
+      this.hasStretches = true;
+    } catch (error) {
+      if (error instanceof NoRoutineError) {
+        this.hasRoutine = false;
+      } else if (error instanceof NoStretchesError) {
+        this.hasStretches = false;
+      } else {
+        throw error;
+      }
+    }
   }
 }
