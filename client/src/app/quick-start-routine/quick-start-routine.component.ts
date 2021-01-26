@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./quick-start-routine.component.scss'],
 })
 export class QuickStartRoutineComponent implements OnInit {
-  stretches: Stretch[] = [];
-
   startRoutineForm = this.fb.group({
     amount: [3, [Validators.min(1), Validators.required]],
     duration: [30, [Validators.min(1), Validators.required]],
@@ -30,6 +28,6 @@ export class QuickStartRoutineComponent implements OnInit {
 
     this.routineService.configureRoutine(amount, duration);
 
-    this.router.navigate(['routine']);
+    this.router.navigate(['routine', 'preview']);
   }
 }

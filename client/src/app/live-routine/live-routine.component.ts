@@ -48,13 +48,13 @@ export class LiveRoutineComponent implements OnInit, OnDestroy {
     this.stretchSecondsDuration = routine.stretchSecondsDuration;
 
     this.liveRoutineSubscription = this.liveRoutineService
-      .getLiveRoutine$(routine)
+      .getLiveRoutine$()
       .subscribe({
         next: (s) => {
           this.currentStretch = s.stretch;
           this.currentSecondsRemaining = s.secondsRemaining;
         },
-        error: (e) => console.log(e),
+        error: (e) => console.log('hello'),
         complete: () => {
           this.isComplete = true;
         },

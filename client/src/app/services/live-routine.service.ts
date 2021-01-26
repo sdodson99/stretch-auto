@@ -9,9 +9,25 @@ import Stretch from '../models/stretch';
   providedIn: 'root',
 })
 export class LiveRoutineService {
+  private _currentRoutine: Routine | undefined;
+
+  get currentRoutine(): Routine | undefined {
+    return this._currentRoutine;
+  }
+
+  set currentRoutine(routine: Routine | undefined) {
+    this._currentRoutine = routine;
+  }
+
   constructor() {}
 
-  getLiveRoutine$(routine: Routine): Observable<LiveRoutineStretch> {
+  getLiveRoutine$(): Observable<LiveRoutineStretch> {
+    if (!this._currentRoutine) {
+      throw new Error('No routine configured.');
+    }
+
+    const routine = this._currentRoutine;
+
     const routineDuration =
       routine.stretchSecondsDuration * routine.stretches.length;
 

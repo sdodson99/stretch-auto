@@ -1,8 +1,25 @@
 :root {
-  --color-primary: #1f4679;
+  --color-primary: #3362a0;
+  --color-primary-dark: #1f4679;
 }
 
 .btn-primary {
   background-color: var(--color-primary) !important;
   border-color: var(--color-primary) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark) !important;
+  border-color: var(--color-primary-dark) !important;
+}
+
+.btn-outline-primary {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.btn-outline-primary:hover {
+  color: white !important;
+  border-color: var(--color-primary-dark) !important;
+  background-color: var(--color-primary-dark) !important;
 }

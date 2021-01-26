@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LiveRoutineComponent } from './live-routine/live-routine.component';
 import { ChartsModule } from 'ng2-charts';
 import { RoutineCountdownComponent } from './routine-countdown/routine-countdown.component';
+import { PreviewRoutineComponent } from './preview-routine/preview-routine.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { RoutineCountdownComponent } from './routine-countdown/routine-countdown
     LayoutComponent,
     LiveRoutineComponent,
     RoutineCountdownComponent,
+    PreviewRoutineComponent,
   ],
   imports: [
     ChartsModule,
