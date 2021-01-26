@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RoutineService } from '../routine.service';
+import { GenerateRoutineService } from '../generate-routine.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -11,17 +11,17 @@ import { Router } from '@angular/router';
 export class QuickStartRoutineComponent implements OnInit {
   startRoutineForm = this.fb.group({
     amount: [
-      this.routineService.routineConfiguration.stretchAmount,
+      this.generateRoutineService.routineConfiguration.stretchAmount,
       [Validators.min(1), Validators.required],
     ],
     duration: [
-      this.routineService.routineConfiguration.stretchDurationSeconds,
+      this.generateRoutineService.routineConfiguration.stretchDurationSeconds,
       [Validators.min(1), Validators.required],
     ],
   });
 
   constructor(
-    private routineService: RoutineService,
+    private generateRoutineService: GenerateRoutineService,
     private fb: FormBuilder,
     private router: Router
   ) {}
@@ -31,7 +31,7 @@ export class QuickStartRoutineComponent implements OnInit {
   start(): void {
     const { amount, duration } = this.startRoutineForm.value;
 
-    this.routineService.routineConfiguration = {
+    this.generateRoutineService.routineConfiguration = {
       stretchAmount: amount,
       stretchDurationSeconds: duration,
     };

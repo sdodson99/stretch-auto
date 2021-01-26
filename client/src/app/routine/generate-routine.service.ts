@@ -7,11 +7,12 @@ import { map } from 'rxjs/operators';
 import Response from '../models/response';
 import Routine from '../models/routine';
 import RoutineConfiguration from '../models/routine-configuration';
+import { CurrentRoutineService } from './current-routine.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RoutineService {
+export class GenerateRoutineService {
   private baseUrl;
 
   private _routineConfiguration: RoutineConfiguration;
@@ -21,10 +22,14 @@ export class RoutineService {
   }
 
   set routineConfiguration(value: RoutineConfiguration) {
+    this.currentRoutineService.clearRoutine();
     this._routineConfiguration = value;
   }
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private currentRoutineService: CurrentRoutineService
+  ) {
     this.baseUrl = environment.baseAPIUrl;
 
     this._routineConfiguration = {
@@ -33,18 +38,22 @@ export class RoutineService {
     };
   }
 
-  getRoutine(): Observable<Routine> {
+  generateRoutine(): Observable<Routine> {
     return this.getRoutineStretches().pipe(
       map((response) => {
         if (response.error) {
           throw new Error('Failed to get stretches.');
         }
 
-        return {
+        const routine = {
           stretchSecondsDuration: this.routineConfiguration
             .stretchDurationSeconds,
           stretches: response.data,
         };
+
+        this.sortInstructions(routine);
+
+        return routine;
       })
     );
   }
@@ -58,5 +67,11 @@ export class RoutineService {
     return this.http.get<Response<Stretch[]>>(this.baseUrl + 'stretch', {
       params,
     });
+  }
+
+  private sortInstructions(routine: Routine): void {
+    for (const stretch of routine.stretches) {
+      stretch.instructions?.sort((a, b) => a.order - b.order);
+    }
   }
 }

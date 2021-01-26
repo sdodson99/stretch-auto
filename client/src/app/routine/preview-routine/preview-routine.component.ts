@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { combineLatest, Observable, Subscription, timer } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { combineLatest, Subscription, timer } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import Routine from '../../models/routine';
-import { LiveRoutineService } from '../live-routine.service';
-import { RoutineService } from '../routine.service';
+import { GenerateRoutineService } from '../generate-routine.service';
+import { CurrentRoutineService } from '../current-routine.service';
 
 @Component({
   selector: 'app-preview-routine',
@@ -19,13 +19,19 @@ export class PreviewRoutineComponent implements OnInit, OnDestroy {
   getRoutineSubscription: Subscription | undefined;
 
   constructor(
-    private routineService: RoutineService,
-    private liveRoutineService: LiveRoutineService,
+    private routineService: GenerateRoutineService,
+    private currentRoutineService: CurrentRoutineService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.getRoutine();
+    if (!this.currentRoutineService.currentRoutine) {
+      this.getRoutine();
+    } else {
+      this.routine = this.currentRoutineService.currentRoutine;
+      this.isLoading = false;
+      this.isRefreshing = false;
+    }
   }
 
   ngOnDestroy(): void {
@@ -33,7 +39,7 @@ export class PreviewRoutineComponent implements OnInit, OnDestroy {
   }
 
   startRoutine(): void {
-    this.liveRoutineService.currentRoutine = this.routine;
+    this.currentRoutineService.currentRoutine = this.routine;
     this.router.navigate(['routine', 'live']);
   }
 
@@ -46,12 +52,17 @@ export class PreviewRoutineComponent implements OnInit, OnDestroy {
     this.getRoutineSubscription?.unsubscribe();
 
     this.getRoutineSubscription = combineLatest([
-      this.routineService.getRoutine(),
+      this.routineService.generateRoutine(),
       timer(100),
-    ]).subscribe((routine) => {
-      this.routine = routine[0];
-      this.isLoading = false;
-      this.isRefreshing = false;
-    });
+    ])
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.isRefreshing = false;
+        })
+      )
+      .subscribe((routine) => {
+        this.routine = routine[0];
+      });
   }
 }

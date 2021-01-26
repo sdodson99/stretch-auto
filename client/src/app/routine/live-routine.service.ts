@@ -4,6 +4,7 @@ import { takeWhile, map } from 'rxjs/operators';
 import LiveRoutineStretch from '../models/live-routine-stretch';
 import Routine from '../models/routine';
 import Stretch from '../models/stretch';
+import { CurrentRoutineService } from './current-routine.service';
 import NoRoutineError from './errors/no-routine-error';
 import NoStretchesError from './errors/no-stretches-error';
 
@@ -11,17 +12,11 @@ import NoStretchesError from './errors/no-stretches-error';
   providedIn: 'root',
 })
 export class LiveRoutineService {
-  private _currentRoutine: Routine | undefined;
-
-  get currentRoutine(): Routine | undefined {
-    return this._currentRoutine;
+  private get currentRoutine(): Routine | undefined {
+    return this.currentRoutineService.currentRoutine;
   }
 
-  set currentRoutine(routine: Routine | undefined) {
-    this._currentRoutine = routine;
-  }
-
-  constructor() {}
+  constructor(private currentRoutineService: CurrentRoutineService) {}
 
   /**
    * Get an observable for a live routine.
@@ -30,37 +25,34 @@ export class LiveRoutineService {
    * @returns The observable to hook into the live routine.
    */
   getLiveRoutine$(): Observable<LiveRoutineStretch> {
-    if (!this._currentRoutine) {
+    if (!this.currentRoutine) {
       throw new NoRoutineError();
     }
 
-    if (
-      !this._currentRoutine.stretches ||
-      this._currentRoutine.stretches.length === 0
-    ) {
+    const routine = this.currentRoutine;
+
+    const hasStretches = routine.stretches && routine.stretches.length > 0;
+    if (!hasStretches) {
       throw new NoStretchesError();
     }
 
-    const routine = this.preprocessRoutine(this._currentRoutine);
-
+    const routineStretches = this.processUnilateralStretches(routine.stretches);
     const routineDuration =
-      routine.stretchSecondsDuration * routine.stretches.length;
+      routineStretches.length * routine.stretchSecondsDuration;
 
     return timer(0, 1000).pipe(
       takeWhile((i) => i < routineDuration),
       this.toLiveRoutineStretch(
-        routine.stretches,
+        routineStretches,
         routine.stretchSecondsDuration
       )
     );
   }
 
-  private preprocessRoutine(routine: Routine): Routine {
+  private processUnilateralStretches(stretches: Stretch[]): Stretch[] {
     const processedStretches = [];
 
-    for (const stretch of routine.stretches) {
-      stretch.instructions?.sort((a, b) => a.order - b.order);
-
+    for (const stretch of stretches) {
       if (stretch.isUnilateral) {
         const unilateralStretches: Stretch[] = ['Left', 'Right'].map((side) => {
           return {
@@ -76,19 +68,20 @@ export class LiveRoutineService {
       }
     }
 
-    routine.stretches = processedStretches;
-
-    return routine;
+    return processedStretches;
   }
 
   private toLiveRoutineStretch(
     stretches: Stretch[],
     stretchDuration: number
   ): OperatorFunction<number, LiveRoutineStretch> {
-    return map((value: number) => {
+    return map((currentSecond: number) => {
+      const currentStretchIndex = Math.trunc(currentSecond / stretchDuration);
+      const currentStretch = stretches[currentStretchIndex];
+
       return {
-        stretch: stretches[Math.trunc(value / stretchDuration)],
-        secondsRemaining: stretchDuration - (value % stretchDuration),
+        stretch: currentStretch,
+        secondsRemaining: stretchDuration - (currentSecond % stretchDuration),
         totalSeconds: stretchDuration,
       };
     });
