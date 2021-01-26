@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RoutineService } from './services/routine.service';
-import { StartRoutineComponent } from './start-routine/start-routine.component';
+import { QuickStartRoutineComponent } from './quick-start-routine/quick-start-routine.component';
 import { LayoutComponent } from './layout/layout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LiveRoutineComponent } from './live-routine/live-routine.component';
@@ -14,19 +14,19 @@ import { RoutineCountdownComponent } from './routine-countdown/routine-countdown
 @NgModule({
   declarations: [
     AppComponent,
-    StartRoutineComponent,
+    QuickStartRoutineComponent,
     LayoutComponent,
     LiveRoutineComponent,
-    RoutineCountdownComponent
+    RoutineCountdownComponent,
   ],
   imports: [
     ChartsModule,
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [RoutineService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

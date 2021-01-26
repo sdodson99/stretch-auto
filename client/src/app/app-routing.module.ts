@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LiveRoutineComponent } from './live-routine/live-routine.component';
-import { StartRoutineComponent } from './start-routine/start-routine.component';
+import { QuickStartRoutineComponent } from './quick-start-routine/quick-start-routine.component';
 
 const routes: Routes = [
-  { path: '', component: StartRoutineComponent },
+  { path: '', component: QuickStartRoutineComponent },
   { path: 'routine', component: LiveRoutineComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

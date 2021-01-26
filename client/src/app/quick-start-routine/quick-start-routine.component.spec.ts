@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StartRoutineComponent } from './start-routine.component';
+import { QuickStartRoutineComponent } from './quick-start-routine.component';
 
 describe('StretchComponent', () => {
-  let component: StartRoutineComponent;
-  let fixture: ComponentFixture<StartRoutineComponent>;
+  let component: QuickStartRoutineComponent;
+  let fixture: ComponentFixture<QuickStartRoutineComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StartRoutineComponent ]
-    })
-    .compileComponents();
+      declarations: [QuickStartRoutineComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StartRoutineComponent);
+    fixture = TestBed.createComponent(QuickStartRoutineComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

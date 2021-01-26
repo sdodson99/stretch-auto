@@ -1,8 +1,26 @@
 header {
   background-color: var(--color-primary);
   color: white;
+  font-size: large;
 
   img {
     max-height: 80px;
+  }
+
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
+  }
+
+  .nav-link:hover {
+    color: rgb(230, 230, 230);
+  }
+
+  .nav-link:hover,
+  .nav-link-active {
+    border-bottom-color: white;
   }
 }
