@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import Stretch from '../../models/stretch';
 import NoRoutineError from '../errors/no-routine-error';
@@ -21,7 +22,10 @@ export class LiveRoutineComponent implements OnInit, OnDestroy {
 
   liveRoutineSubscription: Subscription | undefined;
 
-  constructor(private liveRoutineService: LiveRoutineService) {}
+  constructor(
+    private liveRoutineService: LiveRoutineService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.startRoutine();
@@ -57,5 +61,10 @@ export class LiveRoutineComponent implements OnInit, OnDestroy {
         throw error;
       }
     }
+  }
+
+  cancelRoutine(): void {
+    this.liveRoutineSubscription?.unsubscribe();
+    this.router.navigate(['routine', 'preview']);
   }
 }

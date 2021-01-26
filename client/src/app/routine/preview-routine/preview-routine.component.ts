@@ -27,6 +27,10 @@ export class PreviewRoutineComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (!this.currentRoutineService.currentRoutine) {
       this.getRoutine();
+    } else {
+      this.routine = this.currentRoutineService.currentRoutine;
+      this.isLoading = false;
+      this.isRefreshing = false;
     }
   }
 

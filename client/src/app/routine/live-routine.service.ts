@@ -29,33 +29,30 @@ export class LiveRoutineService {
       throw new NoRoutineError();
     }
 
-    const hasStretches =
-      this.currentRoutine.stretches && this.currentRoutine.stretches.length > 0;
+    const routine = this.currentRoutine;
 
+    const hasStretches = routine.stretches && routine.stretches.length > 0;
     if (!hasStretches) {
       throw new NoStretchesError();
     }
 
-    const routine = this.preprocessRoutine(this.currentRoutine);
-
+    const routineStretches = this.processUnilateralStretches(routine.stretches);
     const routineDuration =
-      routine.stretchSecondsDuration * routine.stretches.length;
+      routineStretches.length * routine.stretchSecondsDuration;
 
     return timer(0, 1000).pipe(
       takeWhile((i) => i < routineDuration),
       this.toLiveRoutineStretch(
-        routine.stretches,
+        routineStretches,
         routine.stretchSecondsDuration
       )
     );
   }
 
-  private preprocessRoutine(routine: Routine): Routine {
+  private processUnilateralStretches(stretches: Stretch[]): Stretch[] {
     const processedStretches = [];
 
-    for (const stretch of routine.stretches) {
-      stretch.instructions?.sort((a, b) => a.order - b.order);
-
+    for (const stretch of stretches) {
       if (stretch.isUnilateral) {
         const unilateralStretches: Stretch[] = ['Left', 'Right'].map((side) => {
           return {
@@ -71,19 +68,20 @@ export class LiveRoutineService {
       }
     }
 
-    routine.stretches = processedStretches;
-
-    return routine;
+    return processedStretches;
   }
 
   private toLiveRoutineStretch(
     stretches: Stretch[],
     stretchDuration: number
   ): OperatorFunction<number, LiveRoutineStretch> {
-    return map((value: number) => {
+    return map((currentSecond: number) => {
+      const currentStretchIndex = Math.trunc(currentSecond / stretchDuration);
+      const currentStretch = stretches[currentStretchIndex];
+
       return {
-        stretch: stretches[Math.trunc(value / stretchDuration)],
-        secondsRemaining: stretchDuration - (value % stretchDuration),
+        stretch: currentStretch,
+        secondsRemaining: stretchDuration - (currentSecond % stretchDuration),
         totalSeconds: stretchDuration,
       };
     });

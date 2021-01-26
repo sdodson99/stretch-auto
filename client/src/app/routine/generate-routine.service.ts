@@ -45,11 +45,15 @@ export class GenerateRoutineService {
           throw new Error('Failed to get stretches.');
         }
 
-        return {
+        const routine = {
           stretchSecondsDuration: this.routineConfiguration
             .stretchDurationSeconds,
           stretches: response.data,
         };
+
+        this.sortInstructions(routine);
+
+        return routine;
       })
     );
   }
@@ -63,5 +67,11 @@ export class GenerateRoutineService {
     return this.http.get<Response<Stretch[]>>(this.baseUrl + 'stretch', {
       params,
     });
+  }
+
+  private sortInstructions(routine: Routine): void {
+    for (const stretch of routine.stretches) {
+      stretch.instructions?.sort((a, b) => a.order - b.order);
+    }
   }
 }
