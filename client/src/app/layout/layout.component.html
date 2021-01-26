@@ -1,13 +1,20 @@
 <div class="vh-100 d-flex flex-column">
     <header class="shadow">
         <div class="container py-3">
-            <div class="row">
-                <div class="col col-sm-auto text-center">
+            <nav class="row align-items-center">
+                <div class="col-sm-auto text-center">
                     <a routerLink="/">
                         <img src="assets/logo-white.png" />
                     </a>
                 </div>
-            </div>
+                <div class="col-sm"></div>
+                <div class="col-sm-auto text-center">
+                    <a class="nav-link" routerLink="/" [routerLinkActiveOptions]="{exact: true}"
+                        routerLinkActive="nav-link-active">
+                        Quick Start
+                    </a>
+                </div>
+            </nav>
         </div>
     </header>
     <div class="container py-4 flex-grow-1">
