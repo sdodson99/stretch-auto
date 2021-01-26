@@ -2,6 +2,11 @@
     <h3>Preview Routine</h3>
 
     <div class="mt-4">
+        <div *ngIf="isLoading" class="mt-4 d-flex flex-column align-items-center">
+            <app-loading-spinner></app-loading-spinner>
+            <div class="mt-3 font-weight-light">Creating Routine</div>
+        </div>
+
         <div *ngIf="routine;">
             <div *ngIf="routine.stretches.length > 0; else hasNoStretches">
 
@@ -39,8 +44,11 @@
                 <div class="mt-4">
                     <div class="d-flex flex-column flex-sm-row">
                         <button (click)="startRoutine()" class="btn btn-primary">Start</button>
-                        <button (click)="refreshRoutine()"
-                            class="btn btn-outline-primary mt-3 mt-sm-0 ml-sm-2">Refresh</button>
+                        <button (click)="refreshRoutine()" class="btn btn-outline-primary mt-3 mt-sm-0 ml-sm-2">
+                            Refresh
+                            <app-loading-spinner class="ml-2" *ngIf="isRefreshing" [diameter]="'1rem'">
+                            </app-loading-spinner>
+                        </button>
                     </div>
                     <div class="mt-4 text-center text-sm-left">
                         <a class="text-danger" routerLink="/">Back to Quick Start</a>
@@ -55,11 +63,6 @@
                 </a>
             </ng-template>
 
-        </div>
-
-        <div *ngIf="isLoading" class="mt-4 d-flex flex-column align-items-center">
-            <app-loading-spinner></app-loading-spinner>
-            <div class="mt-3 font-weight-light">Creating Routine</div>
         </div>
     </div>
 </div>

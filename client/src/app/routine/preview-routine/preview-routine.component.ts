@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription, timer } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import Routine from '../../models/routine';
 import { LiveRoutineService } from '../live-routine.service';
@@ -14,6 +14,7 @@ import { RoutineService } from '../routine.service';
 export class PreviewRoutineComponent implements OnInit, OnDestroy {
   routine: Routine | undefined;
   isLoading = true;
+  isRefreshing = true;
 
   getRoutineSubscription: Subscription | undefined;
 
@@ -37,19 +38,20 @@ export class PreviewRoutineComponent implements OnInit, OnDestroy {
   }
 
   refreshRoutine(): void {
+    this.isRefreshing = true;
     this.getRoutine();
   }
 
   getRoutine(): void {
-    this.isLoading = true;
-
     this.getRoutineSubscription?.unsubscribe();
 
-    this.getRoutineSubscription = this.routineService
-      .getRoutine()
-      .subscribe((routine) => {
-        this.routine = routine;
-        this.isLoading = false;
-      });
+    this.getRoutineSubscription = combineLatest([
+      this.routineService.getRoutine(),
+      timer(100),
+    ]).subscribe((routine) => {
+      this.routine = routine[0];
+      this.isLoading = false;
+      this.isRefreshing = false;
+    });
   }
 }
