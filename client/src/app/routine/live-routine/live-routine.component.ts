@@ -32,15 +32,13 @@ export class LiveRoutineComponent implements OnInit, OnDestroy {
   }
 
   async startRoutine(): Promise<void> {
-    this.stretchSecondsDuration =
-      this.liveRoutineService.currentRoutine?.stretchSecondsDuration ?? 0;
-
     this.liveRoutineSubscription = this.liveRoutineService
       .getLiveRoutine$()
       .subscribe({
         next: (s) => {
           this.currentStretch = s.stretch;
           this.currentSecondsRemaining = s.secondsRemaining;
+          this.stretchSecondsDuration = s.totalSeconds;
         },
         complete: () => {
           this.isComplete = true;

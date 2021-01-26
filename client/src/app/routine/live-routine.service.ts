@@ -74,6 +74,7 @@ export class LiveRoutineService {
       return {
         stretch: stretches[Math.trunc(value / stretchDuration)],
         secondsRemaining: stretchDuration - (value % stretchDuration),
+        totalSeconds: stretchDuration,
       };
     });
   }
