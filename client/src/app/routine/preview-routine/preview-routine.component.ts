@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import Routine from '../models/routine';
-import { LiveRoutineService } from '../services/live-routine.service';
-import { RoutineService } from '../services/routine.service';
+import Routine from '../../models/routine';
+import { LiveRoutineService } from '../live-routine.service';
+import { RoutineService } from '../routine.service';
 
 @Component({
   selector: 'app-preview-routine',

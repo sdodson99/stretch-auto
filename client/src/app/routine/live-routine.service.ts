@@ -26,7 +26,7 @@ export class LiveRoutineService {
       throw new Error('No routine configured.');
     }
 
-    const routine = this._currentRoutine;
+    const routine = this.preprocessRoutine(this._currentRoutine);
 
     const routineDuration =
       routine.stretchSecondsDuration * routine.stretches.length;
@@ -38,6 +38,32 @@ export class LiveRoutineService {
         routine.stretchSecondsDuration
       )
     );
+  }
+
+  private preprocessRoutine(routine: Routine): Routine {
+    const processedStretches = [];
+
+    for (const stretch of routine.stretches) {
+      stretch.instructions?.sort((a, b) => a.order - b.order);
+
+      if (stretch.isUnilateral) {
+        const unilateralStretches: Stretch[] = ['Left', 'Right'].map((side) => {
+          return {
+            id: stretch.id,
+            name: `${side} ${stretch.name}`,
+            isUnilateral: true,
+            instructions: stretch.instructions,
+          };
+        });
+        processedStretches.push(...unilateralStretches);
+      } else {
+        processedStretches.push(stretch);
+      }
+    }
+
+    routine.stretches = processedStretches;
+
+    return routine;
   }
 
   private toLiveRoutineStretch(
