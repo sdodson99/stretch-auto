@@ -1,0 +1,52 @@
+<div>
+    <h3>Routine</h3>
+
+    <div class="mt-4 row justify-content-center">
+        <div *ngIf="!isComplete && hasStretches && hasRoutine;" class="col">
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <app-routine-countdown [secondsRemaining]="currentSecondsRemaining"
+                        [totalSeconds]="stretchSecondsDuration"></app-routine-countdown>
+                </div>
+                <div class="col-md-8">
+                    <h1 class="mt-3 mt-md-0 text-center text-md-left">
+                        {{ currentStretch?.name }} Stretch
+                    </h1>
+                    <ul>
+                        <li *ngFor="let instruction of currentStretch?.instructions" class="my-1">
+                            <strong>{{ instruction.order}}.</strong> {{ instruction.content }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!hasStretches" class="col">
+            <div>The current routine has no stretches.</div>
+            <button class="mt-4 btn btn-primary">
+                <a class="text-white text-decoration-none" routerLink="/">
+                    Back to Start
+                </a>
+            </button>
+        </div>
+
+        <div *ngIf="!hasRoutine" class="col">
+            <div>No routine has been configured.</div>
+            <button class="mt-4 btn btn-primary">
+                <a class="text-white text-decoration-none" routerLink="/">
+                    Back to Start
+                </a>
+            </button>
+        </div>
+
+        <div *ngIf="isComplete" class="col">
+            <div>The current routine has finished.</div>
+            <button class="mt-4 btn btn-primary">
+                <a class="text-white text-decoration-none" routerLink="/">
+                    Back to Start
+                </a>
+            </button>
+        </div>
+    </div>
+
+</div>

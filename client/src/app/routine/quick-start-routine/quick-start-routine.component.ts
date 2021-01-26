@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RoutineService } from '../services/routine.service';
+import { RoutineService } from '../routine.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
