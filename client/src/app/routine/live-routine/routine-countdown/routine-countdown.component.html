@@ -1,7 +1,7 @@
 <div>
     <canvas baseChart [datasets]="chartDatasets" [chartType]="'doughnut'" [legend]="false" [options]="chartOptions">
     </canvas>
-    <div *ngIf="secondsRemaining" class="mt-3 text-center">
+    <div *ngIf="millisecondsRemaining" class="mt-3 text-center">
         <strong>{{ secondsRemaining }}</strong> seconds remaining
     </div>
 </div>
