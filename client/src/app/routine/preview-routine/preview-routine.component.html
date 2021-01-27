@@ -1,20 +1,19 @@
 <div>
     <h3>Preview Routine</h3>
 
-    <div class="mt-4">
-        <div *ngIf="isLoading" class="mt-4 d-flex flex-column align-items-center">
+    <div class="mt-5">
+        <div *ngIf="isLoading" class="d-flex flex-column align-items-center">
             <app-loading-spinner></app-loading-spinner>
             <div class="mt-3 font-weight-light">Creating Routine</div>
         </div>
 
         <div *ngIf="routine;">
             <div *ngIf="routine.stretches.length > 0; else hasNoStretches">
-
                 <div>
                     <h5>General</h5>
                     <div class="mt-3">
                         <div class="row">
-                            <div class="col-sm-auto">
+                            <div class="col-sm-8 col-md-6 col-lg-4">
                                 Stretch Duration (seconds):
                             </div>
                             <div class="col-sm-auto">
@@ -22,7 +21,7 @@
                             </div>
                         </div>
                         <div class="mt-3 row">
-                            <div class="col-sm-auto">
+                            <div class="col-sm-8 col-md-6 col-lg-4">
                                 Amount of Stretches:
                             </div>
                             <div class="col-sm-auto">
@@ -32,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-5">
                     <h5>Stretches</h5>
                     <ol class="mt-3">
                         <li *ngFor="let stretch of routine.stretches" class="mb-3">
@@ -41,7 +40,7 @@
                     </ol>
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-5">
                     <div class="d-flex flex-column flex-sm-row">
                         <button (click)="startRoutine()" class="btn btn-primary">Start</button>
                         <button (click)="refreshRoutine()" class="btn btn-outline-primary mt-3 mt-sm-0 ml-sm-2">
@@ -50,15 +49,16 @@
                             </app-loading-spinner>
                         </button>
                     </div>
-                    <div class="mt-4 text-center text-sm-left">
-                        <a class="text-danger" routerLink="/">Back to Quick Start</a>
-                    </div>
+                </div>
+
+                <div class="mt-5 text-center text-sm-left">
+                    <a class="text-danger" routerLink="/">Back to Quick Start</a>
                 </div>
             </div>
 
             <ng-template #hasNoStretches>
                 <div>The current routine has no stretches.</div>
-                <a class="mt-4 btn btn-primary text-white text-decoration-none" routerLink="/">
+                <a class="mt-5 btn btn-primary text-white text-decoration-none" routerLink="/">
                     Back to Quick Start
                 </a>
             </ng-template>

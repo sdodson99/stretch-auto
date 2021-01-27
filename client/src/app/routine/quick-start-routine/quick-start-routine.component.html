@@ -1,7 +1,7 @@
 <div>
     <h3>Quick Start</h3>
 
-    <form class="mt-4" [formGroup]="startRoutineForm" (ngSubmit)="start()">
+    <form class="mt-5" [formGroup]="startRoutineForm" (ngSubmit)="start()">
         <div class="form-group">
             <div class="row align-items-center">
                 <label for="inputStretchAmount" class="col-lg-6 col-md-8 col-sm-9 col-form-label">How many stretches
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="mt-4 form-group row">
+        <div class="mt-5 form-group row">
             <div class="col">
                 <button type="submit" class="btn btn-primary" [disabled]="!startRoutineForm.valid">
                     Create Routine

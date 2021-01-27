@@ -54,7 +54,7 @@ export class LiveRoutineService {
 
     for (const stretch of stretches) {
       if (stretch.isUnilateral) {
-        const unilateralStretches: Stretch[] = ['Left', 'Right'].map((side) => {
+        const unilateralStretches = ['Left', 'Right'].map((side) => {
           return {
             id: stretch.id,
             name: `${side} ${stretch.name}`,
