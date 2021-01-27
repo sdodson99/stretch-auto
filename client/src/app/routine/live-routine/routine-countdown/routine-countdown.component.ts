@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 
 @Component({
@@ -7,9 +7,9 @@ import { ChartDataSets, ChartOptions } from 'chart.js';
   styleUrls: ['./routine-countdown.component.scss'],
 })
 export class RoutineCountdownComponent implements OnChanges {
-  @Input() secondsRemaining = 0;
+  @Input() millisecondsRemaining = 0;
 
-  @Input() totalSeconds = 0;
+  @Input() totalMillieconds = 0;
 
   chartDatasets: ChartDataSets[] = [];
 
@@ -32,8 +32,8 @@ export class RoutineCountdownComponent implements OnChanges {
     this.chartDatasets = [
       {
         data: [
-          this.secondsRemaining,
-          this.totalSeconds - this.secondsRemaining,
+          this.millisecondsRemaining,
+          this.totalMillieconds - this.millisecondsRemaining,
         ],
         borderWidth: 0,
         backgroundColor: ['green', 'lightgray'],
