@@ -62,6 +62,21 @@
                     Back to Quick Start
                 </a>
             </ng-template>
+        </div>
+
+        <div *ngIf="loadFailed">
+            <div>Failed to generate routine.</div>
+
+            <button (click)="refreshRoutine()" class="mt-5 btn btn-primary">
+                Refresh
+                <app-loading-spinner class="ml-2" *ngIf="isRefreshing" [diameter]="'1rem'">
+                </app-loading-spinner>
+            </button>
+
+            <div class="mt-3 text-center text-sm-left">
+                <a class="text-danger" routerLink="/">Back to Quick Start</a>
+            </div>
+
 
         </div>
     </div>

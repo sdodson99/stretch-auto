@@ -15,6 +15,7 @@ export class PreviewRoutineComponent implements OnInit, OnDestroy {
   routine: Routine | undefined;
   isLoading = true;
   isRefreshing = true;
+  loadFailed = false;
 
   getRoutineSubscription: Subscription | undefined;
 
@@ -61,8 +62,14 @@ export class PreviewRoutineComponent implements OnInit, OnDestroy {
           this.isRefreshing = false;
         })
       )
-      .subscribe((routine) => {
-        this.routine = routine[0];
+      .subscribe({
+        next: (routine) => {
+          this.routine = routine[0];
+          this.loadFailed = false;
+        },
+        error: (err) => {
+          this.loadFailed = true;
+        },
       });
   }
 }
