@@ -5,8 +5,8 @@
         <div *ngIf="!isComplete && hasStretches && hasRoutine;" class="col">
             <div class="row justify-content-center">
                 <div class="col-md-4">
-                    <app-routine-countdown [millisecondsRemaining]="currentSecondsRemaining * 1000"
-                        [totalMillieconds]="stretchSecondsDuration * 1000"></app-routine-countdown>
+                    <app-routine-countdown [millisecondsRemaining]="currentMillisecondsRemaining"
+                        [totalMillieconds]="stretchMillisecondsDuration"></app-routine-countdown>
                 </div>
                 <div class="col-md-8 d-flex flex-column align-items-start justify-content-between">
                     <div>

@@ -17,8 +17,8 @@ export class LiveRoutineComponent implements OnInit, OnDestroy {
   isComplete = false;
 
   currentStretch: Stretch | undefined;
-  currentSecondsRemaining = 0;
-  stretchSecondsDuration = 0;
+  currentMillisecondsRemaining = 0;
+  stretchMillisecondsDuration = 0;
 
   liveRoutineSubscription: Subscription | undefined;
 
@@ -42,8 +42,8 @@ export class LiveRoutineComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (s) => {
             this.currentStretch = s.stretch;
-            this.currentSecondsRemaining = s.secondsRemaining;
-            this.stretchSecondsDuration = s.totalSeconds;
+            this.currentMillisecondsRemaining = s.secondsRemaining * 1000;
+            this.stretchMillisecondsDuration = s.totalSeconds * 1000;
           },
           complete: () => {
             this.isComplete = true;
