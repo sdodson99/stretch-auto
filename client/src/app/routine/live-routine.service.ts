@@ -37,11 +37,11 @@ export class LiveRoutineService {
     }
 
     const routineStretches = this.processUnilateralStretches(routine.stretches);
-    const routineDuration =
+    const routineDurationSeconds =
       routineStretches.length * routine.stretchSecondsDuration;
 
-    return timer(0, 1000).pipe(
-      takeWhile((i) => i < routineDuration),
+    return timer(0, 100).pipe(
+      takeWhile((i) => i / 10 < routineDurationSeconds),
       this.toLiveRoutineStretch(
         routineStretches,
         routine.stretchSecondsDuration
@@ -75,7 +75,8 @@ export class LiveRoutineService {
     stretches: Stretch[],
     stretchDuration: number
   ): OperatorFunction<number, LiveRoutineStretch> {
-    return map((currentSecond: number) => {
+    return map((currentTenthSecond: number) => {
+      const currentSecond = currentTenthSecond / 10;
       const currentStretchIndex = Math.trunc(currentSecond / stretchDuration);
       const currentStretch = stretches[currentStretchIndex];
 
