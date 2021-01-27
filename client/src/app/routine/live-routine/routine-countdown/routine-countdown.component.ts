@@ -11,6 +11,10 @@ export class RoutineCountdownComponent implements OnChanges {
 
   @Input() totalMillieconds = 0;
 
+  get secondsRemaining(): number {
+    return Math.trunc(this.millisecondsRemaining / 1000);
+  }
+
   chartDatasets: ChartDataSets[] = [];
 
   chartOptions: ChartOptions = {
@@ -36,7 +40,7 @@ export class RoutineCountdownComponent implements OnChanges {
           this.totalMillieconds - this.millisecondsRemaining,
         ],
         borderWidth: 0,
-        backgroundColor: ['green', 'lightgray'],
+        backgroundColor: ['green', '#fafafa'],
       },
     ];
   }
